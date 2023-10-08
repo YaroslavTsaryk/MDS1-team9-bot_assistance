@@ -41,7 +41,9 @@ def get_birthdays_per_week(users):
     for i in range(5):
         if days[i] in res.keys():
             res2[days[i]]=res[days[i]]
-                
+            message=", ".join(res[days[i]])
+            print(f'{days[i]}: {message}')
+               
     return res2
             
                 
