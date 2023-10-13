@@ -48,6 +48,7 @@ def get_birthdays_per_week(users,today=datetime.today().date()):
                 
     return res2
             
-today=(datetime.today()+timedelta(1)).date()
+#today=(datetime.today()-timedelta(1)).date() # set different date for testing 
+today=datetime.today().date()
 print(get_birthdays_per_week(users,today))
               
