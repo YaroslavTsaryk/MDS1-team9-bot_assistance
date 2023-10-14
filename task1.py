@@ -1,58 +1,77 @@
-from  datetime import datetime, timedelta
+def input_error(func):
+    def inner(*args, **kwargs):
+        try:            
+            return func(*args, **kwargs)
+        except KeyError:
+            return "Enter user name"
+        except ValueError:
+            return "Give me name and phone please."
+        except IndexError:
+            return "Contact not found"
 
-users=[{"name": "Bill Gates", "birthday": datetime(1955, 10, 10)},
-       {"name": "Mr Anderson", "birthday": datetime(1977, 10, 15)},
-       {"name": "Morfeus", "birthday": datetime(1985, 10, 18)},
-       {"name": "Neo", "birthday": datetime(1993, 10, 12)},
-       {"name": "Trinity", "birthday": datetime(1966, 10, 21)},
-       {"name": "Oraculus", "birthday": datetime(2000, 10, 14)},
-       {"name": "Serafim", "birthday": datetime(2005, 10, 10)},
-       {"name": "Architect", "birthday": datetime(1965, 10, 18)},
-       {"name": "Agent Smith", "birthday": datetime(1953, 10, 12)}]
-       
-def get_birthdays_per_week(users,today=datetime.today().date()):
-    res={}
-    days={0:'Monday',
-          1:'Tuesday',
-          2:'Wednesday',
-          3:'Thursday',
-          4:'Friday'}
+    return inner
+
+def parse_input(user_input):
+    cmd, *args = user_input.split()
+    cmd = cmd.strip().lower()
+    return cmd, *args
+
+@input_error
+def add_contact(args, contacts):
+    name, phone = args
+    if name not in contacts.keys():
+        contacts[name] = phone
+        return "Contact added."
+    else:
+        return "Contact already exists"
+
+@input_error
+def change_contact(args, contacts):
+    name, phone = args
+    if name in contacts.keys():
+        contacts[name] = phone
+        return "Contact updated."
+    else:
+        raise IndexError
+
+@input_error
+def show_phone(args, contacts):
+    name = args[0]
+    if name in contacts.keys():
+        return f"{name}: {contacts[name]}"
+    else:
+        raise IndexError
+
+def show_all(args,contacts):
+    #res=""
+    #for key,value in contacts.items():
+    return "\n".join([f"{key}: {value}" for key,value in contacts.items()])
+
+actions={'add':add_contact,
+         'change':change_contact,
+         'phone':show_phone,
+         'all':show_all}
+
+def main():
+    contacts = {}
+    print("Welcome to the assistant bot!")
+    while True:
+        user_input = input("Enter a command: ")
+        if user_input:
+            command, *args = parse_input(user_input)
+        else:
+            continue
+
+        if command in ["close", "exit"]:
+            print("Good bye!")
+            break
+        elif command == "hello":
+            print("How can I help you?")
+        elif command in actions.keys():
+            print(actions[command](args,contacts))
+        else:
+            print("Invalid command.")
+
+if __name__ == "__main__":
+    main()
     
-    #today=datetime.today().date() 
-    for user in users:
-        name = user["name"]
-        birthday = user["birthday"].date()  # Конвертуємо до типу date*
-        birthday_this_year = birthday.replace(year=today.year)
-        if birthday_this_year < today:
-            birthday_this_year = birthday.replace(year=today.year+1)
-        delta_days = (birthday_this_year - today).days
-        if delta_days<7:    
-            set_day=0
-            if birthday_this_year.weekday()>4:
-                if (birthday_this_year-today).days+7-birthday_this_year.weekday()<7: # Don't greet if greetings day on days after now+7
-                    set_day=0
-                else:
-                    continue
-            else:
-                set_day=birthday_this_year.weekday()
-            if days[set_day] not in res.keys():
-                res[days[set_day]]=[user["name"]]
-            else:
-                res[days[set_day]].append(user["name"])
-       
-    res2={}
-    for i in range(7):
-        sh=(today+timedelta(i)).weekday()
-        if sh not in [5,6]:
-            if days[sh] in res.keys():
-                res2[days[sh]]=res[days[sh]]
-                message=", ".join(res[days[sh]])
-                print(f'{days[sh]}: {message}')
-                
-    return res2
-            
-#today=(datetime.today()+timedelta(3)).date() # set different date for testing 
-today=datetime.today().date()
-print(today)
-print(get_birthdays_per_week(users,today))
-              
