@@ -29,7 +29,10 @@ def get_birthdays_per_week(users,today=datetime.today().date()):
         if delta_days<7:    
             set_day=0
             if birthday_this_year.weekday()>4:
-                set_day=0
+                if today.weekday()!=0:
+                    set_day=0
+                else:
+                    continue
             else:
                 set_day=birthday_this_year.weekday()
             if days[set_day] not in res.keys():
@@ -48,7 +51,8 @@ def get_birthdays_per_week(users,today=datetime.today().date()):
                 
     return res2
             
-#today=(datetime.today()-timedelta(1)).date() # set different date for testing 
-today=datetime.today().date()
+today=(datetime.today()-timedelta(5)).date() # set different date for testing 
+print(today)
+#today=datetime.today().date()
 print(get_birthdays_per_week(users,today))
               
