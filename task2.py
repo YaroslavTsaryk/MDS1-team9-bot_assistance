@@ -65,11 +65,3 @@ def main():
 if __name__ == "__main__":
     main()
     
-    """elif command == "add":
-            print(add_contact(args, contacts))
-        elif command == "change":
-            print(change_contact(args, contacts))
-        elif command == "phone":
-            print(show_phone(args, contacts))
-        elif command == "all":
-            show_all(args, contacts)"""

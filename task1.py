@@ -4,7 +4,7 @@ users=[{"name": "Bill Gates", "birthday": datetime(1955, 10, 10)},
        {"name": "Mr Anderson", "birthday": datetime(1977, 10, 15)},
        {"name": "Morfeus", "birthday": datetime(1985, 10, 18)},
        {"name": "Neo", "birthday": datetime(1993, 10, 12)},
-       {"name": "Trinity", "birthday": datetime(1966, 10, 7)},
+       {"name": "Trinity", "birthday": datetime(1966, 10, 21)},
        {"name": "Oraculus", "birthday": datetime(2000, 10, 14)},
        {"name": "Serafim", "birthday": datetime(2005, 10, 10)},
        {"name": "Architect", "birthday": datetime(1965, 10, 18)},
@@ -29,7 +29,7 @@ def get_birthdays_per_week(users,today=datetime.today().date()):
         if delta_days<7:    
             set_day=0
             if birthday_this_year.weekday()>4:
-                if today.weekday()!=0:
+                if (birthday_this_year-today).days+7-birthday_this_year.weekday()<7: # Don't greet if greetings day on days after now+7
                     set_day=0
                 else:
                     continue
@@ -51,8 +51,8 @@ def get_birthdays_per_week(users,today=datetime.today().date()):
                 
     return res2
             
-today=(datetime.today()-timedelta(5)).date() # set different date for testing 
+#today=(datetime.today()+timedelta(3)).date() # set different date for testing 
+today=datetime.today().date()
 print(today)
-#today=datetime.today().date()
 print(get_birthdays_per_week(users,today))
               
