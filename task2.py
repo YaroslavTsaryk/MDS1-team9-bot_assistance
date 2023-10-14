@@ -1,4 +1,5 @@
 from collections import UserDict
+import operator
 
 class Field:
     def __init__(self, value):
@@ -16,13 +17,22 @@ class Phone(Field):
     # реалізація класу
     def __init__(self, Field):
         self.value = Field
+    
+    @property
+    def value(self):
+        return self._value
+    
+    @value.setter        
+    def value(self, v):
+        if len(v) != 10: raise Exception("value must be 10 digits")
+        self._value = v
 class Record:
     def __init__(self, name):
         self.name = Name(name)
         self.phones = []
 
     def add_phone(self, value):
-        field=Field(value)
+        field=Phone(value)
         self.phones.append(field)
     def remove_phone(self, value):
         res=""
@@ -72,6 +82,7 @@ def main():
     john_record = Record("John")
     john_record.add_phone("1234567890")
     john_record.add_phone("5555555555")
+    #john_record.add_phone("55555555551")
 
     # Додавання запису John до адресної книги
     book.add_record(john_record)
