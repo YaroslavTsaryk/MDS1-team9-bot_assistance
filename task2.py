@@ -16,16 +16,19 @@ class Name(Field):
 class Phone(Field):
     # реалізація класу
     def __init__(self, Field):
+        self.__value = None
         self.value = Field
     
     @property
     def value(self):
-        return self._value
+        return self.__value
     
     @value.setter        
     def value(self, v):
-        if len(v) != 10: raise Exception("value must be 10 digits")
-        self._value = v
+        if len(v) == 10: 
+            self.__value = v
+        else:
+            raise ValueError 
 class Record:
     def __init__(self, name):
         self.name = Name(name)
@@ -54,7 +57,7 @@ class Record:
     # реалізація класу
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"
+        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}"#if p.value is not None
 
 class AddressBook(UserDict):
     # реалізація класу
@@ -82,8 +85,10 @@ def main():
     john_record = Record("John")
     john_record.add_phone("1234567890")
     john_record.add_phone("5555555555")
-    #john_record.add_phone("55555555551")
-
+    try:
+        john_record.add_phone("55555555551")
+    except ValueError:
+        print ("ValueError ")
     # Додавання запису John до адресної книги
     book.add_record(john_record)
 
