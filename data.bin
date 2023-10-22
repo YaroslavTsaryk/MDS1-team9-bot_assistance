@@ -1,0 +1,52 @@
+[
+	{
+		"name": "John",
+		"phone": [
+			"1234567890",
+			"1122334455"
+		],
+		"birthday": "22.10.1990"
+	},
+	{
+		"name": "Jane",
+		"phone": [
+			"1112223334"
+		]
+	},
+	{
+		"name": "Bill_Gates",
+		"birthday": "10.10.1955"
+	},
+	{
+		"name": "Mr_Anderson",
+		"birthday": "15.10.1977"
+	},
+	{
+		"name": "Morfeus",
+		"birthday": "18.10.1985"
+	},
+	{
+		"name": "Neo",
+		"birthday": "12.10.1993"
+	},
+	{
+		"name": "Trinity",
+		"birthday": "21.10.1966"
+	},
+	{
+		"name": "Oraculus",
+		"birthday": "14.10.2000"
+	},
+	{
+		"name": "Serafim",
+		"birthday": "10.10.2005"
+	},
+	{
+		"name": "Architect",
+		"birthday": "18.10.1965"
+	},
+	{
+		"name": "Agent_Smith",
+		"birthday": "12.10.1953"
+	}
+]
