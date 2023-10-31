@@ -37,52 +37,57 @@ class Field:
 
 class Title(Field):
     def __init__(self, title: str):
-        self.is_valid_title(title)
+        Title.is_valid_title(title)
         super().__init__(title)
-        self.__title_min_length = 3
-        self.__title_max_length = 50
 
     @staticmethod
     def is_valid_title(self, title: str):
+        title_min_length = 3
+        title_max_length = 50
         if not title:
             raise IncorrectTitleException("the required title is missing")
-        if self.__title_min_length < len(title) < self.__title_max_length:
+        if not title_min_length <= len(title) <= title_max_length:
             raise IncorrectTitleException(
-                f"the title must be {self.__title_min_length} to {self.__title_max_length} characters long ")
+                f"the title must be {title_min_length} to {title_max_length} characters long ")
 
 
 class Tag(Field):
     def __init__(self, tag: str):
-        self.is_valid_tag(tag)
+        Tag.is_valid_tag(tag)
         super().__init__(tag)
-        self.__tag_min_length = 3
-        self.__tag_max_length = 20
 
     def update_value(self, new_value: str):
         self.is_valid_tag(new_value)
         self.value = new_value
 
-    def is_valid_tag(self, tag: str):
+    @staticmethod
+    def is_valid_tag(tag: str):
+        tag_min_length = 3
+        tag_max_length = 20
+        pattern = r'^[a-zA-Z0-9-_]+$'
         if not tag:
             raise IncorrectTagException("the required tag is missing")
-        if self.__tag_min_length < len(tag) < self.__tag_max_length:
+        if not re.match(pattern, tag):
+            raise IncorrectTagException(f"the tag must contain only letters, numbers and symbols '_' and '-'")
+        if not tag_min_length <= len(tag) <= tag_max_length:
             raise IncorrectTagException(
-                f"the tag must be {self.__tag_min_length} to {self.__tag_max_length} characters long ")
+                f"the tag must be {tag_min_length} to {tag_max_length} characters long ")
 
 
 class Text(Field):
     def __init__(self, text: str):
-        self.is_valid_text(text)
+        Text.is_valid_text(text)
         super().__init__(text)
-        self.__text_min_length = 0
-        self.__text_max_length = 256
 
+    @staticmethod
     def is_valid_text(self, text: str):
+        text_min_length = 0
+        text_max_length = 256
         if not text:
             raise IncorrectTextException("missing required text")
-        if self.__text_min_length < len(text) < self.__text_max_length:
+        if not text_min_length <= len(text) <= text_max_length:
             raise IncorrectTagException(
-                f"the text must be {self.__text_min_length} to {self.__text_max_length} characters long ")
+                f"the text must be {text_min_length} to {text_max_length} characters long ")
 
 
 class Record:
@@ -97,7 +102,7 @@ class Record:
 
 
     def __str__(self):
-        return f"Id: {self.record_auto_id}, Title: {self.title}, Tags: {'; '.join(p.value for p in self.tags)}, Text: {self.text}"
+        return f"Id: {self.record_auto_id}, Title: {self.title}, Tags: {', '.join(p for p in self.tags)}, Text: {self.text}"
 
     def add_tag(self, tag: Tag):
         self.tags.append(tag)
@@ -126,8 +131,17 @@ class NotePad(UserDict):
             self.data.remove(result)
 
 
+# The debugging section. It will be the last to be deleted.
 notepad = NotePad()
 
-record1 = Record("MyTitle")
+record1 = Record("MyTitle-1")
+record2 = Record("MyTitle-2")
+print(record1)
+print(record2)
+
+tag1 = Tag('tag-1')
+tag2 = Tag('ta')
+tag3 = Tag('')
 
 print(record1)
+notepad.add_record(record1)
