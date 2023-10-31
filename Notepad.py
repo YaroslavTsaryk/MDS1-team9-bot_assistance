@@ -42,6 +42,7 @@ class Title(Field):
         self.__title_min_length = 3
         self.__title_max_length = 50
 
+    @staticmethod
     def is_valid_title(self, title: str):
         if not title:
             raise IncorrectTitleException("the required title is missing")
@@ -87,15 +88,16 @@ class Text(Field):
 class Record:
     record_auto_id = 0
 
-    def __init__(self, title: Title, text: Text):
+    def __init__(self, title):
         Record.record_auto_id += 1
         self.record_auto_id = Record.record_auto_id
-        self.tags: list[Tag] = []
-        self.text: Text = text
         self.title: Title = title
+        self.text: Text = None
+        self.tags: list[Tag] = []
+
 
     def __str__(self):
-        return f"Id: {self.record_auto_id}, Title: {self.title.value}, Tags: {'; '.join(p.value for p in self.tags)}, Text: {self.text.value}"
+        return f"Id: {self.record_auto_id}, Title: {self.title}, Tags: {'; '.join(p.value for p in self.tags)}, Text: {self.text}"
 
     def add_tag(self, tag: Tag):
         self.tags.append(tag)
@@ -113,12 +115,19 @@ class NotePad(UserDict):
     def add_record(self, record: Record):
         self.data.append(record)
 
-    def find(self, title: Title):
+    def find_by_title(self, title: Title):
         result = list(filter(lambda record: str(record.title).lower()
                              == str(title).lower(), self.data))
         return result[0] if result else None
 
     def delete(self, title: Title):
-        result = self.find(title)
+        result = self.find_by_title(title)
         if result:
             self.data.remove(result)
+
+
+notepad = NotePad()
+
+record1 = Record("MyTitle")
+
+print(record1)
