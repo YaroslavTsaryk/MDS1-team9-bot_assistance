@@ -1,11 +1,5 @@
 from collections import UserDict
-from datetime import datetime, timedelta
 import re
-import json
-import difflib
-
-# Dictionary with working days for sort operation
-days = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday"}
 
 
 class Field:
@@ -128,3 +122,9 @@ class AddressBook(UserDict):
         rec = self.find(name)
         if rec:
             print(f"{rec.name} birthday: {rec.birthday}")
+
+    def __str__(self):
+        book_str = ''
+        for name, record in self.data.items():
+            book_str += str(record) + "\n"
+        return book_str
