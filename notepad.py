@@ -99,9 +99,11 @@ class Record:
         self.title: Title = title
         self.text: Text = None
         self.tags: list[Tag] = []
+        self.timestamp = datetime.now().time()
+        self.datestamp = datetime.now().date()
 
     def __str__(self):
-        return f"Id: {self.record_auto_id}, Title: {self.title}, Tags: {', '.join(p.value for p in self.tags)}, Text: {self.text}"
+        return f"Id: {self.record_auto_id}, Title: {self.title}, Tags: {', '.join(p.value for p in self.tags)}, Text: {self.text}, Datestamp: {self.datestamp}, Timestamp: {self.timestamp}"
 
     def add_tag(self, tag: Tag):
         self.tags.append(tag)
