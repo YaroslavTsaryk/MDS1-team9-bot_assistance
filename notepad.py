@@ -111,6 +111,9 @@ class Record:
         for i in found:
             self.tags.remove(i)
 
+    def remove_all_tags(self):
+        self.tags.clear()
+
     def add_text(self, text: Text):
         self.text = text
 
@@ -168,23 +171,24 @@ print("Add text 1")
 text1 = Text('This text just for the debug')
 print("Add text 1 to record 1")
 record1.add_text(text1)
-
 print(record1)
 print(record2)
 
 print("Editing text in record 1")
 record1.edit_text("New text for the debug!!!")
-
 print(record1)
 print(record2)
 
 print("Remove text from the record 1")
 record1.remove_text()
+print(record1)
+print(record2)
 
+print("Remove all tags from the record 1")
+record1.remove_all_tags()
 print(record1)
 print(record2)
 
 print("Add record 1 to notepad")
 notepad.add_record(record1)
-
 print(notepad)
