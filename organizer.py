@@ -9,18 +9,24 @@ from phonebook import AddressBook, Record
 days = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday"}
 
 HELP = (
-    """load - load data from json file. Default filename - data.bin
-load <filename> - load data from specified json file
-write - write book data into file. Default filename - data.bin
-write <filename> - write data to cpecified json file
-add <contact_name> <phone_number> - Add contact with a phone number. Phone number must be 10 digits
-change <contact_name> <old_phone_number> <new_phone_number> - Change existing phone number for existing contact
+    """load-book - load data from json file. Default filename - data.bin
+load-book <filename> - load data from specified json file
+write-book - write book data into file. Default filename - data.bin
+write-book <filename> - write data to cpecified json file
+add-contact-name <long name>- add new contact long name
+change-contact-name <id> <long name>- change contact long name by id
+add-contact <contact_name> <phone_number> - Add contact with a phone number. Phone number must be 10 digits
+change-contact <contact_name> <old_phone_number> <new_phone_number> - Change existing phone number for existing contact
 add-birthday <contact_name> <date> - Add birthday data for existing contact or new contact with birthday only. Date format DD.MM.YYYY
+add-email <id> <email> - add email to contact by id
+change-email <id> <email> - change email for contact by id
+add-address <id> <address all string> - add address to contact by id
+change-address <id> <address all string> - change address for contact by id
 phone <contact_name> - Display phones for contact
 show-birthday <contact_name> - Display birthday data for contact
 birthdays - Show birtdays for next 7 days
 birthdays <date> - Show birtdays for next 7 days from selected date. Date format DD.MM.YYYY
-delete <contact_name> - Delete contact data from book
+delete-contact <contact_name> - Delete contact data from book
 hello - get a greeting
 close or exit - exit the program
 """)
@@ -58,11 +64,33 @@ def add_contact(args, book):
     if not new_record:
         new_record = Record(name)
         book.add_record(new_record)
-        res += "Contact added. "
+        res += f"Contact with id = {new_record.id} added. "
     found_phone = new_record.find_phone(phone)
     if not found_phone:
         new_record.add_phone(phone)
         res += "Phone added."
+    return res
+
+@input_error
+def add_contact_name(args, book):
+    name=" ".join(args)
+    new_record = book.find(name)
+    res = ""
+    if not new_record:
+        new_record = Record(name)
+        book.add_record(new_record)
+        res = f"Contact '{new_record.name.value}' with id = {new_record.id} added. "    
+    return res
+
+@input_error
+def change_contact_name(args, book):
+    id, *name = args
+    new_name=" ".join(name)
+    record = book[int(id)]
+    res = ""
+    if record:
+        record.set_name(new_name)
+        res = f"Contact name '{record.name.value}' set for id = {record.id}"    
     return res
 
 
@@ -80,6 +108,21 @@ def add_birthday(args, book):
     res += "Birthday added. "
     return res
 
+@input_error
+def add_email(args, book):
+    id, email = args
+    record = book[int(id)]
+    record.add_email(email)
+    return f"Email {record.email} added to record {record.id}"
+
+@input_error
+def add_address(args, book):
+    print(args)
+    id, *address = args
+    print(address)
+    record = book[int(id)]
+    record.add_address(" ".join(address))
+    return f"Address {record.address} added to record {id}"
 
 # Change phone number
 @input_error
@@ -149,7 +192,7 @@ def get_birthdays_per_week(args, book):
 
     users = [
         {
-            "name": key.value,
+            "name": value.name.value,
             "birthday": datetime.strptime(value.birthday.value, "%d.%m.%Y"),
         }
         for key, value in book.items()
@@ -203,7 +246,7 @@ def show_all(args, book):
 
 # load from json file, name as param
 @input_error
-def load_data(args, book):
+def load_book_data(args, book):
     filename = args[0] if len(args) != 0 else "data.bin"
 
     with open(filename, "r") as fh:
@@ -221,7 +264,7 @@ def load_data(args, book):
 
 # Write to json file, name as param
 @input_error
-def write_data(args, book):
+def write_book_data(args, book):
     filename = args[0] if len(args) != 0 else "data.bin"
 
     contacts = []
@@ -246,27 +289,44 @@ def show_help(args, book):
 
 # Available operations on contacts
 actions = {
-    "add": add_contact,
-    "change": change_contact,
+    "add-contact-name": add_contact_name,
+    "change-contact-name": change_contact_name,
+    "add-contact": add_contact,
+    "change-contact": change_contact,
     "remove-phone": remove_phone,
     "phone": show_phone,
-    "delete": delete_contact,
+    "delete-contact": delete_contact,
     "all": show_all,
-    "load": load_data,
-    "write": write_data,
+    "load-book": load_book_data,
+    "write-book": write_book_data,
     "add-birthday": add_birthday,
     "show-birthday": show_birthday,
     "birthdays": get_birthdays_per_week,
     "help": show_help,
+    "add-email": add_email,
+    "change-email": add_email,
+    "add-address": add_address,
+    "change-address": add_address,
 }
 
 book = AddressBook()
 
+TEST_MODE = True
+TEST_FILE = 'test_commands.txt'
 
 def main():
     print("Welcome to the assistant bot!")
+    test_commands = None
+    test_line = 0
+    if TEST_MODE:
+        with open(TEST_FILE, "r") as fh:
+            test_commands = fh.read().splitlines()
     while True:
-        user_input = input("Enter a command: ")
+        if TEST_MODE:
+            user_input = test_commands[test_line]
+            test_line += 1
+        else:
+            user_input = input("Enter a command: ")
         if user_input:
             command, *args = parse_input(user_input)
         else:

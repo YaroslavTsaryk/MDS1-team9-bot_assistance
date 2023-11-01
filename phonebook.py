@@ -1,5 +1,5 @@
 from collections import UserDict
-
+import re
 
 class Field:
     def __init__(self, value):
@@ -29,6 +29,42 @@ class Birthday(Field):
         else:
             raise ValueError
 
+class Email(Field):
+    # реалізація класу
+    def __init__(self, Field):
+        self.__value = None
+        self.value = Field
+
+    @property
+    def value(self):
+        return self.__value
+
+    # Verification for valid email
+    @value.setter
+    def value(self, v):
+        if re.search(
+            "^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$", v
+        ):
+            self.__value = v
+        else:
+            raise ValueError
+
+class Address(Field):
+    # реалізація класу
+    def __init__(self, Field):
+        self.__value = None
+        self.value = Field
+
+    @property
+    def value(self):
+        return self.__value
+
+    
+    @value.setter
+    def value(self, v):
+            self.__value = v
+    
+
 
 class Name(Field):
     # реалізація класу
@@ -56,9 +92,18 @@ class Phone(Field):
 
 
 class Record:
+    count=1
     def __init__(self, name):
         self.name = Name(name)
         self.phones = []
+        self.email=None
+        self.address=None
+        self.id=Record.count
+        Record.count+=1
+
+    def set_name(self, new_name):
+        self.name = Name(new_name)
+
 
     def add_birthday(self, value):
         field = Birthday(value)
@@ -67,6 +112,14 @@ class Record:
     def add_phone(self, value):
         field = Phone(value)
         self.phones.append(field)
+        
+    def add_email(self, value):
+        field = Email(value)
+        self.email=field
+        
+    def add_address(self, value):
+        field = Address(value)
+        self.address=field
 
     def remove_phone(self, value):
         res = ""
@@ -93,37 +146,39 @@ class Record:
         return None
 
     def __str__(self):
-        return f"Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {self.birthday if 'birthday' in self.__dict__ else 'NA'} "  # if p.value is not None
+        return f"Record id: {self.id}, Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {self.birthday if 'birthday' in self.__dict__ else 'NA'}, " \
+            f"address: {self.address if 'address' in self.__dict__ else 'NA'}, email: {self.email if 'email' in self.__dict__ else 'NA'} "
+            # if p.value is not None
 
 
 class AddressBook(UserDict):
     def add_record(self, record):
-        self.data[record.name] = record
+        self.data[record.id] = record
         return record
 
     # Search before any other operation
     def find(self, name):
-        for n in self.data.keys():
-            if n.value == name:
-                return self.data[n]
+        for k, n in self.data.items():
+            if n.name.value == name:
+                return self.data[k]
         return None
 
-    def delete(self, name):
+    def delete(self, id):
         res = None
         for n in self.data.keys():
-            if n.value == name:
+            if n == id:
                 res = n
         if res:
             del self.data[res]
         return res
 
-    def show_birthday(self, name):
-        rec = self.find(name)
+    def show_birthday(self, id):
+        rec = self.find(id)
         if rec:
             print(f"{rec.name} birthday: {rec.birthday}")
 
     def __str__(self):
         book_str = ''
-        for name, record in self.data.items():
+        for id, record in self.data.items():
             book_str += str(record) + "\n"
         return book_str
