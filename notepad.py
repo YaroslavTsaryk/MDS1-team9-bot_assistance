@@ -41,7 +41,7 @@ class Title(Field):
         super().__init__(title)
 
     @staticmethod
-    def is_valid_title(self, title: str):
+    def is_valid_title(title: str):
         title_min_length = 3
         title_max_length = 50
         if not title:
@@ -100,7 +100,6 @@ class Record:
         self.text: Text = None
         self.tags: list[Tag] = []
 
-
     def __str__(self):
         return f"Id: {self.record_auto_id}, Title: {self.title}, Tags: {', '.join(p.value for p in self.tags)}, Text: {self.text}"
 
@@ -114,6 +113,12 @@ class Record:
 
     def add_text(self, text: Text):
         self.text = text
+
+    def remove_text(self):
+        self.text = None
+
+    def edit_text(self, new_text: Text):
+        self.text = new_text
 
 
 class NotePad(UserDict):
@@ -135,24 +140,51 @@ class NotePad(UserDict):
 
 
 # The debugging section. It will be the last to be deleted.
+print("Create notepad")
 notepad = NotePad()
 
+print("Add record 1")
 record1 = Record("MyTitle-1")
+print("Add record 2")
 record2 = Record("MyTitle-2")
 print(record1)
 print(record2)
 
+print("Add tag 1")
 tag1 = Tag('tag-1')
+print("Add tag 2")
 tag2 = Tag('tag-2')
+print("Add tag 3")
 tag3 = Tag('tag-3')
 
+print("Add tag 1 to record 1")
 record1.add_tag(tag1)
+print("Add tag 2 to record 1")
 record1.add_tag(tag2)
+print("Add tag 3 to record 1")
 record1.add_tag(tag3)
 
+print("Add text 1")
 text1 = Text('This text just for the debug')
+print("Add text 1 to record 1")
 record1.add_text(text1)
 
 print(record1)
 print(record2)
+
+print("Editing text in record 1")
+record1.edit_text("New text for the debug!!!")
+
+print(record1)
+print(record2)
+
+print("Remove text from the record 1")
+record1.remove_text()
+
+print(record1)
+print(record2)
+
+print("Add record 1 to notepad")
 notepad.add_record(record1)
+
+print(notepad)
