@@ -139,6 +139,10 @@ class NotePad(UserDict):
                              == str(title).lower(), self.data))
         return result[0] if result else None
 
+    def find_record_by_id(self, record_auto_id: int):
+        result = list(filter(lambda record: record.record_auto_id == record_auto_id, self.data))
+        return result[0] if result else None
+
     def delete(self, title: Title):
         result = self.find_record_by_title(title)
         if result:
@@ -196,7 +200,15 @@ print("Add record 1 to notepad")
 notepad.add_record(record1)
 print(notepad)
 
+print("Add record 2 to notepad")
+notepad.add_record(record2)
+print(notepad)
+
 print("Find a record by title")
 title1 = notepad.find_record_by_title('MyTitle-1')
 print(title1)
 print(type(title1))
+
+print("Find a record by unique id")
+title2 = notepad.find_record_by_id(2)
+print(title2)
