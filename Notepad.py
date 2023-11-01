@@ -102,7 +102,7 @@ class Record:
 
 
     def __str__(self):
-        return f"Id: {self.record_auto_id}, Title: {self.title}, Tags: {', '.join(p for p in self.tags)}, Text: {self.text}"
+        return f"Id: {self.record_auto_id}, Title: {self.title}, Tags: {', '.join(p.value for p in self.tags)}, Text: {self.text}"
 
     def add_tag(self, tag: Tag):
         self.tags.append(tag)
@@ -140,8 +140,12 @@ print(record1)
 print(record2)
 
 tag1 = Tag('tag-1')
-tag2 = Tag('ta')
-tag3 = Tag('')
+tag2 = Tag('tag-2')
+tag3 = Tag('tag-3')
+
+record1.add_tag(tag1)
+record1.add_tag(tag2)
+record1.add_tag(tag3)
 
 print(record1)
 notepad.add_record(record1)
