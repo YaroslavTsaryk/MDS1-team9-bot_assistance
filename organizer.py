@@ -18,8 +18,7 @@ change <contact_name> <old_phone_number> <new_phone_number> - Change existing ph
 add-birthday <contact_name> <date> - Add birthday data for existing contact or new contact with birthday only. Date format DD.MM.YYYY
 phone <contact_name> - Display phones for contact
 show-birthday <contact_name> - Display birthday data for contact
-birthdays - Show birtdays for next 7 days
-birthdays <date> - Show birtdays for next 7 days from selected date. Date format DD.MM.YYYY
+birthdays <days from today> - Show birtdays for the next specified number of days, 7 days if no argument given
 delete <contact_name> - Delete contact data from book
 hello - get a greeting
 close or exit - exit the program
@@ -30,8 +29,8 @@ def input_error(func):
     def inner(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except KeyError:
-            return "Enter user name"
+        # except KeyError:
+        #     return "Enter user name"
         except ValueError:
             return "Give me name, phone or date please."
         except IndexError:
@@ -140,12 +139,15 @@ def show_birthday(args, book):
     else:
         raise IndexError
 
+def birthday_sort(d):
+    return datetime.strptime(d['date'], "%d.%m.%Y").timestamp()
 
-# Get birthday for next 7 days from date value
+# Get birthday for the specified number of days from date value
 @input_error
 def get_birthdays_per_week(args, book):
-    date_str = args[0] if len(args) != 0 else str(datetime.today().strftime("%d.%m.%Y"))
-    today = datetime.strptime(date_str, "%d.%m.%Y").date()
+    days_from_today = int(args[0]) if len(args) != 0 else 7
+    
+    today = datetime.today().date()
 
     users = [
         {
@@ -155,41 +157,53 @@ def get_birthdays_per_week(args, book):
         for key, value in book.items()
         if "birthday" in value.__dict__
     ]
-    res = {}
+    res = []
 
     for user in users:
         name = user["name"]
         birthday = user["birthday"].date()  # Convert to date type
         birthday_this_year = birthday.replace(year=today.year)
+        
         if birthday_this_year < today:
             birthday_this_year = birthday.replace(year=today.year + 1)
         delta_days = (birthday_this_year - today).days
-        if delta_days < 7:
+        if delta_days <= days_from_today:
             set_day = 0
+            greet_date = user["birthday"].replace(year=today.year)
             if birthday_this_year.weekday() > 4:
                 if (
                     birthday_this_year - today
-                ).days + 7 - birthday_this_year.weekday() < 7:  # Don't greet if greetings day on days after now+7
+                ).days + 7 - birthday_this_year.weekday() < days_from_today:  # Don't greet if greetings day on days after now+7
                     set_day = 0
+                    greet_date = (
+                        greet_date.replace(day=greet_date.day + 2) if birthday_this_year.weekday() == 5 else greet_date.replace(day=greet_date.day + 1)) 
                 else:
                     continue
             else:
                 set_day = birthday_this_year.weekday()
-            if days[set_day] not in res.keys():
-                res[days[set_day]] = [user["name"]]
+            
+            #add entry to internal greet list
+            greet_date_str = greet_date.strftime("%d.%m.%Y")
+            present = False
+            for i in range(len(res)):
+                if greet_date_str in res[i].values():
+                    present = True
+                    break
+            if not present:
+                new = {}
+                new['date'] = greet_date_str
+                new['weekday'] = days[set_day]
+                new['names'] = [name]
+                res.append(new)
             else:
-                res[days[set_day]].append(user["name"])
+                res[i]['names'].append(name)
 
-    res2 = {}  # sorted starting from current date
-    output_message = ""
-    for i in range(7):
-        sh = (today + timedelta(i)).weekday()
-        if sh not in [5, 6]:
-            if days[sh] in res.keys():
-                res2[days[sh]] = res[days[sh]]
-                message = ", ".join(res[days[sh]])
-                # print(f'{days[sh]}: {message}')
-                output_message += f"{days[sh]}: {message} \n"
+    # sorted output starting from current date
+    res.sort(key=birthday_sort)
+    output_message = ''
+    for entry in res:
+        names = ", ".join(n for n in entry['names'])
+        output_message += f"{entry['date']}, {entry['weekday']}: {names};\n" 
 
     return output_message
 
