@@ -1,6 +1,6 @@
 import re
-from datetime import datetime, date
-from collections import UserDict, defaultdict
+from datetime import datetime
+from collections import UserDict
 
 
 class IncorrectTagException(Exception):
