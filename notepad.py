@@ -68,7 +68,8 @@ class Tag(Field):
         if not tag:
             raise IncorrectTagException("the required tag is missing")
         if not re.match(pattern, tag):
-            raise IncorrectTagException(f"the tag must contain only letters, numbers and symbols '_' and '-'")
+            raise IncorrectTagException(
+                f"the tag must contain only letters, numbers and symbols '_' and '-'")
         if not tag_min_length <= len(tag) <= tag_max_length:
             raise IncorrectTagException(
                 f"the tag must be {tag_min_length} to {tag_max_length} characters long ")
