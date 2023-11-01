@@ -134,13 +134,13 @@ class NotePad(UserDict):
     def add_record(self, record: Record):
         self.data.append(record)
 
-    def find_by_title(self, title: Title):
+    def find_record_by_title(self, title: Title):
         result = list(filter(lambda record: str(record.title).lower()
                              == str(title).lower(), self.data))
         return result[0] if result else None
 
     def delete(self, title: Title):
-        result = self.find_by_title(title)
+        result = self.find_record_by_title(title)
         if result:
             self.data.remove(result)
 
@@ -195,3 +195,8 @@ print(record2)
 print("Add record 1 to notepad")
 notepad.add_record(record1)
 print(notepad)
+
+print("Find a record by title")
+title1 = notepad.find_record_by_title('MyTitle-1')
+print(title1)
+print(type(title1))
