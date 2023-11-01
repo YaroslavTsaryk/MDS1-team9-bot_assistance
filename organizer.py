@@ -6,7 +6,7 @@ import json
 from phonebook import AddressBook, Record
 
 # Dictionary with working days for sort operation
-days = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday"}
+days = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday", 5: 'Saturday', 6: 'Sunday'}
 
 HELP = (
     """load - load data from json file. Default filename - data.bin
@@ -139,7 +139,7 @@ def show_birthday(args, book):
     else:
         raise IndexError
 
-def birthday_sort(d):
+def birthday_sort_key(d):
     return datetime.strptime(d['date'], "%d.%m.%Y").timestamp()
 
 # Get birthday for the specified number of days from date value
@@ -168,19 +168,8 @@ def get_birthdays_per_week(args, book):
             birthday_this_year = birthday.replace(year=today.year + 1)
         delta_days = (birthday_this_year - today).days
         if delta_days <= days_from_today:
-            set_day = 0
             greet_date = user["birthday"].replace(year=today.year)
-            if birthday_this_year.weekday() > 4:
-                if (
-                    birthday_this_year - today
-                ).days + 7 - birthday_this_year.weekday() < days_from_today:  # Don't greet if greetings day on days after now+7
-                    set_day = 0
-                    greet_date = (
-                        greet_date.replace(day=greet_date.day + 2) if birthday_this_year.weekday() == 5 else greet_date.replace(day=greet_date.day + 1)) 
-                else:
-                    continue
-            else:
-                set_day = birthday_this_year.weekday()
+            set_day = birthday_this_year.weekday()
             
             #add entry to internal greet list
             greet_date_str = greet_date.strftime("%d.%m.%Y")
@@ -199,16 +188,17 @@ def get_birthdays_per_week(args, book):
                 res[i]['names'].append(name)
 
     # sorted output starting from current date
-    res.sort(key=birthday_sort)
+    res.sort(key=birthday_sort_key)
     output_message = ''
     for entry in res:
         names = ", ".join(n for n in entry['names'])
-        output_message += f"{entry['date']}, {entry['weekday']}: {names};\n" 
+        output_message += f"{entry['date']}, {entry['weekday']:<10}| {names};\n" 
+    output_message = output_message or "Birthdays not found"
 
     return output_message
 
 
-# Display all contracts data
+# Display all contacts
 def show_all(args, book):
     # res=""
     # for key,value in contacts.items():
