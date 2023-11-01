@@ -80,13 +80,13 @@ class Text(Field):
         super().__init__(text)
 
     @staticmethod
-    def is_valid_text(self, text: str):
+    def is_valid_text(text: str):
         text_min_length = 0
         text_max_length = 256
         if not text:
-            raise IncorrectTextException("missing required text")
+            raise IncorrectTextException("the required text is missing")
         if not text_min_length <= len(text) <= text_max_length:
-            raise IncorrectTagException(
+            raise IncorrectTextException(
                 f"the text must be {text_min_length} to {text_max_length} characters long ")
 
 
@@ -111,6 +111,9 @@ class Record:
         found = list(filter(lambda p: str(p) == str(tag), self.tags))
         for i in found:
             self.tags.remove(i)
+
+    def add_text(self, text: Text):
+        self.text = text
 
 
 class NotePad(UserDict):
@@ -147,5 +150,9 @@ record1.add_tag(tag1)
 record1.add_tag(tag2)
 record1.add_tag(tag3)
 
+text1 = Text('This text just for the debug')
+record1.add_text(text1)
+
 print(record1)
+print(record2)
 notepad.add_record(record1)
