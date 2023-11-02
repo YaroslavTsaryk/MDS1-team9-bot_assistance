@@ -1,9 +1,10 @@
+load-book
 add-contact John 1234567891
 add-contact John 1122334451
 add-contact Jane 1112223331
-add-email 1 john@gmail.com
-add-address 1 London, Baker st. 1
-add-contact-name John Doe
+add-email 5 john@gmail.com
+add-address 6 London, Baker st. 1
+add-contact-name John Does
 all
 change-contact-name 3 John Smith
 change-contact Jane 1112223334 2233442233
@@ -15,7 +16,8 @@ show-birthday Diana
 show-birthday Jane
 all
 birthdays
-birthdays 14.10.2023
+all
+birthdays 15
 remove-phone John 1234567890
 all
 delete-contact 2

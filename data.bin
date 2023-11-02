@@ -5,48 +5,53 @@
 			"1234567890",
 			"1122334455"
 		],
-		"birthday": "22.10.1990"
+		"birthday": "22.11.1990",
+		"email": "john.doe@gmail.com",
+		"address": "London, Baker st. 11"
 	},
 	{
 		"name": "Jane",
 		"phone": [
 			"1112223334"
-		]
+		],
+		"birthday": "05.10.1990",
+		"email": "jane.doe@gmail.com",
+		"address": "Munich, Baker st. 15"
 	},
 	{
 		"name": "Bill_Gates",
-		"birthday": "10.10.1955"
+		"birthday": "10.11.1955"
 	},
 	{
 		"name": "Mr_Anderson",
-		"birthday": "15.10.1977"
+		"birthday": "15.11.1977"
 	},
 	{
 		"name": "Morfeus",
-		"birthday": "18.10.1985"
+		"birthday": "18.11.1985"
 	},
 	{
 		"name": "Neo",
-		"birthday": "12.10.1993"
+		"birthday": "12.11.1993"
 	},
 	{
 		"name": "Trinity",
-		"birthday": "21.10.1966"
+		"birthday": "21.11.1966"
 	},
 	{
 		"name": "Oraculus",
-		"birthday": "14.10.2000"
+		"birthday": "14.11.2000"
 	},
 	{
 		"name": "Serafim",
-		"birthday": "10.10.2005"
+		"birthday": "12.11.2005"
 	},
 	{
 		"name": "Architect",
-		"birthday": "18.10.1965"
+		"birthday": "18.11.1965"
 	},
 	{
 		"name": "Agent_Smith",
-		"birthday": "12.10.1953"
+		"birthday": "05.11.1953"
 	}
 ]
