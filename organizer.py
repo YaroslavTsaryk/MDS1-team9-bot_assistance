@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import re
 import sys
 import json
 from datetime import datetime, timedelta
@@ -310,11 +311,19 @@ def show_help(args, book):
 
 @validate_args(2, "note-add '[title]' '[text]'")
 def note_add(args, notepad):
-    title = args[0]
-    text = args[1]
+    print(args)
+
+    #cli = ["'my", "title'", "'my", "text'"]
+    command = ' '.join(args)
+    #command = "note-add 'my title' 'my text'"
+    matches = re.findall(r"'(.*?)'", command)
+
+    title = matches[0]
+    text = matches[1]
     if notepad.find_record_by_title(Title(title)) is None:
         notepad.add_record(Record(text))
-        return f"Note added."
+        return ("{:<7} {}".format('[ok]', 'Note added.'))
+    
     else:
         return f"A note with the title {title} exists"
 
@@ -327,6 +336,8 @@ def hello(*_):
 def exit(*_):
     raise KeyboardInterrupt
 
+def debug_input(args, _):
+    print(args)
 
 # Available operations on contacts
 actions = {
@@ -382,12 +393,14 @@ def main():
                 user_input = input("{:<7} {}".format("[*]", "Enter a command: "))
             if user_input:
                 command, *args = parse_input(user_input)
+                #print(f"DEBUG: {args}")
             else:
                 continue
 
             if command in actions.keys():
                 print(actions[command](args, book))
             elif command in note_actions.keys():
+                print(f"DEBUG: ARGS: [{args}] NOTEPAD: [{notepad}]")
                 print(note_actions[command](args, notepad))
             else:
                 suggested_commands = get_suggestions(command)
