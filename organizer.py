@@ -296,6 +296,21 @@ def note_add(args, notepad):
     else:
         return ("{:<7} A note with the title [{}] exists".format('[info]',  title))
 
+@validate_complex_args(1, "note-delete")
+def note_delete(args, notepad):
+    if len(args) == 1:
+        title = args[0]
+    elif len(args) > 1:
+        command = ' '.join(args)
+        matches = re.findall(r"'(.*?)'", command)
+        title = matches[0]
+    if notepad.delete(title):
+        return ("{:<7} Note deleted.".format('[ok]'))
+    else:
+        return ("{:<7} A note with the title [{}] doesn't exists".format('[info]',  title))
+
+
+
 # Greeting display function
 def hello(*_):
     return "{:<7} {}".format("[*]", 'How can I help you?')
@@ -335,6 +350,7 @@ actions = {
 
 notepad_actions = {
     "note-add": note_add,
+    "note-delete": note_delete,
     "my-debug": debug_input,
 }
 
