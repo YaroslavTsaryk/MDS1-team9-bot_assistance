@@ -165,7 +165,6 @@ class NotePad(UserDict):
     def get_all_records(self):
         return [str(record) for record in self.data]
 
-
     def delete(self, title: Title):
         result = self.find_record_by_title(title)
         if result:
