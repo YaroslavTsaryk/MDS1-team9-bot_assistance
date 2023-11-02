@@ -310,7 +310,7 @@ actions = {
 
 
 def main():
-    TEST_MODE = False
+    TEST_MODE = True
     TEST_FILE = 'test_commands.txt'
 
     book = AddressBook()
