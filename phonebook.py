@@ -1,6 +1,8 @@
 from collections import UserDict
 import re
 
+
+
 class Field:
     def __init__(self, value):
         self.value = value
@@ -27,7 +29,43 @@ class Birthday(Field):
         ):
             self.__value = v
         else:
-            raise ValueError
+            raise ValueError("Date must be the following format: DD.MM.YYYY.")
+
+class Email(Field):
+    # реалізація класу
+    def __init__(self, Field):
+        self.__value = None
+        self.value = Field
+
+    @property
+    def value(self):
+        return self.__value
+
+    # Verification for valid email
+    @value.setter
+    def value(self, v):
+        if re.search(
+            "^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$", v
+        ):
+            self.__value = v
+        else:
+            raise ValueError("Date must be the following format: DD.MM.YYYY.")
+
+class Address(Field):
+    # реалізація класу
+    def __init__(self, Field):
+        self.__value = None
+        self.value = Field
+
+    @property
+    def value(self):
+        return self.__value
+
+    
+    @value.setter
+    def value(self, v):
+            self.__value = v
+    
 
 class Email(Field):
     # реалізація класу
@@ -88,7 +126,7 @@ class Phone(Field):
         if re.search("^\d{10}$", v):
             self.__value = v
         else:
-            raise ValueError
+            raise ValueError("Phone must be 10 digits long.")
 
 
 class Record:
