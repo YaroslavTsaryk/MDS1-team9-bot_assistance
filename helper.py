@@ -52,11 +52,11 @@ COMMANDS_DESCRIPTION = {
     # command
     "hello": "hello - Get a greeting",
     # command
-    "close": "close - exit the program",
+    "close": "close - Exit the program",
     # command
-    "exit": "exit - exit the program",
+    "exit": "exit - Exit the program",
     # command
-    "note-add '<note title>' '<note text>' - add a note with the name",
+    "note-add": "'<note title>' '<note text>' - Add a note with the name",
 }
 
 
