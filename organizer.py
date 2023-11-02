@@ -359,10 +359,11 @@ note_actions = {
 
 
 def main():
-    TEST_MODE = True
+    TEST_MODE = False
     TEST_FILE = 'test_commands.txt'
 
     book = AddressBook()
+    notepad = NotePad()
 
     print("{:<7} {}".format("[*]", "Welcome to the assistant bot!"))
 
@@ -386,6 +387,8 @@ def main():
 
             if command in actions.keys():
                 print(actions[command](args, book))
+            elif command in note_actions.keys():
+                print(note_actions[command](args, notepad))
             else:
                 suggested_commands = get_suggestions(command)
                 if len(suggested_commands):
