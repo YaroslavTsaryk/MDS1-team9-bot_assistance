@@ -294,6 +294,45 @@ def note_add(args, notepad):
     else:
         return f"A note with the title {title} exists"
 
+# load notes from json file, name as param
+@validate_args([0, 1], "note-load")
+def load_notes_data(args, notepad):
+    filename = args[0] if len(args) != 0 else "notes.bin"
+
+    with open(filename, "r") as fh:
+        book_state = json.load(fh)
+        for ln in book_state:
+            new_record = NoteRecord(ln["title"])
+            if "tags" in ln.keys():
+                for tag in ln["tags"]:
+                    new_record.add_tag(tag)
+            if "text" in ln.keys():
+                new_record.add_text(ln["text"])
+            notepad.add_record(new_record)
+    return "Notes loaded"
+
+# Write to json file, name as param
+@validate_args([0, 1], "book-write")
+def write_notes_data(args, notepad):
+    filename = args[0] if len(args) != 0 else "notes.bin"
+
+    notes = []
+    for record in notepad.data.values():
+        note = {}
+        note["title"] = record.title.value
+        tags = []
+        if "tags" in record.__dict__:
+            for tag in record.tags:
+                tags.append(tag.value)
+            note["tags"] = tags
+        if "text" in record.__dict__:
+            note["text"] = record.text.value
+        notes.append(note)
+
+    with open(filename, "w") as fh:
+        json.dump(notes, fh)
+    return "Notes written"
+
 # Greeting display function
 def hello(*_):
     return "{:<7} {}".format("[*]", 'How can I help you?')
