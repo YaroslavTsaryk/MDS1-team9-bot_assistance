@@ -85,6 +85,11 @@ class Text(Field):
         Text.is_valid_text(text)
         super().__init__(text)
 
+    def __eq__(self, other):
+        if isinstance(other, Text):
+            return self.value == other.value
+        return False
+
     @staticmethod
     def is_valid_text(text: str):
         text_min_length = 0
@@ -109,7 +114,7 @@ class Record:
         self.datestamp = datetime.now().date()
 
     def __str__(self):
-        return f"Id: {self.record_auto_id}, Title: {self.title}, Tags: {', '.join(p.value for p in self.tags)}, Text: {self.text}, Datestamp: {self.datestamp}, Timestamp: {self.timestamp}"
+        return f"Id: {self.record_auto_id}, Title: '{self.title}', Tags: '{', '.join(p.value for p in self.tags)}', Text: '{self.text}', Datestamp: {self.datestamp}, Timestamp: {self.timestamp}"
 
     def add_tag(self, tag: Tag):
         self.tags.append(tag)
@@ -140,8 +145,7 @@ class NotePad(UserDict):
         self.data.append(record)
 
     def find_record_by_title(self, title: Title):
-        result = list(filter(lambda record: str(record.title).lower()
-                             == str(title).lower(), self.data))
+        result = list(filter(lambda record: title == record.title, self.data))
         return result[0] if result else None
 
     def find_record_by_tag(self, tag: Tag):
@@ -149,8 +153,15 @@ class NotePad(UserDict):
         return result[0] if result else None
 
     def find_record_by_id(self, record_auto_id: int):
-        result = list(filter(lambda record: record.record_auto_id == record_auto_id, self.data))
+        result = list(
+            filter(
+                lambda record: record.record_auto_id == record_auto_id,
+                self.data))
         return result[0] if result else None
+
+    def get_all_records(self):
+        return [str(record) for record in self.data]
+
 
     def delete(self, title: Title):
         result = self.find_record_by_title(title)
@@ -229,3 +240,7 @@ print(record2)
 print(type(Tag('tag1')))
 
 print(Tag('tag-1') in [Tag('tag-1'), Tag('tag-2'), Tag('tag-3')])
+
+print("Get all notes")
+all_notes = notepad.get_all_records()
+print(all_notes)
