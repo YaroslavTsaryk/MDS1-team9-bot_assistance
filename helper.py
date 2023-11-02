@@ -2,29 +2,27 @@ import difflib
 
 
 COMMANDS_DESCRIPTION = {
-    "all": "all - Shows all available contacts.",
-    "load": "load <filename> - loads data from json file. " +
-    "Default filename - data.bin",
-    "write": "write <filename> - writes book data into file. " +
-    "Default filename - data.bin",
-    "add": "add <contact_name> <phone_number> - " +
-    "Adds contact with a phone number. Phone number must be 10 digits",
-    "change": "change <contact_name> <old_phone_number> <new_phone_number>" +
-    " - Change existing phone number for existing contact",
-    "add-birthday": "add-birthday <contact_name> <date> - " +
-    "Add birthday data for existing contact or new contact " +
-    "with birthday only. Date format DD.MM.YYYY",
-    "phone": "phone <contact_name> - Displays phones for contact",
-    "remove-phone": "remove-phone <contact_name> <phone_number> - " +
-    "Removes the phone number.",
-    "show-birthday": "show-birthday <contact_name> - " +
-    "Display birthday data for contact.",
-    "birthdays": "birthdays <date> - Shows birtdays for next 7 days from" +
-    " selected date. Date format DD.MM.YYYY",
-    "delete": "delete <contact_name> - Deletes contact data from book.",
-    "hello": "hello - Get a greeting",
-    "close": "close - exit the program",
-    "exit": "exit - exit the program",
+    "load-book":"load-book - load data from json file. Default filename - data.bin",
+    "load-book":"load-book <filename> - load data from specified json file",
+    "write-book":"write-book - write book data into file. Default filename - data.bin",
+    "write-book":"write-book <filename> - write data to cpecified json file",
+    "add-contact-name":"add-contact-name <long name>- add new contact long name",
+    "change-contact-name":"change-contact-name <id> <long name>- change contact long name by id",
+    "add-contact":"add-contact <contact_name> <phone_number> - Add contact with a phone number. Phone number must be 10 digits",
+    "change-contact":"change-contact <contact_name> <old_phone_number> <new_phone_number> - Change existing phone number for existing contact",
+    "add-birthday":"add-birthday <contact_name> <date> - Add birthday data for existing contact or new contact with birthday only. Date format DD.MM.YYYY",
+    "add-email":"add-email <id> <email> - add email to contact by id",
+    "change-email":"change-email <id> <email> - change email for contact by id",
+    "add-address":"add-address <id> <address all string> - add address to contact by id",
+    "change-address":"change-address <id> <address all string> - change address for contact by id",
+    "phone":"phone <contact_name> - Display phones for contact",
+    "show-birthday":"show-birthday <contact_name> - Display birthday data for contact",
+    "birthdays":"birthdays <days from today> - Show birtdays for the next specified number of days, 7 days if no argument given",    
+    "delete-contact":"delete-contact <contact_name> - Delete contact data from book",
+    "hello":"hello - get a greeting",
+    "close":"close or exit - exit the program",
+    "exit":"close or exit - exit the program"
+
 }
 
 

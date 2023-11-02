@@ -1,3 +1,5 @@
+import os
+import sys
 import json
 from datetime import datetime, timedelta
 from phonebook import AddressBook, Record
@@ -30,7 +32,6 @@ change-address <id> <address all string> - change address for contact by id
 phone <contact_name> - Display phones for contact
 show-birthday <contact_name> - Display birthday data for contact
 birthdays <days from today> - Show birtdays for the next specified number of days, 7 days if no argument given
-birthdays <date> - Show birtdays for next 7 days from selected date. Date format DD.MM.YYYY
 delete-contact <contact_name> - Delete contact data from book
 hello - get a greeting
 close or exit - exit the program
@@ -192,8 +193,8 @@ def birthday_sort_key(d):
 
 
 # Get birthday for the specified number of days from date value
-@validate_args(1, "birthdays")
-def get_birthdays_per_week(args, book):
+@validate_args([0, 1], "birthdays")
+def get_birthdays(args, book):
     days_from_today = int(args[0]) if len(args) != 0 else 7
     
     today = datetime.today().date()
@@ -268,6 +269,10 @@ def load_book_data(args, book):
                     new_record.add_phone(ph)
             if "birthday" in ln.keys():
                 new_record.add_birthday(ln["birthday"])
+            if "address" in ln.keys():
+                new_record.add_address(ln["address"])
+            if "email" in ln.keys():
+                new_record.add_email(ln["email"])
             book.add_record(new_record)
     return "Book loaded"
 
@@ -287,6 +292,10 @@ def write_book_data(args, book):
         contact["phone"] = phones
         if "birthday" in record.__dict__:
             contact["birthday"] = record.birthday.value
+        if "address" in record.__dict__:
+            contact["address"] = record.address.value
+        if "email" in record.__dict__:
+            contact["email"] = record.email.value
         contacts.append(contact)
 
     with open(filename, "w") as fh:
@@ -307,6 +316,16 @@ def note_add(args, notepad):
     else:
         return f"A note with the title {title} exists"
 
+# Greeting display function
+def hello(*_):
+    return "{:<7} {}".format("[*]", 'How can I help you?')
+
+
+# Function of generating the KeyboardInterrupt interrupt for exit
+def exit(*_):
+    raise KeyboardInterrupt
+
+
 # Available operations on contacts
 actions = {
     "add-contact-name": add_contact_name,
@@ -321,59 +340,70 @@ actions = {
     "write-book": write_book_data,
     "add-birthday": add_birthday,
     "show-birthday": show_birthday,
-    "birthdays": get_birthdays_per_week,
+    "birthdays": get_birthdays,
     "help": show_help,
     "add-email": add_email,
     "change-email": add_email,
     "add-address": add_address,
     "change-address": add_address,
+    "hello": hello,
+    "exit": exit,
+    "close": exit
 }
 
 note_actions = {
     "note-add": note_add
 }
 
-book = AddressBook()
-#notepad = NotePad()
-
-TEST_MODE = True
-TEST_FILE = 'test_commands.txt'
 
 def main():
-    print("Welcome to the assistant bot!")
+    TEST_MODE = True
+    TEST_FILE = 'test_commands.txt'
+
+    book = AddressBook()
+
+    print("{:<7} {}".format("[*]", "Welcome to the assistant bot!"))
+
     test_commands = None
     test_line = 0
     if TEST_MODE:
         with open(TEST_FILE, "r") as fh:
             test_commands = fh.read().splitlines()
+
     while True:
-        if TEST_MODE:
-            user_input = test_commands[test_line]
-            test_line += 1
-        else:
-            user_input = input("Enter a command: ")
-        if user_input:
-            command, *args = parse_input(user_input)
-        else:
+        try:
+            if TEST_MODE:
+                user_input = test_commands[test_line]
+                test_line += 1
+            else:
+                user_input = input("{:<7} {}".format("[*]", "Enter a command: "))
+            if user_input:
+                command, *args = parse_input(user_input)
+            else:
+                continue
+
+            if command in actions.keys():
+                print(actions[command](args, book))
+            else:
+                suggested_commands = get_suggestions(command)
+                if len(suggested_commands):
+                    print(
+                        "Invalid command. Maybe you mean one of these:\n" +
+                        suggested_commands
+                    )
+                else:
+                    print("{:<7} {}".format("[error]", "Invalid command."))
+        except (ValueError, EOFError):
             continue
 
-        if command in ["close", "exit"]:
-            print("Good bye!")
-            break
-        elif command == "hello":
-            print("How can I help you?")
-        elif command in actions.keys():
-            print(actions[command](args, book))
-        else:
-            suggested_commands = get_suggestions(command)
-            if len(suggested_commands):
-                print(
-                    "Invalid command. Maybe you mean one of these:\n" +
-                    suggested_commands
-                )
-            else:
-                print("Invalid command.")
 
-
+# Main function
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("{:<8} {}".format("\n[*]", "Good bye!"))
+        try:
+            sys.exit(130)
+        except SystemExit:
+            os._exit(130)
