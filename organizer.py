@@ -307,7 +307,7 @@ def show_help(args, book):
 
 # Greeting display function
 def hello(*_):
-    return "{:<7} {}".format('[*]', 'How can I help you?')
+    return "{:<7} {}".format("[*]", 'How can I help you?')
 
 
 # Function of generating the KeyboardInterrupt interrupt for exit
@@ -346,7 +346,7 @@ def main():
 
     book = AddressBook()
 
-    print("{:<7} {}".format('[*]', 'Welcome to the assistant bot!'))
+    print("{:<7} {}".format("[*]", "Welcome to the assistant bot!"))
 
     test_commands = None
     test_line = 0
@@ -360,7 +360,7 @@ def main():
                 user_input = test_commands[test_line]
                 test_line += 1
             else:
-                user_input = input("{:<7} {}".format('[*]', 'Enter a command: '))
+                user_input = input("{:<7} {}".format("[*]", "Enter a command: "))
             if user_input:
                 command, *args = parse_input(user_input)
             else:
@@ -376,7 +376,7 @@ def main():
                         suggested_commands
                     )
                 else:
-                    print("{:<7} {}".format('[error]', 'Invalid command.'))
+                    print("{:<7} {}".format("[error]", "Invalid command."))
         except (ValueError, EOFError):
             continue
 
@@ -386,7 +386,7 @@ if __name__ == '__main__':
     try:
         main()
     except KeyboardInterrupt:
-        print("{:<8} {}".format('\n[*]', 'Good bye!'))
+        print("{:<8} {}".format("\n[*]", "Good bye!"))
         try:
             sys.exit(130)
         except SystemExit:
