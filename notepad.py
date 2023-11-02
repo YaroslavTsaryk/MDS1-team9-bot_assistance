@@ -86,7 +86,7 @@ class Text(Field):
         super().__init__(text)
 
     def __eq__(self, other):
-        if isinstance(other, Tag):
+        if isinstance(other, Text):
             return self.value == other.value
         return False
 
