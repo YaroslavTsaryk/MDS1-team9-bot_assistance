@@ -3,10 +3,11 @@ import difflib
 
 COMMANDS_DESCRIPTION = {
     # command
-    "contact-add": "add <contact_name> <phone_number> - " +
+    "contact-add": "contact-add <contact_name> <phone_number> - " +
     "Adds contact with a phone number. Phone number must be 10 digits",
     # command
-    "contact-delete": "delete <contact_name> - Deletes contact data from book",
+    "contact-delete": "contact-delete <id> - " +
+    "Deletes contact data from book",
     # command
     "contact-add-name": "contact-add-name <firstname> ... <lastname> - " +
     "Adds name to existing contact",
@@ -20,10 +21,10 @@ COMMANDS_DESCRIPTION = {
     "contact-change-name": "contact-change-name <id> <firstname> " +
     "... <lastanme> - Changes name of existing contact by ID",
     # command
-    "contact-change": "change <contact_name> <old_phone_number> " +
+    "contact-change": "contact-change <contact_name> <old_phone_number> " +
     "<new_phone_number> - Change existing phone number for existing contact",
     # command
-    "contact-add-birthday": "add-birthday <contact_name> <date> - " +
+    "contact-add-birthday": "contact-add-birthday <contact_name> <date> - " +
     "Add birthday data for existing contact or new contact " +
     "with birthday only. Date format DD.MM.YYYY",
     # command
@@ -33,7 +34,7 @@ COMMANDS_DESCRIPTION = {
     "contact-remove-phone": "contact-remove-phone <contact_name>" +
     " <phone_number> - Removes the phone number.",
     # command
-    "contact-show-birthday": "show-birthday <contact_name> - " +
+    "contact-show-birthday": "contact-show-birthday <contact_name> - " +
     "Display birthday data for contact.",
     # command
     "birthdays": "birthdays <date> - Shows birtdays for next 7 days from" +
@@ -41,10 +42,10 @@ COMMANDS_DESCRIPTION = {
     # command
     "all": "all - Shows all available contacts.",
     # command
-    "book-load": "load <filename> - loads data from json file. " +
+    "book-load": "book-load <filename> - loads data from json file. " +
     "Default filename - data.bin",
     # command
-    "book-write": "write <filename> - writes book data into file. " +
+    "book-write": "book-write <filename> - writes book data into file. " +
     "Default filename - data.bin",
     # command
     "hello": "hello - Get a greeting",

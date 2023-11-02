@@ -204,7 +204,7 @@ class AddressBook(UserDict):
     def delete(self, id):
         res = None
         for n in self.data.keys():
-            if n == id:
+            if n == int(id):
                 res = n
         if res:
             del self.data[res]
