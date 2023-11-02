@@ -280,7 +280,6 @@ def show_help(args, book):
 
 @validate_complex_args(2, "note-add")
 def note_add(args, notepad):
-    print(f"DEBUG: note_add: {args}")
     if len(args) == 2:
         title = args[0]
         text = args[1]
