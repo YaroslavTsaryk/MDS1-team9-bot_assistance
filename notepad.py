@@ -56,6 +56,11 @@ class Tag(Field):
         Tag.is_valid_tag(tag)
         super().__init__(tag)
 
+    def __eq__(self, other):
+        if isinstance(other, Tag):
+            return self.value == other.value
+        return False
+
     def update_value(self, new_value: str):
         self.is_valid_tag(new_value)
         self.value = new_value
@@ -139,6 +144,14 @@ class NotePad(UserDict):
                              == str(title).lower(), self.data))
         return result[0] if result else None
 
+    def find_record_by_tag(self, tag: Tag):
+        result = list(filter(lambda record: tag in record.tags, self.data))
+        return result[0] if result else None
+
+    def find_record_by_id(self, record_auto_id: int):
+        result = list(filter(lambda record: record.record_auto_id == record_auto_id, self.data))
+        return result[0] if result else None
+
     def delete(self, title: Title):
         result = self.find_record_by_title(title)
         if result:
@@ -187,16 +200,32 @@ record1.remove_text()
 print(record1)
 print(record2)
 
-print("Remove all tags from the record 1")
-record1.remove_all_tags()
-print(record1)
-print(record2)
-
 print("Add record 1 to notepad")
 notepad.add_record(record1)
+print(notepad)
+
+print("Add record 2 to notepad")
+notepad.add_record(record2)
 print(notepad)
 
 print("Find a record by title")
 title1 = notepad.find_record_by_title('MyTitle-1')
 print(title1)
 print(type(title1))
+
+print("Find a record by unique id")
+title2 = notepad.find_record_by_id(2)
+print(title2)
+
+print("Find a record by tag")
+title3 = notepad.find_record_by_tag(Tag('tag-1'))
+print(title3)
+
+print("Remove all tags from the record 1")
+record1.remove_all_tags()
+print(record1)
+print(record2)
+
+print(type(Tag('tag1')))
+
+print(Tag('tag-1') in [Tag('tag-1'), Tag('tag-2'), Tag('tag-3')])
