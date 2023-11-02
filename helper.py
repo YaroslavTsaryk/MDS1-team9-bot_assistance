@@ -57,7 +57,9 @@ COMMANDS_DESCRIPTION = {
     # command
     "exit": "exit - Exit the program",
     # command
-    "note-add": "'<note title>' '<note text>' - Add a note with the name",
+    "note-add": "note-add '<note title>' '<note text>' - Add a note with the name",
+    # command
+    "note-delete": "note-delete '<note title>' - Delete the note with the title",
 }
 
 
