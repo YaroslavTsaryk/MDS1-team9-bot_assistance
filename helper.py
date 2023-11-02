@@ -52,9 +52,11 @@ COMMANDS_DESCRIPTION = {
     # command
     "hello": "hello - Get a greeting",
     # command
-    "close": "close - exit the program",
+    "close": "close - Exit the program",
     # command
-    "exit": "exit - exit the program",
+    "exit": "exit - Exit the program",
+    # command
+    "note-add": "'<note title>' '<note text>' - Add a note with the name",
 }
 
 
@@ -77,6 +79,24 @@ def validate_args(expected_arg_len, command):
         return wrapper
     return decorator
 
+#
+def validate_complex_args(expected_arg_len, command):
+    def decorator(func):
+        def wrapper(*args):
+            args_optional = isinstance(expected_arg_len, list)
+            if ((args_optional and (len(args[0]) not in expected_arg_len)) or
+                    (not args_optional and len(args[0]) != expected_arg_len)):
+                return (
+                    "{:<7} {:<34} {}".format(
+                        '[error]',
+                        "Invalid command format. Please use:",
+                        COMMANDS_DESCRIPTION[command]))
+            try:
+                return func(*args)
+            except BaseException as e:
+                return str(e)
+        return wrapper
+    return decorator
 
 # Find suggested commands
 def get_suggestions(command):
