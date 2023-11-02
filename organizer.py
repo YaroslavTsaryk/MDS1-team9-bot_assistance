@@ -1,8 +1,11 @@
+#!/usr/bin/env python3
+
 import os
 import sys
 import json
 from datetime import datetime, timedelta
 from phonebook import AddressBook, Record
+from notepad import NotePad, Record, Title, Text, Tag
 from helper import (
     COMMANDS_DESCRIPTION,
     get_suggestions,
@@ -273,6 +276,16 @@ def show_help(args, book):
     return "\n".join(COMMANDS_DESCRIPTION.values())
 
 
+@validate_args(2, "note-add")
+def note_add(args, notepad):
+    title = args[0]
+    text = args[1]
+    if notepad.find_record_by_title(Title(title)) is None:
+        notepad.add_record(Record(text))
+        return f"Note added."
+    else:
+        return f"A note with the title {title} exists"
+
 # Greeting display function
 def hello(*_):
     return "{:<7} {}".format("[*]", 'How can I help you?')
@@ -308,12 +321,17 @@ actions = {
     "close": exit
 }
 
+note_actions = {
+    "note-add": note_add
+}
+
 
 def main():
-    TEST_MODE = True
+    TEST_MODE = False
     TEST_FILE = 'test_commands.txt'
 
     book = AddressBook()
+    notepad = NotePad()
 
     print("{:<7} {}".format("[*]", "Welcome to the assistant bot!"))
 
@@ -337,6 +355,8 @@ def main():
 
             if command in actions.keys():
                 print(actions[command](args, book))
+            elif command in note_actions.keys():
+                print(note_actions[command](args, notepad))
             else:
                 suggested_commands = get_suggestions(command)
                 if len(suggested_commands):

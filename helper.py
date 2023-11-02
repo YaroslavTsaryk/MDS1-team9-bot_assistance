@@ -48,6 +48,8 @@ COMMANDS_DESCRIPTION = {
     "book-write": "book-write <filename> - writes book data into file. " +
     "Default filename - data.bin",
     # command
+    "note-add": "note-add <title> <text> - Add a new note",
+    # command
     "hello": "hello - Get a greeting",
     # command
     "close": "close - exit the program",
