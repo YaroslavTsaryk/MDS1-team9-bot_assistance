@@ -1,43 +1,15 @@
-from collections import UserDict
-import operator
-from datetime import datetime, timedelta, date
-import re
+from datetime import datetime, timedelta
 import json
 from phonebook import AddressBook, Record
+from helper import (
+    COMMANDS_DESCRIPTION,
+    get_suggestions,
+    validate_args
+)
+
 
 # Dictionary with working days for sort operation
 days = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday"}
-
-HELP = (
-    """load - load data from json file. Default filename - data.bin
-load <filename> - load data from specified json file
-write - write book data into file. Default filename - data.bin
-write <filename> - write data to cpecified json file
-add <contact_name> <phone_number> - Add contact with a phone number. Phone number must be 10 digits
-change <contact_name> <old_phone_number> <new_phone_number> - Change existing phone number for existing contact
-add-birthday <contact_name> <date> - Add birthday data for existing contact or new contact with birthday only. Date format DD.MM.YYYY
-phone <contact_name> - Display phones for contact
-show-birthday <contact_name> - Display birthday data for contact
-birthdays - Show birtdays for next 7 days
-birthdays <date> - Show birtdays for next 7 days from selected date. Date format DD.MM.YYYY
-delete <contact_name> - Delete contact data from book
-hello - get a greeting
-close or exit - exit the program
-""")
-
-# Decorate some access errors
-def input_error(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except KeyError:
-            return "Enter user name"
-        except ValueError:
-            return "Give me name, phone or date please."
-        except IndexError:
-            return "Contact not found"
-
-    return inner
 
 
 # Parse input on spaces
@@ -47,10 +19,8 @@ def parse_input(user_input):
     return cmd, *args
 
 
-
-
 # Add contact with phone or add new phone to existing one
-@input_error
+@validate_args(2, "add")
 def add_contact(args, book):
     name, phone = args
     new_record = book.find(name)
@@ -67,7 +37,7 @@ def add_contact(args, book):
 
 
 # Add birthday to contact or contact with birthday
-@input_error
+@validate_args(2, "add-birthday")
 def add_birthday(args, book):
     name, birthday = args
     new_record = book.find(name)
@@ -82,7 +52,7 @@ def add_birthday(args, book):
 
 
 # Change phone number
-@input_error
+@validate_args(3, "change")
 def change_contact(args, book):
     name, phone1, phone2 = args
     record = book.find(name)
@@ -92,11 +62,11 @@ def change_contact(args, book):
         else:
             return "Contact not updated"
     else:
-        raise IndexError
+        raise IndexError("Contact not found.")
 
 
 # Remove phone from contact
-@input_error
+@validate_args(2, "remove-phone")
 def remove_phone(args, book):
     name, phone = args
     record = book.find(name)
@@ -108,7 +78,7 @@ def remove_phone(args, book):
 
 
 # Show phones for contact
-@input_error
+@validate_args(1, "phone")
 def show_phone(args, book):
     name = args[0]
     record = book.find(name)
@@ -117,11 +87,11 @@ def show_phone(args, book):
         res = f"{name}: " + ",".join([ph.value for ph in record.phones])
         return res
     else:
-        raise IndexError
+        raise IndexError("Contact not found.")
 
 
 # Delete contact from book
-@input_error
+@validate_args(1, "delete")
 def delete_contact(args, book):
     name = args[0]
     res = book.delete(name)
@@ -129,7 +99,7 @@ def delete_contact(args, book):
 
 
 # Show contact birthday
-@input_error
+@validate_args(1, "show-birthday")
 def show_birthday(args, book):
     name = args[0]
     record = book.find(name)
@@ -138,11 +108,11 @@ def show_birthday(args, book):
         res = f"{name} birthday: {record.birthday.value if 'birthday' in record.__dict__ else 'NA'}"
         return res
     else:
-        raise IndexError
+        raise IndexError("Contact not found.")
 
 
 # Get birthday for next 7 days from date value
-@input_error
+@validate_args(1, "birthdays")
 def get_birthdays_per_week(args, book):
     date_str = args[0] if len(args) != 0 else str(datetime.today().strftime("%d.%m.%Y"))
     today = datetime.strptime(date_str, "%d.%m.%Y").date()
@@ -202,7 +172,7 @@ def show_all(args, book):
 
 
 # load from json file, name as param
-@input_error
+@validate_args([0, 1], "load")
 def load_data(args, book):
     filename = args[0] if len(args) != 0 else "data.bin"
 
@@ -220,7 +190,7 @@ def load_data(args, book):
 
 
 # Write to json file, name as param
-@input_error
+@validate_args([0, 1], "write")
 def write_data(args, book):
     filename = args[0] if len(args) != 0 else "data.bin"
 
@@ -240,9 +210,10 @@ def write_data(args, book):
         json.dump(contacts, fh)
     return "Book written"
 
-@input_error
+
 def show_help(args, book):
-    return HELP
+    return "\n".join(COMMANDS_DESCRIPTION.values())
+
 
 # Available operations on contacts
 actions = {
@@ -280,7 +251,14 @@ def main():
         elif command in actions.keys():
             print(actions[command](args, book))
         else:
-            print("Invalid command.")
+            suggested_commands = get_suggestions(command)
+            if len(suggested_commands):
+                print(
+                    "Invalid command. Maybe you mean one of these:\n" +
+                    suggested_commands
+                )
+            else:
+                print("Invalid command.")
 
 
 if __name__ == "__main__":
