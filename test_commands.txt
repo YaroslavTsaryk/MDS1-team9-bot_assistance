@@ -14,7 +14,6 @@ contact-add-birthday Diana 15.11.1995
 contact-show-birthday Diana
 contact-show-birthday Jane
 all
-birthdays
 birthdays 20
 contact-remove-phone John 1234567890
 all

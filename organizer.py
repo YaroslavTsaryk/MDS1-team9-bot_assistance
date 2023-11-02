@@ -11,7 +11,6 @@ from helper import (
 # Dictionary with working days for sort operation
 days = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday", 5: 'Saturday', 6: 'Sunday'}
 
-
 # Parse input on spaces
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -152,8 +151,8 @@ def birthday_sort_key(d):
 
 
 # Get birthday for the specified number of days from date value
-@validate_args([1,0], "birthdays")
-def get_birthdays_per_week(args, book):
+@validate_args([0, 1], "birthdays")
+def get_birthdays(args, book):
     days_from_today = int(args[0]) if len(args) != 0 else 7
     
     today = datetime.today().date()
@@ -228,6 +227,10 @@ def load_book_data(args, book):
                     new_record.add_phone(ph)
             if "birthday" in ln.keys():
                 new_record.add_birthday(ln["birthday"])
+            if "address" in ln.keys():
+                new_record.add_address(ln["address"])
+            if "email" in ln.keys():
+                new_record.add_email(ln["email"])
             book.add_record(new_record)
     return "Book loaded"
 
@@ -247,6 +250,10 @@ def write_book_data(args, book):
         contact["phone"] = phones
         if "birthday" in record.__dict__:
             contact["birthday"] = record.birthday.value
+        if "address" in record.__dict__:
+            contact["address"] = record.address.value
+        if "email" in record.__dict__:
+            contact["email"] = record.email.value
         contacts.append(contact)
 
     with open(filename, "w") as fh:
@@ -274,7 +281,7 @@ actions = {
     "contact-add-birthday": add_birthday,
     "contact-show-birthday": show_birthday,
     "all": show_all,
-    "birthdays": get_birthdays_per_week,
+    "birthdays": get_birthdays,
     "book-load": load_book_data,
     "book-write": write_book_data,
     "help": show_help,
