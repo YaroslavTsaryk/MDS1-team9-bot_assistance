@@ -361,10 +361,10 @@ def main():
                 test_line += 1
             else:
                 user_input = input("{:<7} {}".format('[*]', 'Enter a command: '))
-                if user_input:
-                    command, *args = parse_input(user_input)
-                else:
-                    continue
+            if user_input:
+                command, *args = parse_input(user_input)
+            else:
+                continue
 
             if command in actions.keys():
                 print(actions[command](args, book))
@@ -377,7 +377,6 @@ def main():
                     )
                 else:
                     print("{:<7} {}".format('[error]', 'Invalid command.'))
-
         except (ValueError, EOFError):
             continue
 
