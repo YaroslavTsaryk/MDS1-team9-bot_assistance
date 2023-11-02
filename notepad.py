@@ -136,6 +136,9 @@ class Record:
     def edit_text(self, new_text: Text):
         self.text = new_text
 
+    def rename_title(self, new_title: Title):
+        self.title = new_title
+
 
 class NotePad(UserDict):
     def __init__(self):
@@ -242,5 +245,12 @@ print(type(Tag('tag1')))
 print(Tag('tag-1') in [Tag('tag-1'), Tag('tag-2'), Tag('tag-3')])
 
 print("Get all notes")
+all_notes = notepad.get_all_records()
+print(all_notes)
+
+print("Rename title")
+print(record2)
+record2.rename_title('My renamed title')
+print(record2)
 all_notes = notepad.get_all_records()
 print(all_notes)
