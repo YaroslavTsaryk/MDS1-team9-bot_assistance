@@ -2,27 +2,59 @@ import difflib
 
 
 COMMANDS_DESCRIPTION = {
-    "load-book":"load-book - load data from json file. Default filename - data.bin",
-    "load-book":"load-book <filename> - load data from specified json file",
-    "write-book":"write-book - write book data into file. Default filename - data.bin",
-    "write-book":"write-book <filename> - write data to cpecified json file",
-    "add-contact-name":"add-contact-name <long name>- add new contact long name",
-    "change-contact-name":"change-contact-name <id> <long name>- change contact long name by id",
-    "add-contact":"add-contact <contact_name> <phone_number> - Add contact with a phone number. Phone number must be 10 digits",
-    "change-contact":"change-contact <contact_name> <old_phone_number> <new_phone_number> - Change existing phone number for existing contact",
-    "add-birthday":"add-birthday <contact_name> <date> - Add birthday data for existing contact or new contact with birthday only. Date format DD.MM.YYYY",
-    "add-email":"add-email <id> <email> - add email to contact by id",
-    "change-email":"change-email <id> <email> - change email for contact by id",
-    "add-address":"add-address <id> <address all string> - add address to contact by id",
-    "change-address":"change-address <id> <address all string> - change address for contact by id",
-    "phone":"phone <contact_name> - Display phones for contact",
-    "show-birthday":"show-birthday <contact_name> - Display birthday data for contact",
-    "birthdays":"birthdays <days from today> - Show birtdays for the next specified number of days, 7 days if no argument given",    
-    "delete-contact":"delete-contact <contact_name> - Delete contact data from book",
-    "hello":"hello - get a greeting",
-    "close":"close or exit - exit the program",
-    "exit":"close or exit - exit the program"
-
+    # command
+    "contact-add": "contact-add <contact_name> <phone_number> - " +
+    "Adds contact with a phone number. Phone number must be 10 digits",
+    # command
+    "contact-delete": "contact-delete <id> - " +
+    "Deletes contact data from book",
+    # command
+    "contact-add-name": "contact-add-name <firstname> ... <lastname> - " +
+    "Adds name to existing contact",
+    # command
+    "contact-add-email": "contact-add-email <id> <email> - " +
+    "Adds contact email",
+    # command
+    "contact-add-address": "contact-add-address <id> <address_parapm_1> ..." +
+    "<address_param_8> - Add address with up to 8 parts",
+    # command
+    "contact-change-name": "contact-change-name <id> <firstname> " +
+    "... <lastanme> - Changes name of existing contact by ID",
+    # command
+    "contact-change": "contact-change <contact_name> <old_phone_number> " +
+    "<new_phone_number> - Change existing phone number for existing contact",
+    # command
+    "contact-add-birthday": "contact-add-birthday <contact_name> <date> - " +
+    "Add birthday data for existing contact or new contact " +
+    "with birthday only. Date format DD.MM.YYYY",
+    # command
+    "contact-phone": "contact-phone <contact_name> - " +
+    "Displays phones for contact",
+    # command
+    "contact-remove-phone": "contact-remove-phone <contact_name>" +
+    " <phone_number> - Removes the phone number.",
+    # command
+    "contact-show-birthday": "contact-show-birthday <contact_name> - " +
+    "Display birthday data for contact.",
+    # command
+    "birthdays": "birthdays <date> - Shows birtdays for next 7 days from" +
+    " selected date. Date format DD.MM.YYYY",
+    # command
+    "all": "all - Shows all available contacts.",
+    # command
+    "book-load": "book-load <filename> - loads data from json file. " +
+    "Default filename - data.bin",
+    # command
+    "book-write": "book-write <filename> - writes book data into file. " +
+    "Default filename - data.bin",
+    # command
+    "note-add": "note-add <title> <text> - Add a new note",
+    # command
+    "hello": "hello - Get a greeting",
+    # command
+    "close": "close - exit the program",
+    # command
+    "exit": "exit - exit the program",
 }
 
 

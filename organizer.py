@@ -17,44 +17,6 @@ from helper import (
 days = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday", 5: 'Saturday', 6: 'Sunday'}
 
 
-HELP = (
-    """load-book - load data from json file. Default filename - data.bin
-load-book <filename> - load data from specified json file
-write-book - write book data into file. Default filename - data.bin
-write-book <filename> - write data to cpecified json file
-add-contact-name <long name>- add new contact long name
-change-contact-name <id> <long name>- change contact long name by id
-add-contact <contact_name> <phone_number> - Add contact with a phone number. Phone number must be 10 digits
-change-contact <contact_name> <old_phone_number> <new_phone_number> - Change existing phone number for existing contact
-add-birthday <contact_name> <date> - Add birthday data for existing contact or new contact with birthday only. Date format DD.MM.YYYY
-add-email <id> <email> - add email to contact by id
-change-email <id> <email> - change email for contact by id
-add-address <id> <address all string> - add address to contact by id
-change-address <id> <address all string> - change address for contact by id
-phone <contact_name> - Display phones for contact
-show-birthday <contact_name> - Display birthday data for contact
-birthdays <days from today> - Show birtdays for the next specified number of days, 7 days if no argument given
-delete-contact <contact_name> - Delete contact data from book
-hello - get a greeting
-close or exit - exit the program
-""")
-
-# Decorate some access errors
-def input_error(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except KeyError:
-            return "Enter user name"
-        except ValueError:
-            return "Give me name, phone or date please."
-        except IndexError:
-            return "Contact not found"
-
-    return inner
-
-
-
 # Parse input on spaces
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -63,7 +25,7 @@ def parse_input(user_input):
 
 
 # Add contact with phone or add new phone to existing one
-@validate_args(2, "add")
+@validate_args(2, "contact-add")
 def add_contact(args, book):
     name, phone = args
     new_record = book.find(name)
@@ -78,7 +40,8 @@ def add_contact(args, book):
         res += "Phone added."
     return res
 
-@input_error
+
+@validate_args([1, 2, 3, 4], "contact-add-name")
 def add_contact_name(args, book):
     name=" ".join(args)
     new_record = book.find(name)
@@ -89,7 +52,8 @@ def add_contact_name(args, book):
         res = f"Contact '{new_record.name.value}' with id = {new_record.id} added. "    
     return res
 
-@input_error
+
+@validate_args([1, 2, 3, 4], "contact-change-name")
 def change_contact_name(args, book):
     id, *name = args
     new_name=" ".join(name)
@@ -102,7 +66,7 @@ def change_contact_name(args, book):
 
 
 # Add birthday to contact or contact with birthday
-@validate_args(2, "add-birthday")
+@validate_args(2, "contact-add-birthday")
 def add_birthday(args, book):
     name, birthday = args
     new_record = book.find(name)
@@ -115,14 +79,16 @@ def add_birthday(args, book):
     res += "Birthday added. "
     return res
 
-@input_error
+
+@validate_args(2, "contact-add-email")
 def add_email(args, book):
     id, email = args
     record = book[int(id)]
     record.add_email(email)
     return f"Email {record.email} added to record {record.id}"
 
-@input_error
+
+@validate_args([2, 3, 4, 5, 6, 7, 8, 9], "contact-add-address")
 def add_address(args, book):
     print(args)
     id, *address = args
@@ -131,8 +97,9 @@ def add_address(args, book):
     record.add_address(" ".join(address))
     return f"Address {record.address} added to record {id}"
 
+
 # Change phone number
-@validate_args(3, "change")
+@validate_args(3, "contact-change")
 def change_contact(args, book):
     name, phone1, phone2 = args
     record = book.find(name)
@@ -146,7 +113,7 @@ def change_contact(args, book):
 
 
 # Remove phone from contact
-@validate_args(2, "remove-phone")
+@validate_args(2, "contact-remove-phone")
 def remove_phone(args, book):
     name, phone = args
     record = book.find(name)
@@ -158,7 +125,7 @@ def remove_phone(args, book):
 
 
 # Show phones for contact
-@validate_args(1, "phone")
+@validate_args(1, "contact-phone")
 def show_phone(args, book):
     name = args[0]
     record = book.find(name)
@@ -171,7 +138,7 @@ def show_phone(args, book):
 
 
 # Delete contact from book
-@validate_args(1, "delete")
+@validate_args(1, "contact-delete")
 def delete_contact(args, book):
     name = args[0]
     res = book.delete(name)
@@ -179,7 +146,7 @@ def delete_contact(args, book):
 
 
 # Show contact birthday
-@validate_args(1, "show-birthday")
+@validate_args(1, "contact-show-birthday")
 def show_birthday(args, book):
     name = args[0]
     record = book.find(name)
@@ -258,7 +225,7 @@ def show_all(args, book):
 
 
 # load from json file, name as param
-@validate_args([0, 1], "load")
+@validate_args([0, 1], "book-load")
 def load_book_data(args, book):
     filename = args[0] if len(args) != 0 else "data.bin"
 
@@ -280,7 +247,7 @@ def load_book_data(args, book):
 
 
 # Write to json file, name as param
-@validate_args([0, 1], "write")
+@validate_args([0, 1], "book-write")
 def write_book_data(args, book):
     filename = args[0] if len(args) != 0 else "data.bin"
 
@@ -308,7 +275,8 @@ def write_book_data(args, book):
 def show_help(args, book):
     return "\n".join(COMMANDS_DESCRIPTION.values())
 
-@validate_args(2, "note-add '[title]' '[text]'")
+
+@validate_args(2, "note-add")
 def note_add(args, notepad):
     title = args[0]
     text = args[1]
@@ -330,24 +298,24 @@ def exit(*_):
 
 # Available operations on contacts
 actions = {
-    "add-contact-name": add_contact_name,
-    "change-contact-name": change_contact_name,
-    "add-contact": add_contact,
-    "change-contact": change_contact,
-    "remove-phone": remove_phone,
-    "phone": show_phone,
-    "delete-contact": delete_contact,
-    "all": show_all,
-    "load-book": load_book_data,
-    "write-book": write_book_data,
-    "add-birthday": add_birthday,
-    "show-birthday": show_birthday,
+    "contact-add": add_contact,
+    "contact-add-name": add_contact_name,
+    "contact-change-name": change_contact_name,
+    "contact-change": change_contact,
+    "contact-remove-phone": remove_phone,
+    "contact-phone": show_phone,
+    "contact-delete": delete_contact,
+    "contact-add-email": add_email,
+    "contact-change-email": add_email,
+    "contact-add-address": add_address,
+    "contact-change-address": add_address,
+    "contact-add-birthday": add_birthday,
+    "contact-show-birthday": show_birthday,
+    "book-load": load_book_data,
+    "book-write": write_book_data,
     "birthdays": get_birthdays,
     "help": show_help,
-    "add-email": add_email,
-    "change-email": add_email,
-    "add-address": add_address,
-    "change-address": add_address,
+    "all": show_all,
     "hello": hello,
     "exit": exit,
     "close": exit
