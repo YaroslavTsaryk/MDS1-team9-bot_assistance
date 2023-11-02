@@ -317,16 +317,16 @@ def write_notes_data(args, notepad):
     filename = args[0] if len(args) != 0 else "notes.bin"
 
     notes = []
-    for record in notepad.data.values():
+    for record in notepad.data:
         note = {}
-        note["title"] = record.title.value
+        note["title"] = record.title
         tags = []
-        if "tags" in record.__dict__:
+        if len(record.tags):
             for tag in record.tags:
-                tags.append(tag.value)
+                tags.append(tag)
             note["tags"] = tags
         if "text" in record.__dict__:
-            note["text"] = record.text.value
+            note["text"] = record.text
         notes.append(note)
 
     with open(filename, "w") as fh:
@@ -371,12 +371,14 @@ actions = {
 }
 
 note_actions = {
-    "note-add": note_add
+    "note-add": note_add,
+    "notes-write": write_notes_data,
+    "notes-load": load_notes_data
 }
 
 
 def main():
-    TEST_MODE = True
+    TEST_MODE = False
     TEST_FILE = 'test_commands.txt'
 
     book = AddressBook()
