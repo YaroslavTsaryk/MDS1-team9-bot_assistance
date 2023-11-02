@@ -46,6 +46,9 @@ print("Add record 1 to notepad")
 notepad.add_record(record1)
 print(notepad)
 
+print(f"DEBUG: find_record_by_title")
+print(notepad.find_record_by_title('MyTitle-1'))
+
 print("Add record 2 to notepad")
 notepad.add_record(record2)
 print(notepad)

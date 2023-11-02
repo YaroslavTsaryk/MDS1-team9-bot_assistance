@@ -288,11 +288,13 @@ def note_add(args, notepad):
         matches = re.findall(r"'(.*?)'", command)
         title = matches[0]
         text = matches[1]
-    if notepad.find_record_by_title(Title(title)) is None:
-        notepad.add_record(NoteRecord(text))
-        return ("{:<7} {}".format('[ok]', 'Note added.'))
+    if notepad.find_record_by_title(title) is None:
+        note_record = NoteRecord(title)
+        note_record.add_text(text)
+        notepad.add_record(note_record)
+        return ("{:<7} Note added.".format('[ok]'))
     else:
-        return f"A note with the title {title} exists"
+        return ("{:<7} A note with the title [{}] exists".format('[info]',  title))
 
 # Greeting display function
 def hello(*_):
