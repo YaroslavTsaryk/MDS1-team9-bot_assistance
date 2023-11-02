@@ -190,8 +190,8 @@ def birthday_sort_key(d):
 
 
 # Get birthday for the specified number of days from date value
-@validate_args(1, "birthdays")
-def get_birthdays_per_week(args, book):
+@validate_args([0, 1], "birthdays")
+def get_birthdays(args, book):
     days_from_today = int(args[0]) if len(args) != 0 else 7
     
     today = datetime.today().date()
@@ -318,7 +318,7 @@ actions = {
     "write-book": write_book_data,
     "add-birthday": add_birthday,
     "show-birthday": show_birthday,
-    "birthdays": get_birthdays_per_week,
+    "birthdays": get_birthdays,
     "help": show_help,
     "add-email": add_email,
     "change-email": add_email,
@@ -328,7 +328,7 @@ actions = {
 
 book = AddressBook()
 
-TEST_MODE = False
+TEST_MODE = True
 TEST_FILE = 'test_commands.txt'
 
 def main():
