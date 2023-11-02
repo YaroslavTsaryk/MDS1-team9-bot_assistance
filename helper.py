@@ -87,13 +87,13 @@ def validate_complex_args(expected_arg_len, command):
     def decorator(func):
         def wrapper(*args):
             list_of_values = args[0]
-            if len(list_of_values) <= 1:
+            if len(list_of_values) == 0:
                 return (
                     "{:<7} {:<34} {}".format(
                         '[error]',
                         "Invalid command format. Please use:",
                         COMMANDS_DESCRIPTION[command]))
-            elif len(list_of_values) == 2:
+            elif len(list_of_values) == 2 or len(list_of_values) == 1:
                 pass
             else:
                 string_for_regexp = ' '.join(list_of_values)
