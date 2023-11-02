@@ -9,6 +9,7 @@ from phonebook import AddressBook, Record
 from notepad import NotePad, Record as NoteRecord, Title, Text, Tag
 from helper import (
     COMMANDS_DESCRIPTION,
+    validate_complex_args,
     get_suggestions,
     validate_args
 )
@@ -277,17 +278,16 @@ def show_help(args, book):
     return "\n".join(COMMANDS_DESCRIPTION.values())
 
 
-@validate_args(2, "note-add")
+@validate_complex_args(2, "note-add")
 def note_add(args, notepad):
-    print(args)
-
-    #cli = ["'my", "title'", "'my", "text'"]
-    command = ' '.join(args)
-    #command = "note-add 'my title' 'my text'"
-    matches = re.findall(r"'(.*?)'", command)
-
-    title = matches[0]
-    text = matches[1]
+    if len(args) == 2:
+        title = args[0]
+        text = args[1]
+    if len(args) > 2:
+        command = ' '.join(args)
+        matches = re.findall(r"'(.*?)'", command)
+        title = matches[0]
+        text = matches[1]
     if notepad.find_record_by_title(Title(title)) is None:
         notepad.add_record(NoteRecord(text))
         return ("{:<7} {}".format('[ok]', 'Note added.'))
@@ -304,7 +304,7 @@ def exit(*_):
     raise KeyboardInterrupt
 
 def debug_input(args, _):
-    print(args)
+    return args
 
 # Available operations on contacts
 actions = {
@@ -331,8 +331,9 @@ actions = {
     "close": exit
 }
 
-note_actions = {
-    "note-add": note_add
+notepad_actions = {
+    "note-add": note_add,
+    "my-debug": debug_input,
 }
 
 
@@ -360,15 +361,13 @@ def main():
                 user_input = input("{:<7} {}".format("[*]", "Enter a command: "))
             if user_input:
                 command, *args = parse_input(user_input)
-                #print(f"DEBUG: {args}")
             else:
                 continue
 
             if command in actions.keys():
                 print(actions[command](args, book))
-            elif command in note_actions.keys():
-                print(f"DEBUG: ARGS: [{args}] NOTEPAD: [{notepad}]")
-                print(note_actions[command](args, notepad))
+            elif command in notepad_actions.keys():
+                print(notepad_actions[command](args, notepad))
             else:
                 suggested_commands = get_suggestions(command)
                 if len(suggested_commands):

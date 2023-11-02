@@ -1,3 +1,4 @@
+import re
 import difflib
 
 
@@ -79,22 +80,32 @@ def validate_args(expected_arg_len, command):
         return wrapper
     return decorator
 
-#
+# Function decorator for validating complex function arguments
 def validate_complex_args(expected_arg_len, command):
     def decorator(func):
         def wrapper(*args):
-            args_optional = isinstance(expected_arg_len, list)
-            if ((args_optional and (len(args[0]) not in expected_arg_len)) or
-                    (not args_optional and len(args[0]) != expected_arg_len)):
+            list_of_values = args[0]
+            if len(list_of_values) <= 1:
                 return (
                     "{:<7} {:<34} {}".format(
                         '[error]',
                         "Invalid command format. Please use:",
                         COMMANDS_DESCRIPTION[command]))
+            elif len(list_of_values) == 2:
+                pass
+            else:
+                string_for_regexp = ' '.join(list_of_values)
+                matches = re.findall(r"'(.*?)'", string_for_regexp)
+                if len(matches) != expected_arg_len:
+                    return (
+                        "{:<7} {:<34} {}".format(
+                            '[error]',
+                            "Invalid command format. Please use:",
+                            COMMANDS_DESCRIPTION[command]))
             try:
                 return func(*args)
-            except BaseException as e:
-                return str(e)
+            except BaseException as be:
+                return str(be)
         return wrapper
     return decorator
 
