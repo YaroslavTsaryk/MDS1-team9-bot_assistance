@@ -1,6 +1,7 @@
-from datetime import datetime, timedelta
 import json
+from datetime import datetime, timedelta
 from phonebook import AddressBook, Record
+from notepad import NotePad, Record, Title, Text, Tag
 from helper import (
     COMMANDS_DESCRIPTION,
     get_suggestions,
@@ -296,6 +297,15 @@ def write_book_data(args, book):
 def show_help(args, book):
     return "\n".join(COMMANDS_DESCRIPTION.values())
 
+@validate_args(2, "note-add '[title]' '[text]'")
+def note_add(args, notepad):
+    title = args[0]
+    text = args[1]
+    if notepad.find_record_by_title(Title(title)) is None:
+        notepad.add_record(Record(text))
+        return f"Note added."
+    else:
+        return f"A note with the title {title} exists"
 
 # Available operations on contacts
 actions = {
@@ -319,7 +329,12 @@ actions = {
     "change-address": add_address,
 }
 
+note_actions = {
+    "note-add": note_add
+}
+
 book = AddressBook()
+#notepad = NotePad()
 
 TEST_MODE = True
 TEST_FILE = 'test_commands.txt'
