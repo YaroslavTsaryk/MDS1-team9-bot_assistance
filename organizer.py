@@ -1,12 +1,16 @@
-from collections import UserDict
-import operator
-from datetime import datetime, timedelta, date
-import re
+from datetime import datetime, timedelta
 import json
 from phonebook import AddressBook, Record
+from helper import (
+    COMMANDS_DESCRIPTION,
+    get_suggestions,
+    validate_args
+)
+
 
 # Dictionary with working days for sort operation
 days = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday", 5: 'Saturday', 6: 'Sunday'}
+
 
 HELP = (
     """load - load data from json file. Default filename - data.bin
@@ -39,6 +43,7 @@ def input_error(func):
     return inner
 
 
+
 # Parse input on spaces
 def parse_input(user_input):
     cmd, *args = user_input.split()
@@ -46,10 +51,8 @@ def parse_input(user_input):
     return cmd, *args
 
 
-
-
 # Add contact with phone or add new phone to existing one
-@input_error
+@validate_args(2, "add")
 def add_contact(args, book):
     name, phone = args
     new_record = book.find(name)
@@ -66,7 +69,7 @@ def add_contact(args, book):
 
 
 # Add birthday to contact or contact with birthday
-@input_error
+@validate_args(2, "add-birthday")
 def add_birthday(args, book):
     name, birthday = args
     new_record = book.find(name)
@@ -81,7 +84,7 @@ def add_birthday(args, book):
 
 
 # Change phone number
-@input_error
+@validate_args(3, "change")
 def change_contact(args, book):
     name, phone1, phone2 = args
     record = book.find(name)
@@ -91,11 +94,11 @@ def change_contact(args, book):
         else:
             return "Contact not updated"
     else:
-        raise IndexError
+        raise IndexError("Contact not found.")
 
 
 # Remove phone from contact
-@input_error
+@validate_args(2, "remove-phone")
 def remove_phone(args, book):
     name, phone = args
     record = book.find(name)
@@ -107,7 +110,7 @@ def remove_phone(args, book):
 
 
 # Show phones for contact
-@input_error
+@validate_args(1, "phone")
 def show_phone(args, book):
     name = args[0]
     record = book.find(name)
@@ -116,11 +119,11 @@ def show_phone(args, book):
         res = f"{name}: " + ",".join([ph.value for ph in record.phones])
         return res
     else:
-        raise IndexError
+        raise IndexError("Contact not found.")
 
 
 # Delete contact from book
-@input_error
+@validate_args(1, "delete")
 def delete_contact(args, book):
     name = args[0]
     res = book.delete(name)
@@ -128,7 +131,7 @@ def delete_contact(args, book):
 
 
 # Show contact birthday
-@input_error
+@validate_args(1, "show-birthday")
 def show_birthday(args, book):
     name = args[0]
     record = book.find(name)
@@ -137,13 +140,14 @@ def show_birthday(args, book):
         res = f"{name} birthday: {record.birthday.value if 'birthday' in record.__dict__ else 'NA'}"
         return res
     else:
-        raise IndexError
+        raise IndexError("Contact not found.")
 
 def birthday_sort_key(d):
     return datetime.strptime(d['date'], "%d.%m.%Y").timestamp()
 
+
 # Get birthday for the specified number of days from date value
-@input_error
+@validate_args(1, "birthdays")
 def get_birthdays_per_week(args, book):
     days_from_today = int(args[0]) if len(args) != 0 else 7
     
@@ -206,7 +210,7 @@ def show_all(args, book):
 
 
 # load from json file, name as param
-@input_error
+@validate_args([0, 1], "load")
 def load_data(args, book):
     filename = args[0] if len(args) != 0 else "data.bin"
 
@@ -224,7 +228,7 @@ def load_data(args, book):
 
 
 # Write to json file, name as param
-@input_error
+@validate_args([0, 1], "write")
 def write_data(args, book):
     filename = args[0] if len(args) != 0 else "data.bin"
 
@@ -244,9 +248,10 @@ def write_data(args, book):
         json.dump(contacts, fh)
     return "Book written"
 
-@input_error
+
 def show_help(args, book):
-    return HELP
+    return "\n".join(COMMANDS_DESCRIPTION.values())
+
 
 # Available operations on contacts
 actions = {
@@ -284,7 +289,14 @@ def main():
         elif command in actions.keys():
             print(actions[command](args, book))
         else:
-            print("Invalid command.")
+            suggested_commands = get_suggestions(command)
+            if len(suggested_commands):
+                print(
+                    "Invalid command. Maybe you mean one of these:\n" +
+                    suggested_commands
+                )
+            else:
+                print("Invalid command.")
 
 
 if __name__ == "__main__":

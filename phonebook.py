@@ -28,7 +28,7 @@ class Birthday(Field):
         ):
             self.__value = v
         else:
-            raise ValueError
+            raise ValueError("Date must be the following format: DD.MM.YYYY.")
 
 
 class Name(Field):
@@ -53,7 +53,7 @@ class Phone(Field):
         if re.search("^\d{10}$", v):
             self.__value = v
         else:
-            raise ValueError
+            raise ValueError("Phone must be 10 digits long.")
 
 
 class Record:
