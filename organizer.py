@@ -255,7 +255,7 @@ def show_all(args, book):
 
 # load from json file, name as param
 @validate_args([0, 1], "load")
-def load_data(args, book):
+def load_book_data(args, book):
     filename = args[0] if len(args) != 0 else "data.bin"
 
     with open(filename, "r") as fh:
@@ -273,7 +273,7 @@ def load_data(args, book):
 
 # Write to json file, name as param
 @validate_args([0, 1], "write")
-def write_data(args, book):
+def write_book_data(args, book):
     filename = args[0] if len(args) != 0 else "data.bin"
 
     contacts = []
