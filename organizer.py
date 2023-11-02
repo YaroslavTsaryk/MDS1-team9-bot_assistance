@@ -1,5 +1,7 @@
-from datetime import datetime, timedelta
+import os
+import sys
 import json
+from datetime import datetime, timedelta
 from phonebook import AddressBook, Record
 from helper import (
     COMMANDS_DESCRIPTION,
@@ -303,6 +305,14 @@ def write_book_data(args, book):
 def show_help(args, book):
     return "\n".join(COMMANDS_DESCRIPTION.values())
 
+# Greeting display function
+def hello(*_):
+    return "{:<7} {}".format("[*]", 'How can I help you?')
+
+
+# Function of generating the KeyboardInterrupt interrupt for exit
+def exit(*_):
+    raise KeyboardInterrupt
 
 # Available operations on contacts
 actions = {
@@ -324,48 +334,60 @@ actions = {
     "change-email": add_email,
     "add-address": add_address,
     "change-address": add_address,
+    "hello": hello,
+    "exit": exit,
+    "close": exit
 }
 
-book = AddressBook()
-
-TEST_MODE = True
-TEST_FILE = 'test_commands.txt'
 
 def main():
-    print("Welcome to the assistant bot!")
+    TEST_MODE = True
+    TEST_FILE = 'test_commands.txt'
+
+    book = AddressBook()
+
+    print("{:<7} {}".format("[*]", "Welcome to the assistant bot!"))
+
     test_commands = None
     test_line = 0
     if TEST_MODE:
         with open(TEST_FILE, "r") as fh:
             test_commands = fh.read().splitlines()
+
     while True:
-        if TEST_MODE:
-            user_input = test_commands[test_line]
-            test_line += 1
-        else:
-            user_input = input("Enter a command: ")
-        if user_input:
-            command, *args = parse_input(user_input)
-        else:
+        try:
+            if TEST_MODE:
+                user_input = test_commands[test_line]
+                test_line += 1
+            else:
+                user_input = input("{:<7} {}".format("[*]", "Enter a command: "))
+            if user_input:
+                command, *args = parse_input(user_input)
+            else:
+                continue
+
+            if command in actions.keys():
+                print(actions[command](args, book))
+            else:
+                suggested_commands = get_suggestions(command)
+                if len(suggested_commands):
+                    print(
+                        "Invalid command. Maybe you mean one of these:\n" +
+                        suggested_commands
+                    )
+                else:
+                    print("{:<7} {}".format("[error]", "Invalid command."))
+        except (ValueError, EOFError):
             continue
 
-        if command in ["close", "exit"]:
-            print("Good bye!")
-            break
-        elif command == "hello":
-            print("How can I help you?")
-        elif command in actions.keys():
-            print(actions[command](args, book))
-        else:
-            suggested_commands = get_suggestions(command)
-            if len(suggested_commands):
-                print(
-                    "Invalid command. Maybe you mean one of these:\n" +
-                    suggested_commands
-                )
-            else:
-                print("Invalid command.")
 
-
+# Main function
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("{:<8} {}".format("\n[*]", "Good bye!"))
+        try:
+            sys.exit(130)
+        except SystemExit:
+            os._exit(130)
