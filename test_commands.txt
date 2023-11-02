@@ -1,25 +1,25 @@
-add-contact John 1234567891
-add-contact John 1122334451
-add-contact Jane 1112223331
-add-email 1 john@gmail.com
-add-address 1 London, Baker st. 1
-add-contact-name John Doe
+contact-add John 1234567891
+contact-add John 1122334451
+contact-add Jane 1112223331
+contact-add-email 1 john@gmail.com
+contact-add-address 1 London, Baker st. 1
+contact-add-name John Doe
 all
-change-contact-name 3 John Smith
-change-contact Jane 1112223334 2233442233
+contact-change-name 3 John Smith
+contact-change Jane 1112223334 2233442233
 all
-add-birthday John 22.10.1990
-phone John
-add-birthday Diana 15.10.1995
-show-birthday Diana
-show-birthday Jane
+contact-add-birthday John 22.11.1990
+contact-phone John
+contact-add-birthday Diana 15.11.1995
+contact-show-birthday Diana
+contact-show-birthday Jane
 all
 birthdays
-birthdays 14.10.2023
-remove-phone John 1234567890
+birthdays 20
+contact-remove-phone John 1234567890
 all
-delete-contact 2
-change-email 1 JOHN@gmail.com
-change-address 1 Paris, Baker st. 1
+contact-delete 2
+contact-change-email 1 JOHN@gmail.com
+contact-change-address 1 Paris, Baker st. 1
 all
 exit

@@ -2,28 +2,54 @@ import difflib
 
 
 COMMANDS_DESCRIPTION = {
-    "all": "all - Shows all available contacts.",
-    "load": "load <filename> - loads data from json file. " +
-    "Default filename - data.bin",
-    "write": "write <filename> - writes book data into file. " +
-    "Default filename - data.bin",
-    "add": "add <contact_name> <phone_number> - " +
+    # command
+    "contact-add": "add <contact_name> <phone_number> - " +
     "Adds contact with a phone number. Phone number must be 10 digits",
-    "change": "change <contact_name> <old_phone_number> <new_phone_number>" +
+    # command
+    "contact-delete": "delete <contact_name> - Deletes contact data from book.",
+    # command
+    "contact-add-name": "contact-add-name <firstname> ... <lastname> - " + 
+    "Adds name to existing contact",
+    # command
+    "contact-add-email": "contact-add-email <id> <email> - " +
+    "Adds contact email",
+    # command
+    "contact-add-address": "contact-add-address <id> <address_parapm_1> ..." + 
+    "<address_param_8> - Add address with up to 8 parts",
+    # command
+    "contact-change-name": "contact-change-name <id> <firstname> " + 
+    "... <lastanme> - Changes name of existing contact by ID",
+    # command
+    "contact-change": "change <contact_name> <old_phone_number> <new_phone_number>" +
     " - Change existing phone number for existing contact",
-    "add-birthday": "add-birthday <contact_name> <date> - " +
+    # command
+    "contact-add-birthday": "add-birthday <contact_name> <date> - " +
     "Add birthday data for existing contact or new contact " +
     "with birthday only. Date format DD.MM.YYYY",
-    "phone": "phone <contact_name> - Displays phones for contact",
-    "remove-phone": "remove-phone <contact_name> <phone_number> - " +
+    # command
+    "contact-phone": "contact-phone <contact_name> - Displays phones for contact",
+    # command
+    "contact-remove-phone": "contact-remove-phone <contact_name> <phone_number> - " +
     "Removes the phone number.",
-    "show-birthday": "show-birthday <contact_name> - " +
+    # command
+    "contact-show-birthday": "show-birthday <contact_name> - " +
     "Display birthday data for contact.",
+    # command
     "birthdays": "birthdays <date> - Shows birtdays for next 7 days from" +
     " selected date. Date format DD.MM.YYYY",
-    "delete": "delete <contact_name> - Deletes contact data from book.",
+    # command
+    "all": "all - Shows all available contacts.",
+    # command
+    "book-load": "load <filename> - loads data from json file. " +
+    "Default filename - data.bin",
+    # command
+    "book-write": "write <filename> - writes book data into file. " +
+    "Default filename - data.bin",
+    # command
     "hello": "hello - Get a greeting",
+    # command
     "close": "close - exit the program",
+    # command
     "exit": "exit - exit the program",
 }
 
