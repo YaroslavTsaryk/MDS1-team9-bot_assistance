@@ -5,13 +5,18 @@
 			"1234567890",
 			"1122334455"
 		],
-		"birthday": "22.11.1990"
+		"birthday": "22.11.1990",
+		"email": "john.doe@gmail.com",
+		"address": "London, Baker st. 11"
 	},
 	{
 		"name": "Jane",
 		"phone": [
 			"1112223334"
-		]
+		],
+		"birthday": "05.10.1990",
+		"email": "jane.doe@gmail.com",
+		"address": "Munich, Baker st. 15"
 	},
 	{
 		"name": "Bill_Gates",

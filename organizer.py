@@ -29,7 +29,6 @@ change-address <id> <address all string> - change address for contact by id
 phone <contact_name> - Display phones for contact
 show-birthday <contact_name> - Display birthday data for contact
 birthdays <days from today> - Show birtdays for the next specified number of days, 7 days if no argument given
-birthdays <date> - Show birtdays for next 7 days from selected date. Date format DD.MM.YYYY
 delete-contact <contact_name> - Delete contact data from book
 hello - get a greeting
 close or exit - exit the program
@@ -267,6 +266,10 @@ def load_book_data(args, book):
                     new_record.add_phone(ph)
             if "birthday" in ln.keys():
                 new_record.add_birthday(ln["birthday"])
+            if "address" in ln.keys():
+                new_record.add_address(ln["address"])
+            if "email" in ln.keys():
+                new_record.add_email(ln["email"])
             book.add_record(new_record)
     return "Book loaded"
 
@@ -286,6 +289,10 @@ def write_book_data(args, book):
         contact["phone"] = phones
         if "birthday" in record.__dict__:
             contact["birthday"] = record.birthday.value
+        if "address" in record.__dict__:
+            contact["address"] = record.address.value
+        if "email" in record.__dict__:
+            contact["email"] = record.email.value
         contacts.append(contact)
 
     with open(filename, "w") as fh:
@@ -321,7 +328,7 @@ actions = {
 
 book = AddressBook()
 
-TEST_MODE = True
+TEST_MODE = False
 TEST_FILE = 'test_commands.txt'
 
 def main():
