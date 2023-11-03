@@ -64,6 +64,12 @@ COMMANDS_DESCRIPTION = {
     "note-add-tag": "note-add-tag '<note title>' '<tag>' - Add a tag to a note",
     # command
     "note-get-all": "note-get-all - Get a list of all notes",
+    # command
+    "note-load": "note-load <filename> - loads data from a json file. " +
+    "Default filename - notes.bin",
+    # command
+    "note-write": "note-write <filename> - writes the notes to a file. " +
+    "Default filename - data.bin",
 }
 
 
