@@ -106,7 +106,7 @@ def add_email(args, book):
 
 
 @validate_args([2, 3, 4, 5, 6, 7, 8, 9], "contact-add-address")
-def add_address(args, book):    
+def add_address(args, book):
     id, *address = args
     record = book[int(id)]
     record.add_address(" ".join(address))
@@ -324,7 +324,7 @@ def note_edit(args, notepad):
 
 @validate_complex_args(1, "note-delete")
 def note_delete(args, notepad):
-    command = ' '.join(args)
+    command = ' '.join(args + ['MOCK'])
     title, _ = parse_command(command)
     if notepad.delete(Title(title)):
         return ("{:<7} Note deleted.".format('[ok]'))
@@ -358,7 +358,7 @@ def note_get_all(_, notepad):
 
 @validate_complex_args(1, "note-get")
 def note_get(args, notepad):
-    command = ' '.join(args)
+    command = ' '.join(args + ['MOCK'])
     value, _ = parse_command(command)
 
     value, value_type = detect_input_type(value)
@@ -398,7 +398,7 @@ def note_get(args, notepad):
 
 @validate_complex_args(1, "note-get-tag")
 def note_get_tag(args, notepad):
-    command = ' '.join(args)
+    command = ' '.join(args + ['MOCK'])
     tag, _ = parse_command(command)
 
     record = notepad.find_record_by_tag(Tag(tag))
@@ -428,7 +428,7 @@ def note_rename(args, notepad):
 
 @validate_complex_args(1, "note-search")
 def note_search(args, notepad):
-    command = ' '.join(args)
+    command = ' '.join(args + ['MOCK'])
     pattern, _ = parse_command(command)
 
     record = notepad.find_record_by_text(pattern)
@@ -441,6 +441,8 @@ def note_search(args, notepad):
                          for single_record in record])
 
 # load notes from json file, name as param
+
+
 @validate_args([0, 1], "note-load")
 def load_notes_data(args, notepad):
     filename = args[0] if len(args) != 0 else "notes.bin"

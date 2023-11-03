@@ -97,6 +97,8 @@ def parse_command(command):
     return parsed_arguments
 
 # Function decorator for validating function arguments
+
+
 def validate_args(expected_arg_len, command):
     def decorator(func):
         def wrapper(*args):
@@ -121,7 +123,10 @@ def validate_complex_args(expected_arg_len, command):
     def decorator(func):
         def wrapper(*args):
             commands = args[0]
-            commands = ' '.join(commands)
+            if len(command) == 1:
+                commands = ' '.join(commands + ['MOCK'])
+            else:
+                commands = ' '.join(commands)
             parsed_arguments = parse_command(commands)
             if len(parsed_arguments) != expected_arg_len:
                 return (
