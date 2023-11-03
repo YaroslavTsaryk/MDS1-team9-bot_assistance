@@ -552,8 +552,6 @@ notepad_actions = {
     "note-get": note_get,
     "note-search": note_search,
     "my-debug": debug_input,
-    "note-delete-tag": '',
-    "note-delete-all-tags": '',
     "note-sort": note_get_all_sorted,
     "notes-write": write_notes_data,
     "notes-load": load_notes_data,
