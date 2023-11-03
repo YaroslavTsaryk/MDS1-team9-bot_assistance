@@ -66,10 +66,6 @@ COMMANDS_DESCRIPTION = {
     # command
     "note-get-all": "note-get-all - Get a list of all notes",
     # command
-    # "note-delete-tag": "note-delete-tag '<note title>' '<tag>' - delete specified tag from the specified note",
-    # command
-    # "note-delete-all-tags": "note-delete-all-tags '<note title>' - remove all tags from the note",
-    # command
     "note-sort": "note-sort - Sort notes by number of tags in descending order, then alphabetically by title",
     # command
     "notes-load": "notes-load <filename> - loads data from a json file. " +
