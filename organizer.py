@@ -23,7 +23,14 @@ from helper import (
 
 
 # Dictionary with working days for sort operation
-DAYS = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday", 5: 'Saturday', 6: 'Sunday'}
+DAYS = {
+    0: "Monday",
+    1: "Tuesday",
+    2: "Wednesday",
+    3: "Thursday",
+    4: "Friday",
+    5: 'Saturday',
+    6: 'Sunday'}
 
 
 # Parse input on spaces
@@ -52,25 +59,25 @@ def add_contact(args, book):
 
 @validate_args([1, 2, 3, 4], "contact-add-name")
 def add_contact_name(args, book):
-    name=" ".join(args)
+    name = " ".join(args)
     new_record = book.find(name)
     res = ""
     if not new_record:
         new_record = Record(name)
         book.add_record(new_record)
-        res = f"Contact '{new_record.name.value}' with id = {new_record.id} added. "    
+        res = f"Contact '{new_record.name.value}' with id = {new_record.id} added. "
     return res
 
 
 @validate_args([1, 2, 3, 4], "contact-change-name")
 def change_contact_name(args, book):
     id, *name = args
-    new_name=" ".join(name)
+    new_name = " ".join(name)
     record = book[int(id)]
     res = ""
     if record:
         record.set_name(new_name)
-        res = f"Contact name '{record.name.value}' set for id = {record.id}"    
+        res = f"Contact name '{record.name.value}' set for id = {record.id}"
     return res
 
 
@@ -166,6 +173,7 @@ def show_birthday(args, book):
     else:
         raise IndexError("Contact not found.")
 
+
 def birthday_sort_key(d):
     return datetime.strptime(d['date'], "%d.%m.%Y").timestamp()
 
@@ -174,7 +182,7 @@ def birthday_sort_key(d):
 @validate_args([0, 1], "birthdays")
 def get_birthdays(args, book):
     days_from_today = int(args[0]) if len(args) != 0 else 7
-    
+
     today = datetime.today().date()
 
     users = [
@@ -191,15 +199,15 @@ def get_birthdays(args, book):
         name = user["name"]
         birthday = user["birthday"].date()  # Convert to date type
         birthday_this_year = birthday.replace(year=today.year)
-        
+
         if birthday_this_year < today:
             birthday_this_year = birthday.replace(year=today.year + 1)
         delta_days = (birthday_this_year - today).days
         if delta_days <= days_from_today:
             greet_date = user["birthday"].replace(year=today.year)
             set_day = birthday_this_year.weekday()
-            
-            #add entry to internal greet list
+
+            # add entry to internal greet list
             greet_date_str = greet_date.strftime("%d.%m.%Y")
             present = False
             for i in range(len(res)):
@@ -220,7 +228,7 @@ def get_birthdays(args, book):
     output_message = ''
     for entry in res:
         names = ", ".join(n for n in entry['names'])
-        output_message += f"{entry['date']}, {entry['weekday']:<10}| {names};\n" 
+        output_message += f"{entry['date']}, {entry['weekday']:<10}| {names};\n"
     output_message = output_message or "Birthdays not found"
 
     return output_message
@@ -302,7 +310,10 @@ def note_add(args, notepad):
         notepad.add_record(note_record)
         return ("{:<7} Note added.".format('[ok]'))
     else:
-        return ("{:<7} A note with the title [{}] exists".format('[info]',  title))
+        return (
+            "{:<7} A note with the title [{}] exists".format(
+                '[info]', title))
+
 
 @validate_complex_args(1, "note-delete")
 def note_delete(args, notepad):
@@ -315,7 +326,10 @@ def note_delete(args, notepad):
     if notepad.delete(Title(title)):
         return ("{:<7} Note deleted.".format('[ok]'))
     else:
-        return ("{:<7} A note with the title [{}] doesn't exists".format('[info]',  title))
+        return (
+            "{:<7} A note with the title [{}] doesn't exists".format(
+                '[info]', title))
+
 
 @validate_complex_args(2, "note-add-tag")
 def note_add_tag(args, notepad):
@@ -329,10 +343,13 @@ def note_add_tag(args, notepad):
         tag = matches[1]
     record = notepad.find_record_by_title(Title(title))
     if record is None:
-        return ("{:<7} A note with the title [{}] doesn't exists".format('[info]', title))
+        return (
+            "{:<7} A note with the title [{}] doesn't exists".format(
+                '[info]', title))
     else:
         record.add_tag(Tag(tag))
         return ("{:<7} Tag added.".format('[ok]'))
+
 
 def note_get_all(_, notepad):
     if len(notepad.data) != 0:
@@ -341,7 +358,9 @@ def note_get_all(_, notepad):
     else:
         return ("{:<7} {}".format('[info]', 'There are no notes.'))
 
-#@validate_complex_args(1, "note-get")
+# @validate_complex_args(1, "note-get")
+
+
 def note_get(args, notepad):
     if len(args) == 1:
         value = args[0]
@@ -361,14 +380,18 @@ def note_get(args, notepad):
     def handle_record_title(title):
         record = notepad.find_record_by_title(Title(title))
         if record is None:
-            return ("{:<7} A note with the title [{}] doesn't exists".format('[info]', title))
+            return (
+                "{:<7} A note with the title [{}] doesn't exists".format(
+                    '[info]', title))
         else:
             return ("{:<7} {:<1} {}".format('[ok]', '-', record))
 
     def handle_record_id(id):
         record = notepad.find_record_by_id(int(id))
         if record is None:
-            return ("{:<7} A note with the id [{}] doesn't exists".format('[info]', id))
+            return (
+                "{:<7} A note with the id [{}] doesn't exists".format(
+                    '[info]', id))
         else:
             return ("{:<7} {:<1} {}".format('[ok]', '-', record))
 
@@ -381,6 +404,8 @@ def note_get(args, notepad):
     return handler(new_value)
 
 # load notes from json file, name as param
+
+
 @validate_args([0, 1], "note-load")
 def load_notes_data(args, notepad):
     filename = args[0] if len(args) != 0 else "notes.bin"
@@ -398,6 +423,8 @@ def load_notes_data(args, notepad):
     return "Notes loaded"
 
 # Write to json file, name as param
+
+
 @validate_args([0, 1], "note-write")
 def write_notes_data(args, notepad):
     filename = args[0] if len(args) != 0 else "notes.bin"
@@ -420,7 +447,6 @@ def write_notes_data(args, notepad):
     return "Notes written"
 
 
-
 # Greeting display function
 def hello(*_):
     return "{:<7} {}".format("[*]", 'How can I help you?')
@@ -430,8 +456,10 @@ def hello(*_):
 def exit(*_):
     raise KeyboardInterrupt
 
+
 def debug_input(args, _):
     return args
+
 
 # Available operations on contacts
 actions = {
@@ -465,12 +493,12 @@ notepad_actions = {
     "note-get-all": note_get_all,
     "note-get": note_get,
     "my-debug": debug_input,
-    "note-change-title": '',    
+    "note-change-title": '',
     "note-change-text": '',
-    "note-delete-tag": '',    
-    "note-delete-all-tags": '',     
+    "note-delete-tag": '',
+    "note-delete-all-tags": '',
     "note-find-title": '',
-    "note-find-tag": '',    
+    "note-find-tag": '',
     "note-find-id": '',
     "note-sort": '',
     "notes-write": write_notes_data,
@@ -499,7 +527,9 @@ def main():
                 user_input = test_commands[test_line]
                 test_line += 1
             else:
-                user_input = input("{:<7} {}".format("[*]", "Enter a command: "))
+                user_input = input(
+                    "{:<7} {}".format(
+                        "[*]", "Enter a command: "))
             if user_input:
                 command, *args = parse_input(user_input)
             else:
