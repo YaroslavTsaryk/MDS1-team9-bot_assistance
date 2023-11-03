@@ -179,7 +179,7 @@ class NotePad(UserDict):
 
     def find_record_by_tag(self, tag: Tag):
         result = list(filter(lambda record: tag in record.tags, self.data))
-        return result[0] if result else None
+        return result if result else None
 
     def find_record_by_id(self, record_auto_id: int):
         result = list(
