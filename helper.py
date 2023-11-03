@@ -80,7 +80,7 @@ COMMANDS_DESCRIPTION = {
     # command
     "note-get": "note-get <id> or note-get '<title>' - Get a note entry by its unique integer identifier or by its title",
     # command
-    "note-edit": "note-get '<title>' '<new text>' - Edit a note entry by its name",
+    "note-edit": "note-edit '<title>' '<new text>' - Edit a note entry by its name",
     # command
     "note-get-tag": "note-get-tag <tag> - Get a note entry (entries) by its tag",
     # command
