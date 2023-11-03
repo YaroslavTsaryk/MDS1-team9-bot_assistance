@@ -345,14 +345,20 @@ def note_delete(args, notepad):
 def note_add_tag(args, notepad):
     command = ' '.join(args)
     title, tag = parse_command(command)
-    record = notepad.find_record_by_title(Title(title))
-    if record is None:
+    record_title = notepad.find_record_by_title(Title(title))
+    if record_title is None:
         return (
             "{:<7} A note with the title [{}] doesn't exists".format(
                 '[info]', title))
     else:
-        record.add_tag(Tag(tag))
-        return ("{:<7} Tag added.".format('[ok]'))
+        record_tag = notepad.find_record_by_tag(Tag(tag))
+        if record_tag is not None:
+            return (
+                "{:<7} This tag [{}] already exists".format(
+                    '[info]', tag))
+        else:
+            record_title.add_tag(Tag(tag))
+            return ("{:<7} Tag added.".format('[ok]'))
 
 
 def note_get_all(_, notepad):
