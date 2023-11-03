@@ -288,9 +288,9 @@ def note_add(args, notepad):
         matches = re.findall(r"'(.*?)'", command)
         title = matches[0]
         text = matches[1]
-    if notepad.find_record_by_title(title) is None:
-        note_record = NoteRecord(title)
-        note_record.add_text(text)
+    if notepad.find_record_by_title(Title(title)) is None:
+        note_record = NoteRecord(Title(title))
+        note_record.add_text(Text(text))
         notepad.add_record(note_record)
         return ("{:<7} Note added.".format('[ok]'))
     else:
@@ -319,11 +319,11 @@ def note_add_tag(args, notepad):
         matches = re.findall(r"'(.*?)'", command)
         title = matches[0]
         tag = matches[1]
-    record = notepad.find_record_by_title(title)
+    record = notepad.find_record_by_title(Title(title))
     if record is None:
         return ("{:<7} A note with the title [{}] doesn't exists".format('[ok]', title))
     else:
-        record.add_tag(tag)
+        record.add_tag(Tag(tag))
         return ("{:<7} Tag added.".format('[ok]'))
 
 def note_get_all(_, notepad):
@@ -341,12 +341,12 @@ def load_notes_data(args, notepad):
     with open(filename, "r") as fh:
         book_state = json.load(fh)
         for ln in book_state:
-            new_record = NoteRecord(ln["title"])
+            new_record = NoteRecord(Title(ln["title"]))
             if "tags" in ln.keys():
                 for tag in ln["tags"]:
-                    new_record.add_tag(tag)
+                    new_record.add_tag(Tag(tag))
             if "text" in ln.keys():
-                new_record.add_text(ln["text"])
+                new_record.add_text(Text(ln["text"]))
             notepad.add_record(new_record)
     return "Notes loaded"
 
@@ -358,58 +358,21 @@ def write_notes_data(args, notepad):
     notes = []
     for record in notepad.data:
         note = {}
-        note["title"] = record.title
+        note["title"] = record.title.value
         tags = []
         if len(record.tags):
             for tag in record.tags:
-                tags.append(tag)
+                tags.append(tag.value)
             note["tags"] = tags
         if "text" in record.__dict__:
-            note["text"] = record.text
+            note["text"] = record.text.value
         notes.append(note)
 
     with open(filename, "w") as fh:
         json.dump(notes, fh)
     return "Notes written"
 
-# load notes from json file, name as param
-@validate_args([0, 1], "note-load")
-def load_notes_data(args, notepad):
-    filename = args[0] if len(args) != 0 else "notes.bin"
 
-    with open(filename, "r") as fh:
-        book_state = json.load(fh)
-        for ln in book_state:
-            new_record = NoteRecord(ln["title"])
-            if "tags" in ln.keys():
-                for tag in ln["tags"]:
-                    new_record.add_tag(tag)
-            if "text" in ln.keys():
-                new_record.add_text(ln["text"])
-            notepad.add_record(new_record)
-    return "Notes loaded"
-
-# Write to json file, name as param
-@validate_args([0, 1], "book-write")
-def write_notes_data(args, notepad):
-    filename = args[0] if len(args) != 0 else "notes.bin"
-
-    notes = []
-    for record in notepad.data:
-        note = {}
-        note["title"] = record.title
-        tags = []
-        if len(record.tags):
-            for tag in record.tags:
-                tags.append(tag)
-            note["tags"] = tags
-        if "text" in record.__dict__:
-            note["text"] = record.text
-        notes.append(note)
-
-    with open(filename, "w") as fh:
-        json.dump(notes, fh)
-    return "Notes written"
 
 # Greeting display function
 def hello(*_):
@@ -449,13 +412,13 @@ actions = {
 }
 
 notepad_actions = {
-    "note-add": note_add,
-    "notes-write": write_notes_data,
-    "notes-load": load_notes_data,
+    "note-add": note_add,    
     "note-delete": note_delete,
     "note-add-tag": note_add_tag,
     "note-get-all": note_get_all,
     "my-debug": debug_input,
+    "notes-write": write_notes_data,
+    "notes-load": load_notes_data,
 }
 
 

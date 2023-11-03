@@ -1,1 +1,1 @@
-[{"title": "'text1'", "text": null}, {"title": "'text2'", "text": null}, {"title": "'text3'", "text": null}, {"title": "text3 11", "text": null}]
+[{"title": "'test1'", "tags": ["tag1"], "text": "'text1'"}, {"title": "test 2", "text": "text 2"}]
