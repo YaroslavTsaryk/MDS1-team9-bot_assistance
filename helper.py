@@ -85,6 +85,8 @@ COMMANDS_DESCRIPTION = {
     "note-get-tag": "note-get-tag <tag> - Get a note entry (entries) by its tag",
     # command
     "note-rename": "note-rename <existing title> <new title> - Rename a note entry by its original title",
+    # command
+    "note-search": "note-search '<pattern>' - Search for note entries by pattern",
 }
 
 

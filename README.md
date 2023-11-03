@@ -61,8 +61,7 @@ Notes are independent from contacts and have the following structure:
 `note-edit` - Edit a note entry by its name     
 `note-get-tag` - Get a note entry (entries) by its tag      
 `note-rename` - Rename a note entry by its original title       
-
-
+`note-search` - Search for note entries by pattern      
 
 Developed by T9:
 - Yaroslav Tsarik
