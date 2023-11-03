@@ -118,7 +118,7 @@ def add_address(args, book):
 
 
 # Change phone number
-@validate_args(3, "contact-change")
+@validate_args(3, "contact-change-phone")
 def change_contact(args, book):
     id, phone1, phone2 = args
     record = book[int(id)]
