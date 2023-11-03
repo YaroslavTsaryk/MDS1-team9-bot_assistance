@@ -423,9 +423,26 @@ def note_get(args, notepad):
     handler = type_handlers.get(type(new_value))
     return handler(new_value)
 
+
+@validate_complex_args_one("note-get-tag")
+def note_get_tag(args, notepad):
+    if len(args) == 1:
+        tag = args[0]
+    elif len(args) > 1:
+        command = ' '.join(args)
+        matches = re.findall(r"'(.*?)'", command)
+        tag = matches[0]
+
+    record = notepad.find_record_by_tag(Tag(tag))
+    if record is None:
+        return (
+            "{:<7} A note with the tag [{}] doesn't exists".format(
+                '[info]', tag))
+    else:
+        return ("{:<7} {:<1} {}".format('[ok]', '-', record))
+
+
 # load notes from json file, name as param
-
-
 @validate_args([0, 1], "note-load")
 def load_notes_data(args, notepad):
     filename = args[0] if len(args) != 0 else "notes.bin"
@@ -511,6 +528,7 @@ notepad_actions = {
     "note-edit": note_edit,
     "note-delete": note_delete,
     "note-add-tag": note_add_tag,
+    "note-get-tag": note_get_tag,
     "note-get-all": note_get_all,
     "note-get": note_get,
     "my-debug": debug_input,
