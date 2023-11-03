@@ -4,8 +4,8 @@ import difflib
 
 COMMANDS_DESCRIPTION = {
     # command
-    "contact-add": "contact-add <contact_name> <phone_number> - " +
-    "Adds contact with a phone number. Phone number must be 10 digits",
+    "contact-add-phone": "contact-add-phone <id> <phone_number> - " +
+    "Adds a phone number to the contact by id. Phone number must be 10 digits",
     # command
     "contact-delete": "contact-delete <id> - " +
     "Deletes contact data from book",
@@ -22,17 +22,17 @@ COMMANDS_DESCRIPTION = {
     "contact-change-name": "contact-change-name <id> <firstname> " +
     "... <lastanme> - Changes name of existing contact by ID",
     # command
-    "contact-change": "contact-change <contact_name> <old_phone_number> " +
+    "contact-change": "contact-change <id> <old_phone_number> " +
     "<new_phone_number> - Change existing phone number for existing contact",
     # command
-    "contact-add-birthday": "contact-add-birthday <contact_name> <date> - " +
+    "contact-add-birthday": "contact-add-birthday <id> <date> - " +
     "Add birthday data for existing contact or new contact " +
     "with birthday only. Date format DD.MM.YYYY",
     # command
-    "contact-phone": "contact-phone <contact_name> - " +
+    "contact-phone": "contact-phone <id> - " +
     "Displays phones for contact",
     # command
-    "contact-remove-phone": "contact-remove-phone <contact_name>" +
+    "contact-remove-phone": "contact-remove-phone <id>" +
     " <phone_number> - Removes the phone number.",
     # command
     "contact-show-birthday": "contact-show-birthday <contact_name> - " +
@@ -66,21 +66,17 @@ COMMANDS_DESCRIPTION = {
     # command
     "note-get-all": "note-get-all - Get a list of all notes",
     # command
-    # "note-delete-tag": "note-delete-tag '<note title>' '<tag>' - delete specified tag from the specified note",
-    # command
-    # "note-delete-all-tags": "note-delete-all-tags '<note title>' - remove all tags from the note",
-    # command
-    "note-sort": "note-sort - Sort notes by number of tags in descending order",
+    "note-sort": "note-sort - Sort notes by number of tags in descending order, then alphabetically by title",
     # command
     "notes-load": "notes-load <filename> - loads data from a json file. " +
     "Default filename - notes.bin",
     # command
-    "notes-write": "note-write <filename> - writes the notes to a file. " +
+    "notes-write": "notes-write <filename> - writes the notes to a file. " +
     "Default filename - notes.bin",
     # command
     "note-get": "note-get <id> or note-get '<title>' - Get a note entry by its unique integer identifier or by its title",
     # command
-    "note-edit": "note-get '<title>' '<new text>' - Edit a note entry by its name",
+    "note-edit": "note-edit '<title>' '<new text>' - Edit a note entry by its name",
     # command
     "note-get-tag": "note-get-tag <tag> - Get a note entry (entries) by its tag",
     # command

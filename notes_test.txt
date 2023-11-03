@@ -1,0 +1,22 @@
+note-add 'big1' 'extra fine text'
+note-add 'big 2' 'not very good text'
+note-add 'big3' 'text 3'
+note-add 'big 4' 'text 4'
+note-edit big3 NEWTEXT
+note-edit 'big 4' 'NEWER TEXT'
+note-add-tag big1 tag1
+note-add-tag 'big 2' tag1
+note-add-tag big3 tag1
+note-add-tag big 2 tag2
+note-add-tag big3 tag2
+note-get-all
+note-get-tag tag1
+note-get-tag tag2
+note-delete 'big 4'
+note-delete big3
+note-get-all
+note-rename big3 big4
+note-rename 'big 4' 'big3'
+note-get-all
+notes-write
+exit
