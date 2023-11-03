@@ -41,7 +41,7 @@ COMMANDS_DESCRIPTION = {
     "birthdays": "birthdays <date> - Shows birtdays for next 7 days from" +
     " selected date. Date format DD.MM.YYYY",
     # command
-    "all": "all - Shows all available contacts.",
+    "contacts-all": "contacts-all - Shows all available contacts.",
     # command
     "book-load": "book-load <filename> - loads data from json file. " +
     "Default filename - data.bin",
