@@ -118,7 +118,7 @@ def add_address(args, book):
 
 
 # Change phone number
-@validate_args(3, "contact-change")
+@validate_args(3, "contact-change-phone")
 def change_contact(args, book):
     id, phone1, phone2 = args
     record = book[int(id)]
@@ -443,8 +443,12 @@ def note_rename(args, notepad):
             "{:<7} A note with the title [{}] doesn't exists".format(
                 '[info]', title))
     else:
-        record.rename_title(Title(new_title))
-        return ("{:<7} {}".format('[ok]', 'Note renamed.'))
+        record = notepad.find_record_by_title(Title(new_title))
+        if record is not None:
+            return ("{:<7} {}".format('[error]', 'A note with this name already exists.'))
+        else:
+            record.rename_title(Title(new_title))
+            return ("{:<7} {}".format('[ok]', 'Note renamed.'))
 
 
 @validate_complex_args(1, "note-search")
@@ -472,8 +476,15 @@ def note_delete_tag(args, notepad):
             "{:<7} A note with the title [{}] doesn't exists".format(
                 '[info]', title))
     else:
-        record.remove_tag(Tag(tag))
-        return ("{:<7} Tag deleted.".format('[ok]'))
+        record = notepad.find_record_by_tag(Tag(tag))
+        if record is None:
+            return (
+                "{:<7} The tag [{}] doesn't exists".format(
+                    '[info]', tag))
+        else:
+            for i in record:
+                i.remove_tag(Tag(tag))
+            return ("{:<7} Tag deleted.".format('[ok]'))
 
 
 # load notes from json file, name as param

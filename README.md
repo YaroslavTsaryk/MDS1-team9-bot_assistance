@@ -17,9 +17,9 @@ Stored contacts have the following fields:
 `close` - Exit the program    
 `exit` - Exit the program   
 `help` - Show help    
+`contact-add-name <firstname> ... <lastname>` - Adds name to existing contact    
 `contact-add-phone <id> <phone_number>` - Adds contact with a phone number. Phone number must be 10 digits    
 `contact-delete <id>` - Deletes contact data from book    
-`contact-add-name <firstname> ... <lastname>` - Adds name to existing contact    
 `contact-add-email <id> <email>` - Adds contact email    
 `contact-add-address <id> <address_parapm_1> ...<address_param_8>` - Add address with up to 8 parts    
 `contact-change-name <id> <firstname> ... <lastanme>` - Changes name of existing contact by ID    
@@ -29,7 +29,7 @@ Stored contacts have the following fields:
 `contact-remove-phone <contact_name> <phone_number>` - Removes the phone number    
 `contact-show-birthday <contact_name>` - Display birthday data for contact    
 `birthdays <days>` - Shows contacts with birtdays within the specified number of days from now, 7 days if no value given    
-`all` - Shows all available contacts    
+`contacts-all` - Shows all available contacts    
 `book-load <filename>` - loads data from json file. Default filename - data.bin    
 `book-write <filename>` - writes book data into file. Default filename - data.bin    
 
@@ -44,25 +44,18 @@ Notes are independent from contacts and have the following structure:
 
 ### The following commands are supported
 `note-add <note title> <note text>` - Add a note with the name    
-`note-delete <note title>` - Delete the note with the title    
 `note-add-tag <note title> <tag>` - Add a tag to a note    
+`note-delete <note title>` - Delete the note with the title    
 `note-get-all` - Get a list of all notes    
-`note-change-title <old title> <new title>` - change the note title    
-`note-change-text <note title> <new text>` - Changes text in the specified note    
+`note-get <note title>` - Get a note entry by its unique integer identifier or by its title      
+`note-get-tag <tag>` - Get a note entry (entries) by its tag       
+`note-rename <old title> <new title>` - change the note title    
+`note-edit <note title> <new text>` - Changes text in the specified note    
 `note-delete-tag <note title> <tag>` - delete specified tag from the specified note    
-`note-delete-all-tags <note title>` - remove all tags from the note     
-`note-find-title <note title>` - Find note with the given title    
-`note-find-tag <tag>` - Returns all notes with the given tag    
-`note-find-id <id>` - Find note by id    
 `note-sort` - Sort notes by number of tags in descending orde, then alphabetically by title    
-`note-load` - Loads notes from a json file      
-`note-write` - Writes the notes to a json file      
-`note-get` - Get a note entry by its unique integer identifier or by its title      
-`note-edit` - Edit a note entry by its name     
-`note-get-tag` - Get a note entry (entries) by its tag      
-`note-rename` - Rename a note entry by its original title       
-`note-search` - Search for note entries by pattern      
-`note-delete-tag` - Delete a tag entry by note name     
+`note-search` - Search for note entries by pattern         
+`note-load <filename>` - Loads notes from a json file      
+`note-write <filename>` - Writes the notes to a json file     
 
 Developed by T9:
 - Yaroslav Tsarik
