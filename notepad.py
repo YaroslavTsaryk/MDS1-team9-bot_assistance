@@ -125,7 +125,7 @@ class Record:
         Record.record_auto_id += 1
         self.record_auto_id = Record.record_auto_id
         self.title: Title = title
-        self.text: Text = None
+        self.text: Text = ''
         self.tags: list[Tag] = []
         self.timestamp = datetime.now().time()
         self.datestamp = datetime.now().date()
@@ -190,7 +190,7 @@ class NotePad(UserDict):
         return result[0] if result else None
 
     def find_record_by_text(self, text):
-        result = list(filter(lambda record: text in record.text, self.data))
+        result = list(filter(lambda record: text in str(record.text), self.data))
         return result if result else None
 
     def get_all_records(self):
