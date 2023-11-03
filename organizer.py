@@ -439,7 +439,8 @@ def note_get_tag(args, notepad):
             "{:<7} A note with the tag [{}] doesn't exists".format(
                 '[info]', tag))
     else:
-        return ("{:<7} {:<1} {}".format('[ok]', '-', record))
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in record])
 
 
 # load notes from json file, name as param
