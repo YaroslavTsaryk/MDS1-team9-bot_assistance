@@ -6,10 +6,17 @@ import sys
 import json
 from datetime import datetime, timedelta
 from phonebook import AddressBook, Record
-from notepad import NotePad, Record as NoteRecord, Title, Text, Tag
+from notepad import (
+    Record as NoteRecord,
+    NotePad,
+    Title,
+    Text,
+    Tag
+)
 from helper import (
     COMMANDS_DESCRIPTION,
     validate_complex_args,
+    detect_input_type,
     get_suggestions,
     validate_args
 )
@@ -321,7 +328,7 @@ def note_add_tag(args, notepad):
         tag = matches[1]
     record = notepad.find_record_by_title(Title(title))
     if record is None:
-        return ("{:<7} A note with the title [{}] doesn't exists".format('[ok]', title))
+        return ("{:<7} A note with the title [{}] doesn't exists".format('[info]', title))
     else:
         record.add_tag(Tag(tag))
         return ("{:<7} Tag added.".format('[ok]'))
@@ -332,6 +339,45 @@ def note_get_all(_, notepad):
                          for single_record in notepad.data])
     else:
         return ("{:<7} {}".format('[info]', 'There are no notes.'))
+
+#@validate_complex_args(1, "note-get")
+def note_get(args, notepad):
+    if len(args) == 1:
+        value = args[0]
+    elif len(args) > 1:
+        command = ' '.join(args)
+        matches = re.findall(r"'(.*?)'", command)
+        value = matches[0]
+
+    value, value_type = detect_input_type(value)
+    if value_type == 'int':
+        new_value = int(value)
+    elif value_type == 'str':
+        new_value = str(value)
+    else:
+        return ("{:<7} {}".format("[error]", "Unknown type of input value."))
+
+    def handle_record_title(title):
+        record = notepad.find_record_by_title(Title(title))
+        if record is None:
+            return ("{:<7} A note with the title [{}] doesn't exists".format('[info]', title))
+        else:
+            return ("{:<7} {:<1} {}".format('[ok]', '-', record))
+
+    def handle_record_id(id):
+        record = notepad.find_record_by_id(int(id))
+        if record is None:
+            return ("{:<7} A note with the id [{}] doesn't exists".format('[info]', id))
+        else:
+            return ("{:<7} {:<1} {}".format('[ok]', '-', record))
+
+    type_handlers = {
+        int: handle_record_id,
+        str: handle_record_title,
+    }
+
+    handler = type_handlers.get(type(new_value))
+    return handler(new_value)
 
 # load notes from json file, name as param
 @validate_args([0, 1], "note-load")
@@ -416,6 +462,7 @@ notepad_actions = {
     "note-delete": note_delete,
     "note-add-tag": note_add_tag,
     "note-get-all": note_get_all,
+    "note-get": note_get,
     "my-debug": debug_input,
     "notes-write": write_notes_data,
     "notes-load": load_notes_data,
