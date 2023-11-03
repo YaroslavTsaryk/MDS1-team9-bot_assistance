@@ -17,13 +17,13 @@ Stored contacts have the following fields:
 `close` - Exit the program    
 `exit` - Exit the program   
 `help` - Show help    
-`contact-add <contact_name> <phone_number>` - Adds contact with a phone number. Phone number must be 10 digits    
+`contact-add-phone <id> <phone_number>` - Adds contact with a phone number. Phone number must be 10 digits    
 `contact-delete <id>` - Deletes contact data from book    
 `contact-add-name <firstname> ... <lastname>` - Adds name to existing contact    
 `contact-add-email <id> <email>` - Adds contact email    
 `contact-add-address <id> <address_parapm_1> ...<address_param_8>` - Add address with up to 8 parts    
 `contact-change-name <id> <firstname> ... <lastanme>` - Changes name of existing contact by ID    
-`contact-change <contact_name> <old_phone_number> <new_phone_number>` - Change existing phone number for existing contact    
+`contact-change-phone <contact_name> <old_phone_number> <new_phone_number>` - Change existing phone number for existing contact    
 `contact-add-birthday <contact_name> <date>` - Add birthday data for existing contact or new contact with birthday only. Date format DD.MM.YYYY    
 `contact-phone <contact_name>` - Displays phones for contact    
 `contact-remove-phone <contact_name> <phone_number>` - Removes the phone number    
