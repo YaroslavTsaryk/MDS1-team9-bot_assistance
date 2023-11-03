@@ -472,8 +472,15 @@ def note_delete_tag(args, notepad):
             "{:<7} A note with the title [{}] doesn't exists".format(
                 '[info]', title))
     else:
-        record.remove_tag(Tag(tag))
-        return ("{:<7} Tag deleted.".format('[ok]'))
+        record = notepad.find_record_by_tag(Tag(tag))
+        if record is None:
+            return (
+                "{:<7} The tag [{}] doesn't exists".format(
+                    '[info]', tag))
+        else:
+            for i in record:
+                i.remove_tag(Tag(tag))
+            return ("{:<7} Tag deleted.".format('[ok]'))
 
 
 # load notes from json file, name as param
