@@ -134,7 +134,8 @@ class Record:
         return f"Id: {self.record_auto_id}, Title: '{self.title}', Tags: '{', '.join(p.value for p in self.tags)}', Text: '{self.text}', Datestamp: {self.datestamp}, Timestamp: {self.timestamp}"
 
     def add_tag(self, tag: Tag):
-        self.tags.append(tag)
+        if tag not in self.tags:
+            self.tags.append(tag)
 
     def remove_tag(self, tag: Tag):
         found = list(filter(lambda p: p == tag, self.tags))
