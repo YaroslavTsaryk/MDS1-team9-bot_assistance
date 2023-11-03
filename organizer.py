@@ -222,7 +222,7 @@ def get_birthdays(args, book):
 # Display all contacts
 def show_all(args, book):
     if not len(book.items()):
-        return 'There are no contacts yet.'
+        return "{:<7} {}".format("[info]", "There are no contacts yet.")
 
     return "\n".join([f"{key}: {value}" for key, value in book.items()])
 
