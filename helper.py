@@ -41,7 +41,7 @@ COMMANDS_DESCRIPTION = {
     "birthdays": "birthdays <date> - Shows birtdays for next 7 days from" +
     " selected date. Date format DD.MM.YYYY",
     # command
-    "all": "all - Shows all available contacts.",
+    "contacts-all": "contacts-all - Shows all available contacts.",
     # command
     "book-load": "book-load <filename> - loads data from json file. " +
     "Default filename - data.bin",
@@ -49,21 +49,38 @@ COMMANDS_DESCRIPTION = {
     "book-write": "book-write <filename> - writes book data into file. " +
     "Default filename - data.bin",
     # command
-    "note-add": "note-add <title> <text> - Add a new note",
-    # command
     "hello": "hello - Get a greeting",
     # command
     "close": "close - Exit the program",
     # command
     "exit": "exit - Exit the program",
     # command
-    "note-add": "note-add '<note title>' '<note text>' - Add a note with the name",
+    "note-add": "note-add '<note title>' '<note text>' - " +
+    "Add a note with the name",
     # command
-    "note-delete": "note-delete '<note title>' - Delete the note with the title",
+    "note-delete": "note-delete '<note title>' - " +
+    "Delete the note with the title",
     # command
-    "note-add-tag": "note-add-tag '<note title>' '<tag>' - Add a tag to a note",
+    "note-add-tag": "note-add-tag '<note title>' '<tag>' - " +
+    "Add a tag to a note",
     # command
     "note-get-all": "note-get-all - Get a list of all notes",
+    # command
+    "note-change-title": "note-change-title '<old title>' '<new title>' - change the note title",
+    # command
+    "note-change-text": "note-change-text '<note title>' '<new text>' - Changes text in the specified note",
+    # command
+    "note-delete-tag": "note-delete-tag '<note title>' '<tag>' - delete specified tag from the specified note",
+    # command
+    "note-delete-all-tags": "note-delete-all-tags '<note title>' - remove all tags from the note",
+    # command
+    "note-find-title": "note-find-title '<note title>' - Find note with the given title",
+    # command
+    "note-find-tag": "note-find-tag '<tag>' - Returns all notes with the given tag",
+    # command
+    "note-find-id": "note-find-id '<id>' - Find note by id",
+    # command
+    "note-sort": "note-sort - Sort notes by number of tags in descending order, then alphabetically by title"
     # command
     "note-load": "note-load <filename> - loads data from a json file. " +
     "Default filename - notes.bin",
@@ -95,6 +112,8 @@ def validate_args(expected_arg_len, command):
     return decorator
 
 # Function decorator for validating complex function arguments
+
+
 def validate_complex_args(expected_arg_len, command):
     def decorator(func):
         def wrapper(*args):
@@ -124,14 +143,26 @@ def validate_complex_args(expected_arg_len, command):
     return decorator
 
 # Find suggested commands
+
+
 def get_suggestions(command):
-    options = COMMANDS_DESCRIPTION.keys()
+    all_commands = COMMANDS_DESCRIPTION.keys()
 
     def find_suggestions_by_part(command_part):
+        options = '-'.join(all_commands).split('-')
+        potential_suggestions = difflib.get_close_matches(
+            command_part,
+            options,
+            12
+        )
+        potential_suggestions_unique = list(set(potential_suggestions))
         # retrieve all commands where current command is substring
-        suggestions = list(filter(lambda cmd: command_part in cmd, options))
-        # retrieve up to 3 commands with get_close_matches
-        suggestions += difflib.get_close_matches(command_part, options)
+        suggestions = []
+        for cmd_part in potential_suggestions_unique:
+            suggestions += list(
+                filter(lambda cmd: cmd_part in cmd, all_commands)
+            )
+
         return suggestions
 
     suggested_commands = []

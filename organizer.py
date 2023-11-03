@@ -23,7 +23,7 @@ from helper import (
 
 
 # Dictionary with working days for sort operation
-days = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday", 5: 'Saturday', 6: 'Sunday'}
+DAYS = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday", 5: 'Saturday', 6: 'Sunday'}
 
 
 # Parse input on spaces
@@ -209,7 +209,7 @@ def get_birthdays(args, book):
             if not present:
                 new = {}
                 new['date'] = greet_date_str
-                new['weekday'] = days[set_day]
+                new['weekday'] = DAYS[set_day]
                 new['names'] = [name]
                 res.append(new)
             else:
@@ -228,8 +228,9 @@ def get_birthdays(args, book):
 
 # Display all contacts
 def show_all(args, book):
-    # res=""
-    # for key,value in contacts.items():
+    if not len(book.items()):
+        return "{:<7} {}".format("[info]", "There are no contacts yet.")
+
     return "\n".join([f"{key}: {value}" for key, value in book.items()])
 
 
@@ -434,6 +435,7 @@ def debug_input(args, _):
 
 # Available operations on contacts
 actions = {
+    "contacts-all": show_all,
     "contact-add": add_contact,
     "contact-add-name": add_contact_name,
     "contact-change-name": change_contact_name,
@@ -451,7 +453,6 @@ actions = {
     "book-write": write_book_data,
     "birthdays": get_birthdays,
     "help": show_help,
-    "all": show_all,
     "hello": hello,
     "exit": exit,
     "close": exit
@@ -464,6 +465,14 @@ notepad_actions = {
     "note-get-all": note_get_all,
     "note-get": note_get,
     "my-debug": debug_input,
+    "note-change-title": '',    
+    "note-change-text": '',
+    "note-delete-tag": '',    
+    "note-delete-all-tags": '',     
+    "note-find-title": '',
+    "note-find-tag": '',    
+    "note-find-id": '',
+    "note-sort": ''    
     "notes-write": write_notes_data,
     "notes-load": load_notes_data,
 }
@@ -504,8 +513,11 @@ def main():
                 suggested_commands = get_suggestions(command)
                 if len(suggested_commands):
                     print(
-                        "Invalid command. Maybe you mean one of these:\n" +
-                        suggested_commands
+                        "{:<7} {}".format(
+                            "[info]",
+                            "Invalid command. Maybe you mean one of these:\n" +
+                            suggested_commands
+                        ),
                     )
                 else:
                     print("{:<7} {}".format("[error]", "Invalid command."))
