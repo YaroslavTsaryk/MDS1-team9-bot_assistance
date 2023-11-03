@@ -221,8 +221,9 @@ def get_birthdays(args, book):
 
 # Display all contacts
 def show_all(args, book):
-    # res=""
-    # for key,value in contacts.items():
+    if not len(book.items()):
+        return 'There are no contacts yet.'
+
     return "\n".join([f"{key}: {value}" for key, value in book.items()])
 
 
@@ -388,6 +389,7 @@ def debug_input(args, _):
 
 # Available operations on contacts
 actions = {
+    "contacts-all": show_all,
     "contact-add": add_contact,
     "contact-add-name": add_contact_name,
     "contact-change-name": change_contact_name,
@@ -405,7 +407,6 @@ actions = {
     "book-write": write_book_data,
     "birthdays": get_birthdays,
     "help": show_help,
-    "all": show_all,
     "hello": hello,
     "exit": exit,
     "close": exit
