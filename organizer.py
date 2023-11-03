@@ -288,9 +288,9 @@ def note_add(args, notepad):
         matches = re.findall(r"'(.*?)'", command)
         title = matches[0]
         text = matches[1]
-    if notepad.find_record_by_title(title) is None:
-        note_record = NoteRecord(title)
-        note_record.add_text(text)
+    if notepad.find_record_by_title(Title(title)) is None:
+        note_record = NoteRecord(Title(title))
+        note_record.add_text(Text(text))
         notepad.add_record(note_record)
         return ("{:<7} Note added.".format('[ok]'))
     else:
@@ -304,7 +304,7 @@ def note_delete(args, notepad):
         command = ' '.join(args)
         matches = re.findall(r"'(.*?)'", command)
         title = matches[0]
-    if notepad.delete(title):
+    if notepad.delete(Title(title)):
         return ("{:<7} Note deleted.".format('[ok]'))
     else:
         return ("{:<7} A note with the title [{}] doesn't exists".format('[info]',  title))
@@ -319,11 +319,11 @@ def note_add_tag(args, notepad):
         matches = re.findall(r"'(.*?)'", command)
         title = matches[0]
         tag = matches[1]
-    record = notepad.find_record_by_title(title)
+    record = notepad.find_record_by_title(Title(title))
     if record is None:
         return ("{:<7} A note with the title [{}] doesn't exists".format('[ok]', title))
     else:
-        record.add_tag(tag)
+        record.add_tag(Tag(tag))
         return ("{:<7} Tag added.".format('[ok]'))
 
 def note_get_all(_, notepad):

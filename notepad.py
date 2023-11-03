@@ -40,6 +40,11 @@ class Title(Field):
         Title.is_valid_title(title)
         super().__init__(title)
 
+    def __eq__(self, other):
+        if isinstance(other, Title):
+            return self.value == other.value
+        return False
+
     @staticmethod
     def is_valid_title(title: str):
         title_min_length = 3
@@ -117,10 +122,10 @@ class Record:
         return f"Id: {self.record_auto_id}, Title: '{self.title}', Tags: '{', '.join(p.value for p in self.tags)}', Text: '{self.text}', Datestamp: {self.datestamp}, Timestamp: {self.timestamp}"
 
 
-    def __eq__(self, other):
-        if isinstance(other, Title):
-            return self.value == other.value
-        return False
+#    def __eq__(self, other):
+#        if isinstance(other, Title):
+#            return self.value == other.value
+#        return False
 
     def add_tag(self, tag: Tag):
         self.tags.append(tag)
