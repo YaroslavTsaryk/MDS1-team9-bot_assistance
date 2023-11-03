@@ -15,11 +15,11 @@ from notepad import (
 )
 from helper import (
     COMMANDS_DESCRIPTION,
-    validate_complex_args_one,
-    validate_complex_args_two,
+    validate_complex_args,
     detect_input_type,
     get_suggestions,
-    validate_args
+    validate_args,
+    parse_command
 )
 
 
@@ -104,7 +104,7 @@ def add_email(args, book):
 
 
 @validate_args([2, 3, 4, 5, 6, 7, 8, 9], "contact-add-address")
-def add_address(args, book):    
+def add_address(args, book):
     id, *address = args
     if int(id) in book.data.keys():
         record = book[int(id)]
@@ -297,16 +297,10 @@ def show_help(args, book):
     return "\n".join(COMMANDS_DESCRIPTION.values())
 
 
-@validate_complex_args_two("note-add")
+@validate_complex_args(2, "note-add")
 def note_add(args, notepad):
-    if len(args) == 2:
-        title = args[0]
-        text = args[1]
-    if len(args) > 2:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        title = matches[0]
-        text = matches[1]
+    command = ' '.join(args)
+    title, text = parse_command(command)
     if notepad.find_record_by_title(Title(title)) is None:
         note_record = NoteRecord(Title(title))
         note_record.add_text(Text(text))
@@ -318,16 +312,10 @@ def note_add(args, notepad):
                 '[info]', title))
 
 
-@validate_complex_args_two("note-edit")
+@validate_complex_args(2, "note-edit")
 def note_edit(args, notepad):
-    if len(args) == 2:
-        title = args[0]
-        text = args[1]
-    if len(args) > 2:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        title = matches[0]
-        text = matches[1]
+    command = ' '.join(args)
+    title, text = parse_command(command)
     record = notepad.find_record_by_title(Title(title))
     if record is None:
         return (
@@ -338,14 +326,10 @@ def note_edit(args, notepad):
         return ("{:<7} Note edited.".format('[ok]'))
 
 
-@validate_complex_args_one("note-delete")
+@validate_complex_args(1, "note-delete")
 def note_delete(args, notepad):
-    if len(args) == 1:
-        title = args[0]
-    elif len(args) > 1:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        title = matches[0]
+    command = ' '.join(args)
+    title, _ = parse_command(command)
     if notepad.delete(Title(title)):
         return ("{:<7} Note deleted.".format('[ok]'))
     else:
@@ -354,16 +338,10 @@ def note_delete(args, notepad):
                 '[info]', title))
 
 
-@validate_complex_args_two("note-add-tag")
+@validate_complex_args(2, "note-add-tag")
 def note_add_tag(args, notepad):
-    if len(args) == 2:
-        title = args[0]
-        tag = args[1]
-    if len(args) > 2:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        title = matches[0]
-        tag = matches[1]
+    command = ' '.join(args)
+    title, tag = parse_command(command)
     record = notepad.find_record_by_title(Title(title))
     if record is None:
         return (
@@ -382,14 +360,24 @@ def note_get_all(_, notepad):
         return ("{:<7} {}".format('[info]', 'There are no notes.'))
 
 
-@validate_complex_args_one("note-get")
+def note_get_all_sorted(_, notepad):
+    if len(notepad.data) != 0:
+        sorted_notes = sorted(
+            notepad.data,
+            key=lambda x:
+            len(x.tags),
+            reverse=True
+        )
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in sorted_notes])
+    else:
+        return ("{:<7} {}".format('[info]', 'There are no notes.'))
+
+
+@validate_complex_args(1, "note-get")
 def note_get(args, notepad):
-    if len(args) == 1:
-        value = args[0]
-    elif len(args) > 1:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        value = matches[0]
+    command = ' '.join(args)
+    value, _ = parse_command(command)
 
     value, value_type = detect_input_type(value)
     if value_type == 'int':
@@ -426,14 +414,10 @@ def note_get(args, notepad):
     return handler(new_value)
 
 
-@validate_complex_args_one("note-get-tag")
+@validate_complex_args(1, "note-get-tag")
 def note_get_tag(args, notepad):
-    if len(args) == 1:
-        tag = args[0]
-    elif len(args) > 1:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        tag = matches[0]
+    command = ' '.join(args)
+    tag, _ = parse_command(command)
 
     record = notepad.find_record_by_tag(Tag(tag))
     if record is None:
@@ -445,16 +429,10 @@ def note_get_tag(args, notepad):
                          for single_record in record])
 
 
-@validate_complex_args_two("note-rename")
+@validate_complex_args(2, "note-rename")
 def note_rename(args, notepad):
-    if len(args) == 2:
-        title = args[0]
-        new_title = args[1]
-    if len(args) > 2:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        title = matches[0]
-        new_title = matches[1]
+    command = ' '.join(args)
+    title, new_title = parse_command(command)
 
     record = notepad.find_record_by_title(Title(title))
     if record is None:
@@ -464,6 +442,21 @@ def note_rename(args, notepad):
     else:
         record.rename_title(Title(new_title))
         return ("{:<7} {}".format('[ok]', 'Note renamed.'))
+
+
+@validate_complex_args(1, "note-search")
+def note_search(args, notepad):
+    command = ' '.join(args)
+    pattern, _ = parse_command(command)
+
+    record = notepad.find_record_by_text(pattern)
+    if record is None:
+        return (
+            "{:<7} A notes with the pattern [{}] doesn't exists".format(
+                '[info]', pattern))
+    else:
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in record])
 
 # load notes from json file, name as param
 @validate_args([0, 1], "note-load")
@@ -555,10 +548,11 @@ notepad_actions = {
     "note-get-tag": note_get_tag,
     "note-get-all": note_get_all,
     "note-get": note_get,
+    "note-search": note_search,
     "my-debug": debug_input,
     "note-delete-tag": '',
     "note-delete-all-tags": '',
-    "note-sort": '',
+    "note-sort": note_get_all_sorted,
     "notes-write": write_notes_data,
     "notes-load": load_notes_data,
 }

@@ -40,6 +40,7 @@ note-add-tag 'Cristmas  gifts' 'family'
 note-add 'New owen' 'New owen reqiored with steam mode'
 note-add-tag 'New owen' 'family'
 note-get-all
+note-sort
 note-get-tag gifts
 note-get-tag family
 notes-write
