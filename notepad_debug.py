@@ -47,7 +47,7 @@ print(record1)
 print(record2)
 
 print("Remove text from the record 1")
-#record1.remove_text()
+# record1.remove_text()
 print(record1)
 print(record2)
 

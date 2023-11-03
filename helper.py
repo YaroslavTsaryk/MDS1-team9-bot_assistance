@@ -176,6 +176,8 @@ def get_suggestions(command):
     return "\n".join(result.values())
 
 # Function for determining the type of input data
+
+
 def detect_input_type(value):
     try:
         int_value = int(value)
