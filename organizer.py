@@ -106,7 +106,7 @@ def add_email(args, book):
 
 
 @validate_args([2, 3, 4, 5, 6, 7, 8, 9], "contact-add-address")
-def add_address(args, book):    
+def add_address(args, book):
     id, *address = args
     record = book[int(id)]
     record.add_address(" ".join(address))
@@ -378,6 +378,20 @@ def note_get_all(_, notepad):
         return ("{:<7} {}".format('[info]', 'There are no notes.'))
 
 
+def note_get_all_sorted(_, notepad):
+    if len(notepad.data) != 0:
+        sorted_notes = sorted(
+            notepad.data,
+            key=lambda x:
+            len(x.tags),
+            reverse=True
+        )
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in sorted_notes])
+    else:
+        return ("{:<7} {}".format('[info]', 'There are no notes.'))
+
+
 @validate_complex_args_one("note-get")
 def note_get(args, notepad):
     if len(args) == 1:
@@ -460,6 +474,7 @@ def note_rename(args, notepad):
     else:
         record.rename_title(Title(new_title))
         return ("{:<7} {}".format('[ok]', 'Note renamed.'))
+
 
 # load notes from json file, name as param
 @validate_args([0, 1], "note-load")
@@ -554,7 +569,7 @@ notepad_actions = {
     "my-debug": debug_input,
     "note-delete-tag": '',
     "note-delete-all-tags": '',
-    "note-sort": '',
+    "note-sort": note_get_all_sorted,
     "notes-write": write_notes_data,
     "notes-load": load_notes_data,
 }
