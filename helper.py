@@ -57,7 +57,13 @@ COMMANDS_DESCRIPTION = {
     # command
     "exit": "exit - Exit the program",
     # command
-    "note-add": "'<note title>' '<note text>' - Add a note with the name",
+    "note-add": "note-add '<note title>' '<note text>' - Add a note with the name",
+    # command
+    "note-delete": "note-delete '<note title>' - Delete the note with the title",
+    # command
+    "note-add-tag": "note-add-tag '<note title>' '<tag>' - Add a tag to a note",
+    # command
+    "note-get-all": "note-get-all - Get a list of all notes",
 }
 
 
@@ -85,13 +91,13 @@ def validate_complex_args(expected_arg_len, command):
     def decorator(func):
         def wrapper(*args):
             list_of_values = args[0]
-            if len(list_of_values) <= 1:
+            if len(list_of_values) == 0:
                 return (
                     "{:<7} {:<34} {}".format(
                         '[error]',
                         "Invalid command format. Please use:",
                         COMMANDS_DESCRIPTION[command]))
-            elif len(list_of_values) == 2:
+            elif len(list_of_values) == 2 or len(list_of_values) == 1:
                 pass
             else:
                 string_for_regexp = ' '.join(list_of_values)

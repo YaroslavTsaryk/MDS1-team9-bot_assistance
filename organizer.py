@@ -288,11 +288,89 @@ def note_add(args, notepad):
         matches = re.findall(r"'(.*?)'", command)
         title = matches[0]
         text = matches[1]
-    if notepad.find_record_by_title(Title(title)) is None:
-        notepad.add_record(NoteRecord(text))
-        return ("{:<7} {}".format('[ok]', 'Note added.'))
+    if notepad.find_record_by_title(title) is None:
+        note_record = NoteRecord(title)
+        note_record.add_text(text)
+        notepad.add_record(note_record)
+        return ("{:<7} Note added.".format('[ok]'))
     else:
-        return f"A note with the title {title} exists"
+        return ("{:<7} A note with the title [{}] exists".format('[info]',  title))
+
+@validate_complex_args(1, "note-delete")
+def note_delete(args, notepad):
+    if len(args) == 1:
+        title = args[0]
+    elif len(args) > 1:
+        command = ' '.join(args)
+        matches = re.findall(r"'(.*?)'", command)
+        title = matches[0]
+    if notepad.delete(title):
+        return ("{:<7} Note deleted.".format('[ok]'))
+    else:
+        return ("{:<7} A note with the title [{}] doesn't exists".format('[info]',  title))
+
+@validate_complex_args(2, "note-add-tag")
+def note_add_tag(args, notepad):
+    if len(args) == 2:
+        title = args[0]
+        tag = args[1]
+    if len(args) > 2:
+        command = ' '.join(args)
+        matches = re.findall(r"'(.*?)'", command)
+        title = matches[0]
+        tag = matches[1]
+    record = notepad.find_record_by_title(title)
+    if record is None:
+        return ("{:<7} A note with the title [{}] doesn't exists".format('[ok]', title))
+    else:
+        record.add_tag(tag)
+        return ("{:<7} Tag added.".format('[ok]'))
+
+def note_get_all(_, notepad):
+    if len(notepad.data) != 0:
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in notepad.data])
+    else:
+        return ("{:<7} {}".format('[info]', 'There are no notes.'))
+
+# load notes from json file, name as param
+@validate_args([0, 1], "note-load")
+def load_notes_data(args, notepad):
+    filename = args[0] if len(args) != 0 else "notes.bin"
+
+    with open(filename, "r") as fh:
+        book_state = json.load(fh)
+        for ln in book_state:
+            new_record = NoteRecord(ln["title"])
+            if "tags" in ln.keys():
+                for tag in ln["tags"]:
+                    new_record.add_tag(tag)
+            if "text" in ln.keys():
+                new_record.add_text(ln["text"])
+            notepad.add_record(new_record)
+    return "Notes loaded"
+
+# Write to json file, name as param
+@validate_args([0, 1], "book-write")
+def write_notes_data(args, notepad):
+    filename = args[0] if len(args) != 0 else "notes.bin"
+
+    notes = []
+    for record in notepad.data:
+        note = {}
+        note["title"] = record.title
+        tags = []
+        if len(record.tags):
+            for tag in record.tags:
+                tags.append(tag)
+            note["tags"] = tags
+        if "text" in record.__dict__:
+            note["text"] = record.text
+        notes.append(note)
+
+    with open(filename, "w") as fh:
+        json.dump(notes, fh)
+    return "Notes written"
 
 # load notes from json file, name as param
 @validate_args([0, 1], "note-load")
@@ -374,6 +452,9 @@ notepad_actions = {
     "note-add": note_add,
     "notes-write": write_notes_data,
     "notes-load": load_notes_data,
+    "note-delete": note_delete,
+    "note-add-tag": note_add_tag,
+    "note-get-all": note_get_all,
     "my-debug": debug_input,
 }
 
