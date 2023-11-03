@@ -54,11 +54,7 @@ class Title(Field):
         if not title_min_length <= len(title) <= title_max_length:
             raise IncorrectTitleException(
                 f"the title must be {title_min_length} to {title_max_length} characters long ")
-    
-    def __eq__(self, other):
-        if isinstance(other, Title):
-            return self.value == other.value
-        return False
+
 
 class Tag(Field):
     def __init__(self, tag: str):
