@@ -125,7 +125,7 @@ class Record:
         Record.record_auto_id += 1
         self.record_auto_id = Record.record_auto_id
         self.title: Title = title
-        self.text: Text = ''
+        self.text: Text = None
         self.tags: list[Tag] = []
         self.timestamp = datetime.now().time()
         self.datestamp = datetime.now().date()
