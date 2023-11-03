@@ -54,8 +54,8 @@ Notes are independent from contacts and have the following structure:
 `note-delete-tag <note title> <tag>` - delete specified tag from the specified note    
 `note-sort` - Sort notes by number of tags in descending orde, then alphabetically by title    
 `note-search <text>` - Search the specified pattern in note text         
-`note-load <filename>` - Loads notes from a json file      
-`note-write <filename>` - Writes the notes to a json file     
+`notes-load <filename>` - Loads notes from a json file      
+`notes-write <filename>` - Writes the notes to a json file     
 
 Developed by T9:
 - Yaroslav Tsarik
