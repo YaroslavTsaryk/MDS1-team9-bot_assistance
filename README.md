@@ -55,12 +55,12 @@ Notes are independent from contacts and have the following structure:
 `note-find-tag <tag>` - Returns all notes with the given tag    
 `note-find-id <id>` - Find note by id    
 `note-sort` - Sort notes by number of tags in descending orde, then alphabetically by title    
-`note-load` - Loads notes from a json file
-`note-write` - Writes the notes to a json file
-`note-get` - Get a note entry by its unique integer identifier or by its title
-`note-edit` - Edit a note entry by its name
-`note-get-tag` - Get a note entry (entries) by its tag
-`note-rename` - Rename a note entry by its original title
+`note-load` - Loads notes from a json file      
+`note-write` - Writes the notes to a json file      
+`note-get` - Get a note entry by its unique integer identifier or by its title      
+`note-edit` - Edit a note entry by its name     
+`note-get-tag` - Get a note entry (entries) by its tag      
+`note-rename` - Rename a note entry by its original title       
 
 
 
