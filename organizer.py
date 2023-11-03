@@ -45,7 +45,10 @@ def parse_input(user_input):
 @validate_args(2, "contact-add")
 def add_contact_phone(args, book):
     id, phone = args
-    new_record = book[int(id)]
+    if int(id) in book.data.keys():
+        new_record = book[int(id)]
+    else:
+        return "Id not exists"
     res = ""    
     found_phone = new_record.find_phone(phone)
     if not found_phone:
@@ -70,7 +73,10 @@ def add_contact_name(args, book):
 def change_contact_name(args, book):
     id, *name = args
     new_name = " ".join(name)
-    record = book[int(id)]
+    if int(id) in book.data.keys():
+        record = book[int(id)]
+    else:
+        return "Id not exists"
     res = ""
     if record:
         record.set_name(new_name)
@@ -100,7 +106,10 @@ def add_email(args, book):
 @validate_args([2, 3, 4, 5, 6, 7, 8, 9], "contact-add-address")
 def add_address(args, book):    
     id, *address = args
-    record = book[int(id)]
+    if int(id) in book.data.keys():
+        record = book[int(id)]
+    else:
+        return "Id not exists"
     record.add_address(" ".join(address))
     return f"Address {record.address} added to record {id}"
 
@@ -123,7 +132,10 @@ def change_contact(args, book):
 @validate_args(2, "contact-remove-phone")
 def remove_phone(args, book):
     id, phone = args
-    record = book[int(id)]
+    if int(id) in book.data.keys():
+        record = book[int(id)]
+    else:
+        return "Id not exists"    
     if record:
         if record.remove_phone(phone):
             return f"Phone number {phone} removed"
@@ -553,7 +565,7 @@ notepad_actions = {
 
 
 def main():
-    TEST_MODE = True
+    TEST_MODE = False
     TEST_FILE = 'test_commands.txt'
 
     book = AddressBook()
