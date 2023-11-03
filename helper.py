@@ -22,7 +22,7 @@ COMMANDS_DESCRIPTION = {
     "contact-change-name": "contact-change-name <id> <firstname> " +
     "... <lastanme> - Changes name of existing contact by ID",
     # command
-    "contact-change-phone": "contact-change <id> <old_phone_number> " +
+    "contact-change-phone": "contact-change-phone <id> <old_phone_number> " +
     "<new_phone_number> - Change existing phone number for existing contact",
     # command
     "contact-add-birthday": "contact-add-birthday <id> <date> - " +
