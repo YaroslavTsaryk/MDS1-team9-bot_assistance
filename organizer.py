@@ -43,14 +43,10 @@ def parse_input(user_input):
 
 # Add contact with phone or add new phone to existing one
 @validate_args(2, "contact-add")
-def add_contact(args, book):
-    name, phone = args
-    new_record = book.find(name)
-    res = ""
-    if not new_record:
-        new_record = Record(name)
-        book.add_record(new_record)
-        res += f"Contact with id = {new_record.id} added. "
+def add_contact_phone(args, book):
+    id, phone = args
+    new_record = book[int(id)]
+    res = ""    
     found_phone = new_record.find_phone(phone)
     if not found_phone:
         new_record.add_phone(phone)
@@ -85,13 +81,9 @@ def change_contact_name(args, book):
 # Add birthday to contact or contact with birthday
 @validate_args(2, "contact-add-birthday")
 def add_birthday(args, book):
-    name, birthday = args
-    new_record = book.find(name)
-    res = ""
-    if not new_record:
-        new_record = Record(name)
-        book.add_record(new_record)
-        res += "Contact added. "
+    id, birthday = args
+    new_record = book[int(id)]
+    res = ""    
     new_record.add_birthday(birthday)
     res += "Birthday added. "
     return res
@@ -116,8 +108,8 @@ def add_address(args, book):
 # Change phone number
 @validate_args(3, "contact-change")
 def change_contact(args, book):
-    name, phone1, phone2 = args
-    record = book.find(name)
+    id, phone1, phone2 = args
+    record = book[int(id)]
     if record:
         if record.edit_phone(phone1, phone2):
             return "Contact updated."
@@ -130,8 +122,8 @@ def change_contact(args, book):
 # Remove phone from contact
 @validate_args(2, "contact-remove-phone")
 def remove_phone(args, book):
-    name, phone = args
-    record = book.find(name)
+    id, phone = args
+    record = book[int(id)]
     if record:
         if record.remove_phone(phone):
             return f"Phone number {phone} removed"
@@ -141,8 +133,8 @@ def remove_phone(args, book):
 
 # Show phones for contact
 @validate_args(1, "contact-phone")
-def show_phone(args, book):
-    name = args[0]
+def show_phone(args, book):    
+    name = " ".join(args)
     record = book.find(name)
 
     if record:
@@ -155,15 +147,15 @@ def show_phone(args, book):
 # Delete contact from book
 @validate_args(1, "contact-delete")
 def delete_contact(args, book):
-    name = args[0]
-    res = book.delete(name)
+    id = args[0]
+    res = book.delete(id)
     return f"Contact {res if res else 'not'} deleted"
 
 
 # Show contact birthday
-@validate_args(1, "contact-show-birthday")
+@validate_args([1,2,3], "contact-show-birthday")
 def show_birthday(args, book):
-    name = args[0]
+    name = " ".join(args)
     record = book.find(name)
 
     if record:
@@ -520,10 +512,10 @@ def debug_input(args, _):
 # Available operations on contacts
 actions = {
     "contacts-all": show_all,
-    "contact-add": add_contact,
+    "contact-add-phone": add_contact_phone,
     "contact-add-name": add_contact_name,
     "contact-change-name": change_contact_name,
-    "contact-change": change_contact,
+    "contact-change-phone": change_contact,
     "contact-remove-phone": remove_phone,
     "contact-phone": show_phone,
     "contact-delete": delete_contact,
@@ -561,7 +553,7 @@ notepad_actions = {
 
 
 def main():
-    TEST_MODE = False
+    TEST_MODE = True
     TEST_FILE = 'test_commands.txt'
 
     book = AddressBook()

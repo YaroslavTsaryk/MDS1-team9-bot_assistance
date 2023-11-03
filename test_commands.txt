@@ -1,25 +1,29 @@
 book-load
 notes-load
-contact-add John 1234567891
-contact-add John 1122334451
-contact-add Jane 1112223331
+contacts-all
+contact-add-phone 1 1224567891
+contact-add-phone 1 1123334451
+contact-add-phone 2 1112223331
+contact-add-phone 2 1112223334
 contact-add-email 1 john@gmail.com
 contact-add-address 1 London, Baker st. 1
 contact-add-name John Doe
 contacts-all
 contact-change-name 3 John Smith
-contact-change Jane 1112223334 2233442233
-contact-change Jane 1112223331 2233442233
+contact-change-phone 2 1112223334 2233442233
+contact-change-phone 2 1112223331 2233442233
 contacts-all
-contact-add-birthday John 22.11.1990
+contact-add-birthday 1 22.11.1990
 contact-phone John
-contact-add-birthday Diana 15.11.1995
-contact-show-birthday Diana
+contact-add-Name Diana
+contact-add-birthday 3 15.11.1995
+contact-show-birthday Agent Smith
 contact-show-birthday Jane
+contact-show-birthday John Smith
 birthdays
 contacts-all
 birthdays 20
-contact-remove-phone John 1234567890
+contact-remove-phone 1 1234567890
 contacts-all
 contact-delete 2
 contact-change-email 1 JOHN@gmail.com
