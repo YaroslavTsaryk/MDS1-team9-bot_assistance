@@ -390,6 +390,7 @@ def note_get_all(_, notepad):
 def note_get(args, notepad):
     if len(args) == 1:
         value = args[0]
+        value = value.strip('\'').strip('"')
     elif len(args) > 1:
         command = ' '.join(args)
         matches = re.findall(r"'(.*?)'", command)
