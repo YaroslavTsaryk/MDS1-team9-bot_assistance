@@ -579,6 +579,7 @@ def main():
         try:
             if TEST_MODE:
                 user_input = test_commands[test_line]
+                print(f'[INPUT] {user_input}')
                 test_line += 1
             else:
                 user_input = input(
