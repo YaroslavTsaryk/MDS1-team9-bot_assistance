@@ -60,6 +60,7 @@ Notes are independent from contacts and have the following structure:
 `note-get` - Get a note entry by its unique integer identifier or by its title
 `note-edit` - Edit a note entry by its name
 `note-get-tag` - Get a note entry (entries) by its tag
+`note-rename` - Rename a note entry by its original title
 
 
 
