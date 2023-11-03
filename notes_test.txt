@@ -15,4 +15,8 @@ note-get-tag tag2
 note-delete 'big 4'
 note-delete big3
 note-get-all
+note-rename big3 big4
+note-rename 'big 4' 'big3'
+note-get-all
+notes-write
 exit
