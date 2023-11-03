@@ -60,6 +60,8 @@ COMMANDS_DESCRIPTION = {
     "note-add": "note-add '<note title>' '<note text>' - Add a note with the name",
     # command
     "note-delete": "note-delete '<note title>' - Delete the note with the title",
+    # command
+    "note-add-tag": "note-add-tag '<note title>' '<tag>' - Add a tag to a note",
 }
 
 

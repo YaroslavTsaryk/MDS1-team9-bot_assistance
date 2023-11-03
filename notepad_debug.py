@@ -8,6 +8,15 @@ print("Add record 1")
 record1 = Record("MyTitle-1")
 print("Add record 2")
 record2 = Record("MyTitle-2")
+
+print("--------------------------")
+tag4 = Tag('tag-4')
+record3 = Record("MyTitle-2")
+record3.add_tag(tag4)
+notepad.add_record(record3)
+print(record3)
+print(notepad)
+print("--------------------------")
 print(record1)
 print(record2)
 
@@ -38,7 +47,7 @@ print(record1)
 print(record2)
 
 print("Remove text from the record 1")
-record1.remove_text()
+#record1.remove_text()
 print(record1)
 print(record2)
 
@@ -86,3 +95,5 @@ print(record2)
 all_notes = notepad.get_all_records()
 print(all_notes)
 
+for i in all_notes:
+    print(i)
