@@ -87,6 +87,8 @@ COMMANDS_DESCRIPTION = {
     "note-rename": "note-rename <existing title> <new title> - Rename a note entry by its original title",
     # command
     "note-search": "note-search '<pattern>' - Search for note entries by pattern",
+    # command
+    "note-delete-tag": "note-delete-tag '<title>' '<tag>' - Delete a tag entry by note name",
 }
 
 

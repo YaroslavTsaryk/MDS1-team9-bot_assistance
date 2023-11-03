@@ -137,7 +137,7 @@ class Record:
         self.tags.append(tag)
 
     def remove_tag(self, tag: Tag):
-        found = list(filter(lambda p: str(p) == str(tag), self.tags))
+        found = list(filter(lambda p: p == tag, self.tags))
         for i in found:
             self.tags.remove(i)
 

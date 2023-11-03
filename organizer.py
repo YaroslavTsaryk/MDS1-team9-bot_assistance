@@ -49,7 +49,7 @@ def add_contact_phone(args, book):
         new_record = book[int(id)]
     else:
         return "Id not exists"
-    res = ""    
+    res = ""
     found_phone = new_record.find_phone(phone)
     if not found_phone:
         new_record.add_phone(phone)
@@ -89,7 +89,7 @@ def change_contact_name(args, book):
 def add_birthday(args, book):
     id, birthday = args
     new_record = book[int(id)]
-    res = ""    
+    res = ""
     new_record.add_birthday(birthday)
     res += "Birthday added. "
     return res
@@ -135,7 +135,7 @@ def remove_phone(args, book):
     if int(id) in book.data.keys():
         record = book[int(id)]
     else:
-        return "Id not exists"    
+        return "Id not exists"
     if record:
         if record.remove_phone(phone):
             return f"Phone number {phone} removed"
@@ -145,7 +145,7 @@ def remove_phone(args, book):
 
 # Show phones for contact
 @validate_args(1, "contact-phone")
-def show_phone(args, book):    
+def show_phone(args, book):
     name = " ".join(args)
     record = book.find(name)
 
@@ -165,7 +165,7 @@ def delete_contact(args, book):
 
 
 # Show contact birthday
-@validate_args([1,2,3], "contact-show-birthday")
+@validate_args([1, 2, 3], "contact-show-birthday")
 def show_birthday(args, book):
     name = " ".join(args)
     record = book.find(name)
@@ -458,9 +458,22 @@ def note_search(args, notepad):
         return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
                          for single_record in record])
 
+
+@validate_complex_args(2, "note-delete-tag")
+def note_delete_tag(args, notepad):
+    command = ' '.join(args)
+    title, tag = parse_command(command)
+    record = notepad.find_record_by_title(Title(title))
+    if record is None:
+        return (
+            "{:<7} A note with the title [{}] doesn't exists".format(
+                '[info]', title))
+    else:
+        record.remove_tag(Tag(tag))
+        return ("{:<7} Tag deleted.".format('[ok]'))
+
+
 # load notes from json file, name as param
-
-
 @validate_args([0, 1], "note-load")
 def load_notes_data(args, notepad):
     filename = args[0] if len(args) != 0 else "notes.bin"
@@ -548,12 +561,11 @@ notepad_actions = {
     "note-delete": note_delete,
     "note-add-tag": note_add_tag,
     "note-get-tag": note_get_tag,
+    "note-delete-tag": note_delete_tag,
     "note-get-all": note_get_all,
     "note-get": note_get,
     "note-search": note_search,
     "my-debug": debug_input,
-    "note-delete-tag": '',
-    "note-delete-all-tags": '',
     "note-sort": note_get_all_sorted,
     "notes-write": write_notes_data,
     "notes-load": load_notes_data,
