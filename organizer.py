@@ -321,14 +321,17 @@ def note_add_tag(args, notepad):
         tag = matches[1]
     record = notepad.find_record_by_title(title)
     if record is None:
-        #note_record = NoteRecord(title)
-        #note_record.add_tag(tag)
-        #notepad.add_record(note_record)
         return ("{:<7} A note with the title [{}] doesn't exists".format('[ok]', title))
     else:
         record.add_tag(tag)
         return ("{:<7} Tag added.".format('[ok]'))
 
+def note_get_all(_, notepad):
+    if len(notepad.data) != 0:
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in notepad.data])
+    else:
+        return ("{:<7} {}".format('[info]', 'There are no notes.'))
 
 # Greeting display function
 def hello(*_):
@@ -371,6 +374,7 @@ notepad_actions = {
     "note-add": note_add,
     "note-delete": note_delete,
     "note-add-tag": note_add_tag,
+    "note-get-all": note_get_all,
     "my-debug": debug_input,
 }
 

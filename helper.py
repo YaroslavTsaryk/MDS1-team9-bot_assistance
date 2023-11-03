@@ -62,6 +62,8 @@ COMMANDS_DESCRIPTION = {
     "note-delete": "note-delete '<note title>' - Delete the note with the title",
     # command
     "note-add-tag": "note-add-tag '<note title>' '<tag>' - Add a tag to a note",
+    # command
+    "note-get-all": "note-get-all - Get a list of all notes",
 }
 
 
