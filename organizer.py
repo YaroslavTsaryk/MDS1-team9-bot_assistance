@@ -440,8 +440,12 @@ def note_rename(args, notepad):
             "{:<7} A note with the title [{}] doesn't exists".format(
                 '[info]', title))
     else:
-        record.rename_title(Title(new_title))
-        return ("{:<7} {}".format('[ok]', 'Note renamed.'))
+        record = notepad.find_record_by_title(Title(new_title))
+        if record is not None:
+            return ("{:<7} {}".format('[error]', 'A note with this name already exists.'))
+        else:
+            record.rename_title(Title(new_title))
+            return ("{:<7} {}".format('[ok]', 'Note renamed.'))
 
 
 @validate_complex_args(1, "note-search")
