@@ -472,7 +472,7 @@ notepad_actions = {
     "note-find-title": '',
     "note-find-tag": '',    
     "note-find-id": '',
-    "note-sort": ''    
+    "note-sort": '',
     "notes-write": write_notes_data,
     "notes-load": load_notes_data,
 }
