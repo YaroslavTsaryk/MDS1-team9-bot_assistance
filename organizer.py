@@ -333,6 +333,47 @@ def note_get_all(_, notepad):
     else:
         return ("{:<7} {}".format('[info]', 'There are no notes.'))
 
+# load notes from json file, name as param
+@validate_args([0, 1], "note-load")
+def load_notes_data(args, notepad):
+    filename = args[0] if len(args) != 0 else "notes.bin"
+
+    with open(filename, "r") as fh:
+        book_state = json.load(fh)
+        for ln in book_state:
+            new_record = NoteRecord(Title(ln["title"]))
+            if "tags" in ln.keys():
+                for tag in ln["tags"]:
+                    new_record.add_tag(Tag(tag))
+            if "text" in ln.keys():
+                new_record.add_text(Text(ln["text"]))
+            notepad.add_record(new_record)
+    return "Notes loaded"
+
+# Write to json file, name as param
+@validate_args([0, 1], "book-write")
+def write_notes_data(args, notepad):
+    filename = args[0] if len(args) != 0 else "notes.bin"
+
+    notes = []
+    for record in notepad.data:
+        note = {}
+        note["title"] = record.title.value
+        tags = []
+        if len(record.tags):
+            for tag in record.tags:
+                tags.append(tag.value)
+            note["tags"] = tags
+        if "text" in record.__dict__:
+            note["text"] = record.text.value
+        notes.append(note)
+
+    with open(filename, "w") as fh:
+        json.dump(notes, fh)
+    return "Notes written"
+
+
+
 # Greeting display function
 def hello(*_):
     return "{:<7} {}".format("[*]", 'How can I help you?')
@@ -376,11 +417,13 @@ notepad_actions = {
     "note-add-tag": note_add_tag,
     "note-get-all": note_get_all,
     "my-debug": debug_input,
+    "notes-write": write_notes_data,
+    "notes-load": load_notes_data,
 }
 
 
 def main():
-    TEST_MODE = True
+    TEST_MODE = False
     TEST_FILE = 'test_commands.txt'
 
     book = AddressBook()
