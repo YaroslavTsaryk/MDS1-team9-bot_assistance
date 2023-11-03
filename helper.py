@@ -72,7 +72,7 @@ COMMANDS_DESCRIPTION = {
     # command
     "note-sort": "note-sort - Sort notes by number of tags in descending order, then alphabetically by title",
     # command
-    "notes-load": "note-load <filename> - loads data from a json file. " +
+    "notes-load": "notes-load <filename> - loads data from a json file. " +
     "Default filename - notes.bin",
     # command
     "notes-write": "note-write <filename> - writes the notes to a file. " +
