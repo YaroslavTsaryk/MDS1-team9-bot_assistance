@@ -54,7 +54,11 @@ class Title(Field):
         if not title_min_length <= len(title) <= title_max_length:
             raise IncorrectTitleException(
                 f"the title must be {title_min_length} to {title_max_length} characters long ")
-
+    
+    def __eq__(self, other):
+        if isinstance(other, Title):
+            return self.value == other.value
+        return False
 
 class Tag(Field):
     def __init__(self, tag: str):
@@ -186,7 +190,7 @@ class NotePad(UserDict):
         return [str(record) for record in self.data]
 
     def delete(self, title: Title):
-        result = self.find_record_by_title(title)
+        result = self.find_record_by_title(Title(title))
         if result is None:
             return False
         else:
