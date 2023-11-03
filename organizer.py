@@ -315,6 +315,26 @@ def note_add(args, notepad):
                 '[info]', title))
 
 
+@validate_complex_args(2, "note-edit")
+def note_edit(args, notepad):
+    if len(args) == 2:
+        title = args[0]
+        text = args[1]
+    if len(args) > 2:
+        command = ' '.join(args)
+        matches = re.findall(r"'(.*?)'", command)
+        title = matches[0]
+        text = matches[1]
+    record = notepad.find_record_by_title(Title(title))
+    if record is None:
+        return (
+            "{:<7} A note with the title [{}] doesn't exists".format(
+                '[info]', title))
+    else:
+        record.edit_text(Text(text))
+        return ("{:<7} Note edited.".format('[ok]'))
+
+
 @validate_complex_args(1, "note-delete")
 def note_delete(args, notepad):
     if len(args) == 1:
@@ -488,6 +508,7 @@ actions = {
 
 notepad_actions = {
     "note-add": note_add,
+    "note-edit": note_edit,
     "note-delete": note_delete,
     "note-add-tag": note_add_tag,
     "note-get-all": note_get_all,

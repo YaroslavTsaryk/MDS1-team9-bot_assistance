@@ -88,7 +88,8 @@ COMMANDS_DESCRIPTION = {
     "note-write": "note-write <filename> - writes the notes to a file. " +
     "Default filename - notes.bin",
     # command
-    "note-get": "note-get <id> or note-get '<title>' - Get a note record by its unique integer identifier or by its title"
+    "note-get": "note-get <id> or note-get '<title>' - Get a note record by its unique integer identifier or by its title",
+    "note-edit": "note-get '<title>' '<new text>' - Edit a note entry by its name",
 }
 
 
