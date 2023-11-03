@@ -81,10 +81,20 @@ COMMANDS_DESCRIPTION = {
     "note-get-tag": "note-get-tag <tag> - Get a note entry (entries) by its tag",
     # command
     "note-rename": "note-rename <existing title> <new title> - Rename a note entry by its original title",
+    # command
+    "note-search": "note-search '<pattern>' - Search for note entries by pattern",
 }
 
 
+def parse_command(command):
+    pattern = re.compile(r"'([^']*)'|\b(\S+)\b")
+    matches = pattern.findall(command)
+    parsed_arguments = [m[0] or m[1] for m in matches]
+    return parsed_arguments
+
 # Function decorator for validating function arguments
+
+
 def validate_args(expected_arg_len, command):
     def decorator(func):
         def wrapper(*args):
@@ -105,58 +115,21 @@ def validate_args(expected_arg_len, command):
 
 
 # Function decorator for validating complex function arguments
-def validate_complex_args_two(command):
-    expected_arg_len = 2
-
+def validate_complex_args(expected_arg_len, command):
     def decorator(func):
         def wrapper(*args):
-            list_of_values = args[0]
-            string_for_regexp = ' '.join(list_of_values)
-            matches = re.findall(r"'(.*?)'", string_for_regexp)
-            if len(matches) == 1:
-                print(f"DEBUG: len(list_of_values): {len(list_of_values)}")
+            commands = args[0]
+            if len(command) == 1:
+                commands = ' '.join(commands + ['MOCK'])
+            else:
+                commands = ' '.join(commands)
+            parsed_arguments = parse_command(commands)
+            if len(parsed_arguments) != expected_arg_len:
                 return (
                     "{:<7} {:<34} {}".format(
                         '[error]',
                         "Invalid command format. Please use:",
                         COMMANDS_DESCRIPTION[command]))
-            elif len(list_of_values) == 2:
-                pass
-            else:
-                string_for_regexp = ' '.join(list_of_values)
-                matches = re.findall(r"'(.*?)'", string_for_regexp)
-                if len(matches) != expected_arg_len:
-                    return (
-                        "{:<7} {:<34} {}".format(
-                            '[error]',
-                            "Invalid command format. Please use:",
-                            COMMANDS_DESCRIPTION[command]))
-            try:
-                return func(*args)
-            except BaseException as be:
-                return str(be)
-        return wrapper
-    return decorator
-
-
-# Function decorator for checking a single complex argument
-def validate_complex_args_one(command):
-    expected_arg_len = 1
-
-    def decorator(func):
-        def wrapper(*args):
-            list_of_values = args[0]
-            if len(list_of_values) == 1:
-                pass
-            else:
-                string_for_regexp = ' '.join(list_of_values)
-                matches = re.findall(r"'(.*?)'", string_for_regexp)
-                if len(matches) != expected_arg_len:
-                    return (
-                        "{:<7} {:<34} {}".format(
-                            '[error]',
-                            "Invalid command format. Please use:",
-                            COMMANDS_DESCRIPTION[command]))
             try:
                 return func(*args)
             except BaseException as be:

@@ -188,11 +188,15 @@ class NotePad(UserDict):
                 self.data))
         return result[0] if result else None
 
+    def find_record_by_text(self, text):
+        result = list(filter(lambda record: text in record.text, self.data))
+        return result if result else None
+
     def get_all_records(self):
         return [str(record) for record in self.data]
 
     def delete(self, title: Title):
-        result = self.find_record_by_title(Title(title))
+        result = self.find_record_by_title(title)
         if result is None:
             return False
         else:

@@ -15,11 +15,11 @@ from notepad import (
 )
 from helper import (
     COMMANDS_DESCRIPTION,
-    validate_complex_args_one,
-    validate_complex_args_two,
+    validate_complex_args,
     detect_input_type,
     get_suggestions,
-    validate_args
+    validate_args,
+    parse_command
 )
 
 
@@ -43,14 +43,13 @@ def parse_input(user_input):
 
 # Add contact with phone or add new phone to existing one
 @validate_args(2, "contact-add")
-def add_contact(args, book):
-    name, phone = args
-    new_record = book.find(name)
-    res = ""
-    if not new_record:
-        new_record = Record(name)
-        book.add_record(new_record)
-        res += f"Contact with id = {new_record.id} added. "
+def add_contact_phone(args, book):
+    id, phone = args
+    if int(id) in book.data.keys():
+        new_record = book[int(id)]
+    else:
+        return "Id not exists"
+    res = ""    
     found_phone = new_record.find_phone(phone)
     if not found_phone:
         new_record.add_phone(phone)
@@ -74,7 +73,10 @@ def add_contact_name(args, book):
 def change_contact_name(args, book):
     id, *name = args
     new_name = " ".join(name)
-    record = book[int(id)]
+    if int(id) in book.data.keys():
+        record = book[int(id)]
+    else:
+        return "Id not exists"
     res = ""
     if record:
         record.set_name(new_name)
@@ -85,13 +87,9 @@ def change_contact_name(args, book):
 # Add birthday to contact or contact with birthday
 @validate_args(2, "contact-add-birthday")
 def add_birthday(args, book):
-    name, birthday = args
-    new_record = book.find(name)
-    res = ""
-    if not new_record:
-        new_record = Record(name)
-        book.add_record(new_record)
-        res += "Contact added. "
+    id, birthday = args
+    new_record = book[int(id)]
+    res = ""    
     new_record.add_birthday(birthday)
     res += "Birthday added. "
     return res
@@ -107,10 +105,11 @@ def add_email(args, book):
 
 @validate_args([2, 3, 4, 5, 6, 7, 8, 9], "contact-add-address")
 def add_address(args, book):
-    print(args)
     id, *address = args
-    print(address)
-    record = book[int(id)]
+    if int(id) in book.data.keys():
+        record = book[int(id)]
+    else:
+        return "Id not exists"
     record.add_address(" ".join(address))
     return f"Address {record.address} added to record {id}"
 
@@ -118,8 +117,8 @@ def add_address(args, book):
 # Change phone number
 @validate_args(3, "contact-change")
 def change_contact(args, book):
-    name, phone1, phone2 = args
-    record = book.find(name)
+    id, phone1, phone2 = args
+    record = book[int(id)]
     if record:
         if record.edit_phone(phone1, phone2):
             return "Contact updated."
@@ -132,8 +131,11 @@ def change_contact(args, book):
 # Remove phone from contact
 @validate_args(2, "contact-remove-phone")
 def remove_phone(args, book):
-    name, phone = args
-    record = book.find(name)
+    id, phone = args
+    if int(id) in book.data.keys():
+        record = book[int(id)]
+    else:
+        return "Id not exists"    
     if record:
         if record.remove_phone(phone):
             return f"Phone number {phone} removed"
@@ -143,8 +145,8 @@ def remove_phone(args, book):
 
 # Show phones for contact
 @validate_args(1, "contact-phone")
-def show_phone(args, book):
-    name = args[0]
+def show_phone(args, book):    
+    name = " ".join(args)
     record = book.find(name)
 
     if record:
@@ -157,15 +159,15 @@ def show_phone(args, book):
 # Delete contact from book
 @validate_args(1, "contact-delete")
 def delete_contact(args, book):
-    name = args[0]
-    res = book.delete(name)
+    id = args[0]
+    res = book.delete(id)
     return f"Contact {res if res else 'not'} deleted"
 
 
 # Show contact birthday
-@validate_args(1, "contact-show-birthday")
+@validate_args([1,2,3], "contact-show-birthday")
 def show_birthday(args, book):
-    name = args[0]
+    name = " ".join(args)
     record = book.find(name)
 
     if record:
@@ -295,16 +297,10 @@ def show_help(args, book):
     return "\n".join(COMMANDS_DESCRIPTION.values())
 
 
-@validate_complex_args_two("note-add")
+@validate_complex_args(2, "note-add")
 def note_add(args, notepad):
-    if len(args) == 2:
-        title = args[0]
-        text = args[1]
-    if len(args) > 2:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        title = matches[0]
-        text = matches[1]
+    command = ' '.join(args)
+    title, text = parse_command(command)
     if notepad.find_record_by_title(Title(title)) is None:
         note_record = NoteRecord(Title(title))
         note_record.add_text(Text(text))
@@ -316,16 +312,10 @@ def note_add(args, notepad):
                 '[info]', title))
 
 
-@validate_complex_args_two("note-edit")
+@validate_complex_args(2, "note-edit")
 def note_edit(args, notepad):
-    if len(args) == 2:
-        title = args[0]
-        text = args[1]
-    if len(args) > 2:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        title = matches[0]
-        text = matches[1]
+    command = ' '.join(args)
+    title, text = parse_command(command)
     record = notepad.find_record_by_title(Title(title))
     if record is None:
         return (
@@ -336,14 +326,10 @@ def note_edit(args, notepad):
         return ("{:<7} Note edited.".format('[ok]'))
 
 
-@validate_complex_args_one("note-delete")
+@validate_complex_args(1, "note-delete")
 def note_delete(args, notepad):
-    if len(args) == 1:
-        title = args[0]
-    elif len(args) > 1:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        title = matches[0]
+    command = ' '.join(args + ['MOCK'])
+    title, _ = parse_command(command)
     if notepad.delete(Title(title)):
         return ("{:<7} Note deleted.".format('[ok]'))
     else:
@@ -352,16 +338,10 @@ def note_delete(args, notepad):
                 '[info]', title))
 
 
-@validate_complex_args_two("note-add-tag")
+@validate_complex_args(2, "note-add-tag")
 def note_add_tag(args, notepad):
-    if len(args) == 2:
-        title = args[0]
-        tag = args[1]
-    if len(args) > 2:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        title = matches[0]
-        tag = matches[1]
+    command = ' '.join(args)
+    title, tag = parse_command(command)
     record = notepad.find_record_by_title(Title(title))
     if record is None:
         return (
@@ -380,14 +360,24 @@ def note_get_all(_, notepad):
         return ("{:<7} {}".format('[info]', 'There are no notes.'))
 
 
-@validate_complex_args_one("note-get")
+def note_get_all_sorted(_, notepad):
+    if len(notepad.data) != 0:
+        sorted_notes = sorted(
+            notepad.data,
+            key=lambda x:
+            len(x.tags),
+            reverse=True
+        )
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in sorted_notes])
+    else:
+        return ("{:<7} {}".format('[info]', 'There are no notes.'))
+
+
+@validate_complex_args(1, "note-get")
 def note_get(args, notepad):
-    if len(args) == 1:
-        value = args[0]
-    elif len(args) > 1:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        value = matches[0]
+    command = ' '.join(args + ['MOCK'])
+    value, _ = parse_command(command)
 
     value, value_type = detect_input_type(value)
     if value_type == 'int':
@@ -424,14 +414,10 @@ def note_get(args, notepad):
     return handler(new_value)
 
 
-@validate_complex_args_one("note-get-tag")
+@validate_complex_args(1, "note-get-tag")
 def note_get_tag(args, notepad):
-    if len(args) == 1:
-        tag = args[0]
-    elif len(args) > 1:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        tag = matches[0]
+    command = ' '.join(args + ['MOCK'])
+    tag, _ = parse_command(command)
 
     record = notepad.find_record_by_tag(Tag(tag))
     if record is None:
@@ -443,16 +429,10 @@ def note_get_tag(args, notepad):
                          for single_record in record])
 
 
-@validate_complex_args_two("note-rename")
+@validate_complex_args(2, "note-rename")
 def note_rename(args, notepad):
-    if len(args) == 2:
-        title = args[0]
-        new_title = args[1]
-    if len(args) > 2:
-        command = ' '.join(args)
-        matches = re.findall(r"'(.*?)'", command)
-        title = matches[0]
-        new_title = matches[1]
+    command = ' '.join(args)
+    title, new_title = parse_command(command)
 
     record = notepad.find_record_by_title(Title(title))
     if record is None:
@@ -463,7 +443,24 @@ def note_rename(args, notepad):
         record.rename_title(Title(new_title))
         return ("{:<7} {}".format('[ok]', 'Note renamed.'))
 
+
+@validate_complex_args(1, "note-search")
+def note_search(args, notepad):
+    command = ' '.join(args + ['MOCK'])
+    pattern, _ = parse_command(command)
+
+    record = notepad.find_record_by_text(pattern)
+    if record is None:
+        return (
+            "{:<7} A notes with the pattern [{}] doesn't exists".format(
+                '[info]', pattern))
+    else:
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in record])
+
 # load notes from json file, name as param
+
+
 @validate_args([0, 1], "note-load")
 def load_notes_data(args, notepad):
     filename = args[0] if len(args) != 0 else "notes.bin"
@@ -522,10 +519,10 @@ def debug_input(args, _):
 # Available operations on contacts
 actions = {
     "contacts-all": show_all,
-    "contact-add": add_contact,
+    "contact-add-phone": add_contact_phone,
     "contact-add-name": add_contact_name,
     "contact-change-name": change_contact_name,
-    "contact-change": change_contact,
+    "contact-change-phone": change_contact,
     "contact-remove-phone": remove_phone,
     "contact-phone": show_phone,
     "contact-delete": delete_contact,
@@ -553,8 +550,9 @@ notepad_actions = {
     "note-get-tag": note_get_tag,
     "note-get-all": note_get_all,
     "note-get": note_get,
+    "note-search": note_search,
     "my-debug": debug_input,
-    "note-sort": '',
+    "note-sort": note_get_all_sorted,
     "notes-write": write_notes_data,
     "notes-load": load_notes_data,
 }
@@ -579,6 +577,7 @@ def main():
         try:
             if TEST_MODE:
                 user_input = test_commands[test_line]
+                print(f'[INPUT] {user_input}')
                 test_line += 1
             else:
                 user_input = input(
