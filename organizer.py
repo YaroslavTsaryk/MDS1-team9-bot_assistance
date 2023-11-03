@@ -436,12 +436,32 @@ def note_get_tag(args, notepad):
     record = notepad.find_record_by_tag(Tag(tag))
     if record is None:
         return (
-            "{:<7} A note with the tag [{}] doesn't exists".format(
+            "{:<7} A notes with the tag [{}] doesn't exists".format(
                 '[info]', tag))
     else:
         return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
                          for single_record in record])
 
+
+@validate_complex_args_two("note-rename")
+def note_rename(args, notepad):
+    if len(args) == 2:
+        title = args[0]
+        new_title = args[1]
+    if len(args) > 2:
+        command = ' '.join(args)
+        matches = re.findall(r"'(.*?)'", command)
+        title = matches[0]
+        new_title = matches[1]
+
+    record = notepad.find_record_by_title(Title(title))
+    if record is None:
+        return (
+            "{:<7} A note with the title [{}] doesn't exists".format(
+                '[info]', title))
+    else:
+        record.rename_title(Title(new_title))
+        return ("{:<7} {}".format('[ok]', 'Note renamed.'))
 
 # load notes from json file, name as param
 @validate_args([0, 1], "note-load")
@@ -527,6 +547,7 @@ actions = {
 notepad_actions = {
     "note-add": note_add,
     "note-edit": note_edit,
+    "note-rename": note_rename,
     "note-delete": note_delete,
     "note-add-tag": note_add_tag,
     "note-get-tag": note_get_tag,
