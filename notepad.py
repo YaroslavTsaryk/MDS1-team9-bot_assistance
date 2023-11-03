@@ -8,7 +8,11 @@ class IncorrectTagException(Exception):
         self.message = message
 
     def __str__(self):
-        return ("{:<7} {} {}".format("[error]", "Incorrect tag:", self.message))
+        return (
+            "{:<7} {} {}".format(
+                "[error]",
+                "Incorrect tag:",
+                self.message))
 
 
 class IncorrectTitleException(Exception):
@@ -16,7 +20,11 @@ class IncorrectTitleException(Exception):
         self.message = message
 
     def __str__(self):
-        return ("{:<7} {} {}".format("[error]", "Incorrect title:", self.message))
+        return (
+            "{:<7} {} {}".format(
+                "[error]",
+                "Incorrect title:",
+                self.message))
 
 
 class IncorrectTextException(Exception):
@@ -24,7 +32,11 @@ class IncorrectTextException(Exception):
         self.message = message
 
     def __str__(self):
-        return ("{:<7} {} {}".format("[error]", "Incorrect text:", self.message))
+        return (
+            "{:<7} {} {}".format(
+                "[error]",
+                "Incorrect text:",
+                self.message))
 
 
 class Field:

@@ -379,6 +379,7 @@ def note_get_all(_, notepad):
     else:
         return ("{:<7} {}".format('[info]', 'There are no notes.'))
 
+
 @validate_complex_args_one("note-get")
 def note_get(args, notepad):
     if len(args) == 1:

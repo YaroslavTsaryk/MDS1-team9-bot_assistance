@@ -112,11 +112,11 @@ def validate_args(expected_arg_len, command):
         return wrapper
     return decorator
 
+
 # Function decorator for validating complex function arguments
-
-
 def validate_complex_args_two(command):
     expected_arg_len = 2
+
     def decorator(func):
         def wrapper(*args):
             list_of_values = args[0]
@@ -147,9 +147,11 @@ def validate_complex_args_two(command):
         return wrapper
     return decorator
 
+
 # Function decorator for checking a single complex argument
 def validate_complex_args_one(command):
     expected_arg_len = 1
+
     def decorator(func):
         def wrapper(*args):
             list_of_values = args[0]
@@ -170,6 +172,7 @@ def validate_complex_args_one(command):
                 return str(be)
         return wrapper
     return decorator
+
 
 # Find suggested commands
 def get_suggestions(command):
@@ -202,9 +205,8 @@ def get_suggestions(command):
 
     return "\n".join(result.values())
 
+
 # Function for determining the type of input data
-
-
 def detect_input_type(value):
     try:
         int_value = int(value)
