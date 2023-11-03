@@ -189,7 +189,7 @@ class NotePad(UserDict):
         return result[0] if result else None
 
     def find_record_by_text(self, text):
-        result = list(filter(lambda record: text in str(record.text), self.data))
+        result = list(filter(lambda record: str(text).lower() in str(record.text).lower(), self.data))
         return result if result else None
 
     def get_all_records(self):
