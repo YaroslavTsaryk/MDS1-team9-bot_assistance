@@ -1,3 +1,5 @@
+book-load
+notes-load
 contact-add John 1234567891
 contact-add John 1122334451
 contact-add Jane 1112223331
@@ -14,6 +16,7 @@ contact-phone John
 contact-add-birthday Diana 15.11.1995
 contact-show-birthday Diana
 contact-show-birthday Jane
+birthdays
 contacts-all
 birthdays 20
 contact-remove-phone John 1234567890
@@ -22,4 +25,19 @@ contact-delete 2
 contact-change-email 1 JOHN@gmail.com
 contact-change-address 1 Paris, Baker st. 1
 contacts-all
+note-add 'Organizer startup' 'Startup for new organizer application'
+note-add-tag 'Organizer startup' 'work'
+note-add 'Kids  toys' 'Bear, doll, LEGO'
+note-add-tag 'Kids  toys' 'gifts'
+note-add-tag 'Kids  toys' 'kids'
+note-add 'Cristmas  gifts' 'Parfume, helicopter, rail road'
+note-add-tag 'Cristmas  gifts' 'gifts'
+note-add-tag 'Cristmas  gifts' 'family'
+note-add 'New owen' 'New owen reqiored with steam mode'
+note-add-tag 'New owen' 'family'
+note-get-all
+note-get-tag gifts
+note-get-tag family
+notes-write
 exit
+
