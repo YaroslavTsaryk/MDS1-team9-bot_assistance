@@ -115,17 +115,43 @@ def validate_args(expected_arg_len, command):
 # Function decorator for validating complex function arguments
 
 
-def validate_complex_args(expected_arg_len, command):
+def validate_complex_two_args(expected_arg_len, command):
     def decorator(func):
         def wrapper(*args):
             list_of_values = args[0]
-            if len(list_of_values) == 0:
+            string_for_regexp = ' '.join(list_of_values)
+            matches = re.findall(r"'(.*?)'", string_for_regexp)
+            if len(matches) == 1:
+                print(f"DEBUG: len(list_of_values): {len(list_of_values)}")
                 return (
                     "{:<7} {:<34} {}".format(
                         '[error]',
                         "Invalid command format. Please use:",
                         COMMANDS_DESCRIPTION[command]))
-            elif len(list_of_values) == 2 or len(list_of_values) == 1:
+            elif len(list_of_values) == 2:
+                pass
+            else:
+                string_for_regexp = ' '.join(list_of_values)
+                matches = re.findall(r"'(.*?)'", string_for_regexp)
+                if len(matches) != expected_arg_len:
+                    return (
+                        "{:<7} {:<34} {}".format(
+                            '[error]',
+                            "Invalid command format. Please use:",
+                            COMMANDS_DESCRIPTION[command]))
+            try:
+                return func(*args)
+            except BaseException as be:
+                return str(be)
+        return wrapper
+    return decorator
+
+# Function decorator for checking a single complex argument
+def validate_complex_one_arg(expected_arg_len, command):
+    def decorator(func):
+        def wrapper(*args):
+            list_of_values = args[0]
+            if len(list_of_values) == 1:
                 pass
             else:
                 string_for_regexp = ' '.join(list_of_values)
@@ -144,8 +170,6 @@ def validate_complex_args(expected_arg_len, command):
     return decorator
 
 # Find suggested commands
-
-
 def get_suggestions(command):
     all_commands = COMMANDS_DESCRIPTION.keys()
 
