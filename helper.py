@@ -70,7 +70,7 @@ COMMANDS_DESCRIPTION = {
     # command
     # "note-delete-all-tags": "note-delete-all-tags '<note title>' - remove all tags from the note",
     # command
-    "note-sort": "note-sort - Sort notes by number of tags in descending order, then alphabetically by title",
+    "note-sort": "note-sort - Sort notes by number of tags in descending order",
     # command
     "notes-load": "notes-load <filename> - loads data from a json file. " +
     "Default filename - notes.bin",
