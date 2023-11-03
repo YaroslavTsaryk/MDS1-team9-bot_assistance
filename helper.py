@@ -80,7 +80,7 @@ COMMANDS_DESCRIPTION = {
     # command
     "note-find-id": "note-find-id '<id>' - Find note by id",
     # command
-    "note-sort": "note-sort - Sort notes by number of tags in descending order, then alphabetically by title"
+    "note-sort": "note-sort - Sort notes by number of tags in descending order, then alphabetically by title",
     # command
     "note-load": "note-load <filename> - loads data from a json file. " +
     "Default filename - notes.bin",
