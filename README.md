@@ -55,8 +55,8 @@ Notes are independent from contacts and have the following structure:
 `note-find-tag <tag>` - Returns all notes with the given tag    
 `note-find-id <id>` - Find note by id    
 `note-sort` - Sort notes by number of tags in descending orde, then alphabetically by title    
-    
-
+`note-load` - Loads notes from a json file
+`note-write` - Writes the notes to a json file
 
 
 Developed by T9:

@@ -221,8 +221,9 @@ def get_birthdays(args, book):
 
 # Display all contacts
 def show_all(args, book):
-    # res=""
-    # for key,value in contacts.items():
+    if not len(book.items()):
+        return "{:<7} {}".format("[info]", "There are no contacts yet.")
+
     return "\n".join([f"{key}: {value}" for key, value in book.items()])
 
 
@@ -288,9 +289,9 @@ def note_add(args, notepad):
         matches = re.findall(r"'(.*?)'", command)
         title = matches[0]
         text = matches[1]
-    if notepad.find_record_by_title(title) is None:
-        note_record = NoteRecord(title)
-        note_record.add_text(text)
+    if notepad.find_record_by_title(Title(title)) is None:
+        note_record = NoteRecord(Title(title))
+        note_record.add_text(Text(text))
         notepad.add_record(note_record)
         return ("{:<7} Note added.".format('[ok]'))
     else:
@@ -304,7 +305,7 @@ def note_delete(args, notepad):
         command = ' '.join(args)
         matches = re.findall(r"'(.*?)'", command)
         title = matches[0]
-    if notepad.delete(title):
+    if notepad.delete(Title(title)):
         return ("{:<7} Note deleted.".format('[ok]'))
     else:
         return ("{:<7} A note with the title [{}] doesn't exists".format('[info]',  title))
@@ -319,11 +320,11 @@ def note_add_tag(args, notepad):
         matches = re.findall(r"'(.*?)'", command)
         title = matches[0]
         tag = matches[1]
-    record = notepad.find_record_by_title(title)
+    record = notepad.find_record_by_title(Title(title))
     if record is None:
         return ("{:<7} A note with the title [{}] doesn't exists".format('[ok]', title))
     else:
-        record.add_tag(tag)
+        record.add_tag(Tag(tag))
         return ("{:<7} Tag added.".format('[ok]'))
 
 def note_get_all(_, notepad):
@@ -332,6 +333,47 @@ def note_get_all(_, notepad):
                          for single_record in notepad.data])
     else:
         return ("{:<7} {}".format('[info]', 'There are no notes.'))
+
+# load notes from json file, name as param
+@validate_args([0, 1], "note-load")
+def load_notes_data(args, notepad):
+    filename = args[0] if len(args) != 0 else "notes.bin"
+
+    with open(filename, "r") as fh:
+        book_state = json.load(fh)
+        for ln in book_state:
+            new_record = NoteRecord(Title(ln["title"]))
+            if "tags" in ln.keys():
+                for tag in ln["tags"]:
+                    new_record.add_tag(Tag(tag))
+            if "text" in ln.keys():
+                new_record.add_text(Text(ln["text"]))
+            notepad.add_record(new_record)
+    return "Notes loaded"
+
+# Write to json file, name as param
+@validate_args([0, 1], "note-write")
+def write_notes_data(args, notepad):
+    filename = args[0] if len(args) != 0 else "notes.bin"
+
+    notes = []
+    for record in notepad.data:
+        note = {}
+        note["title"] = record.title.value
+        tags = []
+        if len(record.tags):
+            for tag in record.tags:
+                tags.append(tag.value)
+            note["tags"] = tags
+        if "text" in record.__dict__:
+            note["text"] = record.text.value
+        notes.append(note)
+
+    with open(filename, "w") as fh:
+        json.dump(notes, fh)
+    return "Notes written"
+
+
 
 # Greeting display function
 def hello(*_):
@@ -347,6 +389,7 @@ def debug_input(args, _):
 
 # Available operations on contacts
 actions = {
+    "contacts-all": show_all,
     "contact-add": add_contact,
     "contact-add-name": add_contact_name,
     "contact-change-name": change_contact_name,
@@ -364,7 +407,6 @@ actions = {
     "book-write": write_book_data,
     "birthdays": get_birthdays,
     "help": show_help,
-    "all": show_all,
     "hello": hello,
     "exit": exit,
     "close": exit
@@ -384,11 +426,13 @@ notepad_actions = {
     "note-find-tag": '',    
     "note-find-id": '',
     "note-sort": ''    
+    "notes-write": write_notes_data,
+    "notes-load": load_notes_data,
 }
 
 
 def main():
-    TEST_MODE = True
+    TEST_MODE = False
     TEST_FILE = 'test_commands.txt'
 
     book = AddressBook()
@@ -422,8 +466,11 @@ def main():
                 suggested_commands = get_suggestions(command)
                 if len(suggested_commands):
                     print(
-                        "Invalid command. Maybe you mean one of these:\n" +
-                        suggested_commands
+                        "{:<7} {}".format(
+                            "[info]",
+                            "Invalid command. Maybe you mean one of these:\n" +
+                            suggested_commands
+                        ),
                     )
                 else:
                     print("{:<7} {}".format("[error]", "Invalid command."))
