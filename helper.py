@@ -115,7 +115,8 @@ def validate_args(expected_arg_len, command):
 # Function decorator for validating complex function arguments
 
 
-def validate_complex_two_args(expected_arg_len, command):
+def validate_complex_args_two(command):
+    expected_arg_len = 2
     def decorator(func):
         def wrapper(*args):
             list_of_values = args[0]
@@ -147,7 +148,8 @@ def validate_complex_two_args(expected_arg_len, command):
     return decorator
 
 # Function decorator for checking a single complex argument
-def validate_complex_one_arg(expected_arg_len, command):
+def validate_complex_args_one(command):
+    expected_arg_len = 1
     def decorator(func):
         def wrapper(*args):
             list_of_values = args[0]
