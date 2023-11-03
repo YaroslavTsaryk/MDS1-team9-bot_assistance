@@ -412,7 +412,7 @@ actions = {
 }
 
 notepad_actions = {
-    "note-add": note_add,    
+    "note-add": note_add,
     "note-delete": note_delete,
     "note-add-tag": note_add_tag,
     "note-get-all": note_get_all,
