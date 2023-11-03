@@ -28,6 +28,7 @@ contacts-all
 contact-delete 2
 contact-change-email 1 JOHN@gmail.com
 contact-change-address 1 Paris, Baker st. 1
+contact-add-phone 21 1224567891
 contacts-all
 note-add 'Organizer startup' 'Startup for new organizer application'
 note-add-tag 'Organizer startup' 'work'
