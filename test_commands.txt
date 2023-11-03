@@ -1,27 +1,49 @@
-load-book
-add-contact John 1234567891
-add-contact John 1122334451
-add-contact Jane 1112223331
-add-email 5 john@gmail.com
-add-address 6 London, Baker st. 1
-add-contact-name John Does
-all
-change-contact-name 3 John Smith
-change-contact Jane 1112223334 2233442233
-all
-add-birthday John 22.10.1990
-phone John
-add-birthday Diana 15.10.1995
-show-birthday Diana
-show-birthday Jane
-all
+book-load
+notes-load
+contacts-all
+contact-add-phone 1 1224567891
+contact-add-phone 1 1123334451
+contact-add-phone 2 1112223331
+contact-add-phone 2 1112223334
+contact-add-email 1 john@gmail.com
+contact-add-address 1 London, Baker st. 1
+contact-add-name John Doe
+contacts-all
+contact-change-name 3 John Smith
+contact-change-phone 2 1112223334 2233442233
+contact-change-phone 2 1112223331 2233442233
+contacts-all
+contact-add-birthday 1 22.11.1990
+contact-phone John
+contact-add-Name Diana
+contact-add-birthday 3 15.11.1995
+contact-show-birthday Agent Smith
+contact-show-birthday Jane
+contact-show-birthday John Smith
 birthdays
-all
-birthdays 15
-remove-phone John 1234567890
-all
-delete-contact 2
-change-email 1 JOHN@gmail.com
-change-address 1 Paris, Baker st. 1
-all
+contacts-all
+birthdays 20
+contact-remove-phone 1 1234567890
+contacts-all
+contact-delete 2
+contact-change-email 1 JOHN@gmail.com
+contact-change-address 1 Paris, Baker st. 1
+contact-add-phone 21 1224567891
+contacts-all
+note-add 'Organizer startup' 'Startup for new organizer application'
+note-add-tag 'Organizer startup' 'work'
+note-add 'Kids  toys' 'Bear, doll, LEGO'
+note-add-tag 'Kids  toys' 'gifts'
+note-add-tag 'Kids  toys' 'kids'
+note-add 'Cristmas  gifts' 'Parfume, helicopter, rail road'
+note-add-tag 'Cristmas  gifts' 'gifts'
+note-add-tag 'Cristmas  gifts' 'family'
+note-add 'New owen' 'New owen reqiored with steam mode'
+note-add-tag 'New owen' 'family'
+note-get-all
+note-sort
+note-get-tag gifts
+note-get-tag family
+notes-write
 exit
+

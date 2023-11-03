@@ -8,7 +8,11 @@ class IncorrectTagException(Exception):
         self.message = message
 
     def __str__(self):
-        return f"Incorrect tag: {self.message}"
+        return (
+            "{:<7} {} {}".format(
+                "[error]",
+                "Incorrect tag:",
+                self.message))
 
 
 class IncorrectTitleException(Exception):
@@ -16,7 +20,11 @@ class IncorrectTitleException(Exception):
         self.message = message
 
     def __str__(self):
-        return f"Incorrect title: {self.message}"
+        return (
+            "{:<7} {} {}".format(
+                "[error]",
+                "Incorrect title:",
+                self.message))
 
 
 class IncorrectTextException(Exception):
@@ -24,7 +32,11 @@ class IncorrectTextException(Exception):
         self.message = message
 
     def __str__(self):
-        return f"Incorrect text: {self.message}"
+        return (
+            "{:<7} {} {}".format(
+                "[error]",
+                "Incorrect text:",
+                self.message))
 
 
 class Field:
@@ -39,6 +51,11 @@ class Title(Field):
     def __init__(self, title: str):
         Title.is_valid_title(title)
         super().__init__(title)
+
+    def __eq__(self, other):
+        if isinstance(other, Title):
+            return self.value == other.value
+        return False
 
     @staticmethod
     def is_valid_title(title: str):
@@ -144,6 +161,15 @@ class NotePad(UserDict):
     def __init__(self):
         self.data = list()
 
+    def __eq__(self, other):
+        if isinstance(other, Title):
+            return self.value == other.value
+        if isinstance(other, Text):
+            return self.value == other.value
+        if isinstance(other, Tag):
+            return self.value == other.value
+        return False
+
     def add_record(self, record: Record):
         self.data.append(record)
 
@@ -153,7 +179,7 @@ class NotePad(UserDict):
 
     def find_record_by_tag(self, tag: Tag):
         result = list(filter(lambda record: tag in record.tags, self.data))
-        return result[0] if result else None
+        return result if result else None
 
     def find_record_by_id(self, record_auto_id: int):
         result = list(
@@ -162,95 +188,17 @@ class NotePad(UserDict):
                 self.data))
         return result[0] if result else None
 
+    def find_record_by_text(self, text):
+        result = list(filter(lambda record: text in record.text, self.data))
+        return result if result else None
+
     def get_all_records(self):
         return [str(record) for record in self.data]
 
-
     def delete(self, title: Title):
         result = self.find_record_by_title(title)
-        if result:
+        if result is None:
+            return False
+        else:
             self.data.remove(result)
-
-
-# The debugging section. It will be the last to be deleted.
-print("Create notepad")
-notepad = NotePad()
-
-print("Add record 1")
-record1 = Record("MyTitle-1")
-print("Add record 2")
-record2 = Record("MyTitle-2")
-print(record1)
-print(record2)
-
-print("Add tag 1")
-tag1 = Tag('tag-1')
-print("Add tag 2")
-tag2 = Tag('tag-2')
-print("Add tag 3")
-tag3 = Tag('tag-3')
-
-print("Add tag 1 to record 1")
-record1.add_tag(tag1)
-print("Add tag 2 to record 1")
-record1.add_tag(tag2)
-print("Add tag 3 to record 1")
-record1.add_tag(tag3)
-
-print("Add text 1")
-text1 = Text('This text just for the debug')
-print("Add text 1 to record 1")
-record1.add_text(text1)
-print(record1)
-print(record2)
-
-print("Editing text in record 1")
-record1.edit_text("New text for the debug!!!")
-print(record1)
-print(record2)
-
-print("Remove text from the record 1")
-record1.remove_text()
-print(record1)
-print(record2)
-
-print("Add record 1 to notepad")
-notepad.add_record(record1)
-print(notepad)
-
-print("Add record 2 to notepad")
-notepad.add_record(record2)
-print(notepad)
-
-print("Find a record by title")
-title1 = notepad.find_record_by_title('MyTitle-1')
-print(title1)
-print(type(title1))
-
-print("Find a record by unique id")
-title2 = notepad.find_record_by_id(2)
-print(title2)
-
-print("Find a record by tag")
-title3 = notepad.find_record_by_tag(Tag('tag-1'))
-print(title3)
-
-print("Remove all tags from the record 1")
-record1.remove_all_tags()
-print(record1)
-print(record2)
-
-print(type(Tag('tag1')))
-
-print(Tag('tag-1') in [Tag('tag-1'), Tag('tag-2'), Tag('tag-3')])
-
-print("Get all notes")
-all_notes = notepad.get_all_records()
-print(all_notes)
-
-print("Rename title")
-print(record2)
-record2.rename_title('My renamed title')
-print(record2)
-all_notes = notepad.get_all_records()
-print(all_notes)
+            return True

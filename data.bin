@@ -19,11 +19,11 @@
 		"address": "Munich, Baker st. 15"
 	},
 	{
-		"name": "Bill_Gates",
+		"name": "Bill Gates",
 		"birthday": "10.11.1955"
 	},
 	{
-		"name": "Mr_Anderson",
+		"name": "Mr Anderson",
 		"birthday": "15.11.1977"
 	},
 	{
@@ -51,7 +51,7 @@
 		"birthday": "18.11.1965"
 	},
 	{
-		"name": "Agent_Smith",
+		"name": "Agent Smith",
 		"birthday": "05.11.1953"
 	}
 ]

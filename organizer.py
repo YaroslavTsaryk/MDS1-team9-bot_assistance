@@ -1,53 +1,37 @@
-from datetime import datetime, timedelta
+#!/usr/bin/env python3
+
+import os
+import re
+import sys
 import json
+from datetime import datetime, timedelta
 from phonebook import AddressBook, Record
+from notepad import (
+    Record as NoteRecord,
+    NotePad,
+    Title,
+    Text,
+    Tag
+)
 from helper import (
     COMMANDS_DESCRIPTION,
+    validate_complex_args,
+    detect_input_type,
     get_suggestions,
-    validate_args
+    validate_args,
+    parse_command
 )
 
 
 # Dictionary with working days for sort operation
-days = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday", 5: 'Saturday', 6: 'Sunday'}
-
-
-HELP = (
-    """load-book - load data from json file. Default filename - data.bin
-load-book <filename> - load data from specified json file
-write-book - write book data into file. Default filename - data.bin
-write-book <filename> - write data to cpecified json file
-add-contact-name <long name>- add new contact long name
-change-contact-name <id> <long name>- change contact long name by id
-add-contact <contact_name> <phone_number> - Add contact with a phone number. Phone number must be 10 digits
-change-contact <contact_name> <old_phone_number> <new_phone_number> - Change existing phone number for existing contact
-add-birthday <contact_name> <date> - Add birthday data for existing contact or new contact with birthday only. Date format DD.MM.YYYY
-add-email <id> <email> - add email to contact by id
-change-email <id> <email> - change email for contact by id
-add-address <id> <address all string> - add address to contact by id
-change-address <id> <address all string> - change address for contact by id
-phone <contact_name> - Display phones for contact
-show-birthday <contact_name> - Display birthday data for contact
-birthdays <days from today> - Show birtdays for the next specified number of days, 7 days if no argument given
-delete-contact <contact_name> - Delete contact data from book
-hello - get a greeting
-close or exit - exit the program
-""")
-
-# Decorate some access errors
-def input_error(func):
-    def inner(*args, **kwargs):
-        try:
-            return func(*args, **kwargs)
-        except KeyError:
-            return "Enter user name"
-        except ValueError:
-            return "Give me name, phone or date please."
-        except IndexError:
-            return "Contact not found"
-
-    return inner
-
+DAYS = {
+    0: "Monday",
+    1: "Tuesday",
+    2: "Wednesday",
+    3: "Thursday",
+    4: "Friday",
+    5: 'Saturday',
+    6: 'Sunday'}
 
 
 # Parse input on spaces
@@ -58,79 +42,83 @@ def parse_input(user_input):
 
 
 # Add contact with phone or add new phone to existing one
-@validate_args(2, "add")
-def add_contact(args, book):
-    name, phone = args
-    new_record = book.find(name)
-    res = ""
-    if not new_record:
-        new_record = Record(name)
-        book.add_record(new_record)
-        res += f"Contact with id = {new_record.id} added. "
+@validate_args(2, "contact-add")
+def add_contact_phone(args, book):
+    id, phone = args
+    if int(id) in book.data.keys():
+        new_record = book[int(id)]
+    else:
+        return "Id not exists"
+    res = ""    
     found_phone = new_record.find_phone(phone)
     if not found_phone:
         new_record.add_phone(phone)
         res += "Phone added."
     return res
 
-@input_error
+
+@validate_args([1, 2, 3, 4], "contact-add-name")
 def add_contact_name(args, book):
-    name=" ".join(args)
+    name = " ".join(args)
     new_record = book.find(name)
     res = ""
     if not new_record:
         new_record = Record(name)
         book.add_record(new_record)
-        res = f"Contact '{new_record.name.value}' with id = {new_record.id} added. "    
+        res = f"Contact '{new_record.name.value}' with id = {new_record.id} added. "
     return res
 
-@input_error
+
+@validate_args([1, 2, 3, 4], "contact-change-name")
 def change_contact_name(args, book):
     id, *name = args
-    new_name=" ".join(name)
-    record = book[int(id)]
+    new_name = " ".join(name)
+    if int(id) in book.data.keys():
+        record = book[int(id)]
+    else:
+        return "Id not exists"
     res = ""
     if record:
         record.set_name(new_name)
-        res = f"Contact name '{record.name.value}' set for id = {record.id}"    
+        res = f"Contact name '{record.name.value}' set for id = {record.id}"
     return res
 
 
 # Add birthday to contact or contact with birthday
-@validate_args(2, "add-birthday")
+@validate_args(2, "contact-add-birthday")
 def add_birthday(args, book):
-    name, birthday = args
-    new_record = book.find(name)
-    res = ""
-    if not new_record:
-        new_record = Record(name)
-        book.add_record(new_record)
-        res += "Contact added. "
+    id, birthday = args
+    new_record = book[int(id)]
+    res = ""    
     new_record.add_birthday(birthday)
     res += "Birthday added. "
     return res
 
-@input_error
+
+@validate_args(2, "contact-add-email")
 def add_email(args, book):
     id, email = args
     record = book[int(id)]
     record.add_email(email)
     return f"Email {record.email} added to record {record.id}"
 
-@input_error
+
+@validate_args([2, 3, 4, 5, 6, 7, 8, 9], "contact-add-address")
 def add_address(args, book):
-    print(args)
     id, *address = args
-    print(address)
-    record = book[int(id)]
+    if int(id) in book.data.keys():
+        record = book[int(id)]
+    else:
+        return "Id not exists"
     record.add_address(" ".join(address))
     return f"Address {record.address} added to record {id}"
 
+
 # Change phone number
-@validate_args(3, "change")
+@validate_args(3, "contact-change")
 def change_contact(args, book):
-    name, phone1, phone2 = args
-    record = book.find(name)
+    id, phone1, phone2 = args
+    record = book[int(id)]
     if record:
         if record.edit_phone(phone1, phone2):
             return "Contact updated."
@@ -141,10 +129,13 @@ def change_contact(args, book):
 
 
 # Remove phone from contact
-@validate_args(2, "remove-phone")
+@validate_args(2, "contact-remove-phone")
 def remove_phone(args, book):
-    name, phone = args
-    record = book.find(name)
+    id, phone = args
+    if int(id) in book.data.keys():
+        record = book[int(id)]
+    else:
+        return "Id not exists"    
     if record:
         if record.remove_phone(phone):
             return f"Phone number {phone} removed"
@@ -153,9 +144,9 @@ def remove_phone(args, book):
 
 
 # Show phones for contact
-@validate_args(1, "phone")
-def show_phone(args, book):
-    name = args[0]
+@validate_args(1, "contact-phone")
+def show_phone(args, book):    
+    name = " ".join(args)
     record = book.find(name)
 
     if record:
@@ -166,17 +157,17 @@ def show_phone(args, book):
 
 
 # Delete contact from book
-@validate_args(1, "delete")
+@validate_args(1, "contact-delete")
 def delete_contact(args, book):
-    name = args[0]
-    res = book.delete(name)
+    id = args[0]
+    res = book.delete(id)
     return f"Contact {res if res else 'not'} deleted"
 
 
 # Show contact birthday
-@validate_args(1, "show-birthday")
+@validate_args([1,2,3], "contact-show-birthday")
 def show_birthday(args, book):
-    name = args[0]
+    name = " ".join(args)
     record = book.find(name)
 
     if record:
@@ -184,6 +175,7 @@ def show_birthday(args, book):
         return res
     else:
         raise IndexError("Contact not found.")
+
 
 def birthday_sort_key(d):
     return datetime.strptime(d['date'], "%d.%m.%Y").timestamp()
@@ -193,7 +185,7 @@ def birthday_sort_key(d):
 @validate_args([0, 1], "birthdays")
 def get_birthdays(args, book):
     days_from_today = int(args[0]) if len(args) != 0 else 7
-    
+
     today = datetime.today().date()
 
     users = [
@@ -210,15 +202,15 @@ def get_birthdays(args, book):
         name = user["name"]
         birthday = user["birthday"].date()  # Convert to date type
         birthday_this_year = birthday.replace(year=today.year)
-        
+
         if birthday_this_year < today:
             birthday_this_year = birthday.replace(year=today.year + 1)
         delta_days = (birthday_this_year - today).days
         if delta_days <= days_from_today:
             greet_date = user["birthday"].replace(year=today.year)
             set_day = birthday_this_year.weekday()
-            
-            #add entry to internal greet list
+
+            # add entry to internal greet list
             greet_date_str = greet_date.strftime("%d.%m.%Y")
             present = False
             for i in range(len(res)):
@@ -228,7 +220,7 @@ def get_birthdays(args, book):
             if not present:
                 new = {}
                 new['date'] = greet_date_str
-                new['weekday'] = days[set_day]
+                new['weekday'] = DAYS[set_day]
                 new['names'] = [name]
                 res.append(new)
             else:
@@ -239,7 +231,7 @@ def get_birthdays(args, book):
     output_message = ''
     for entry in res:
         names = ", ".join(n for n in entry['names'])
-        output_message += f"{entry['date']}, {entry['weekday']:<10}| {names};\n" 
+        output_message += f"{entry['date']}, {entry['weekday']:<10}| {names};\n"
     output_message = output_message or "Birthdays not found"
 
     return output_message
@@ -247,13 +239,14 @@ def get_birthdays(args, book):
 
 # Display all contacts
 def show_all(args, book):
-    # res=""
-    # for key,value in contacts.items():
+    if not len(book.items()):
+        return "{:<7} {}".format("[info]", "There are no contacts yet.")
+
     return "\n".join([f"{key}: {value}" for key, value in book.items()])
 
 
 # load from json file, name as param
-@validate_args([0, 1], "load")
+@validate_args([0, 1], "book-load")
 def load_book_data(args, book):
     filename = args[0] if len(args) != 0 else "data.bin"
 
@@ -275,7 +268,7 @@ def load_book_data(args, book):
 
 
 # Write to json file, name as param
-@validate_args([0, 1], "write")
+@validate_args([0, 1], "book-write")
 def write_book_data(args, book):
     filename = args[0] if len(args) != 0 else "data.bin"
 
@@ -304,68 +297,326 @@ def show_help(args, book):
     return "\n".join(COMMANDS_DESCRIPTION.values())
 
 
+@validate_complex_args(2, "note-add")
+def note_add(args, notepad):
+    command = ' '.join(args)
+    title, text = parse_command(command)
+    if notepad.find_record_by_title(Title(title)) is None:
+        note_record = NoteRecord(Title(title))
+        note_record.add_text(Text(text))
+        notepad.add_record(note_record)
+        return ("{:<7} Note added.".format('[ok]'))
+    else:
+        return (
+            "{:<7} A note with the title [{}] exists".format(
+                '[info]', title))
+
+
+@validate_complex_args(2, "note-edit")
+def note_edit(args, notepad):
+    command = ' '.join(args)
+    title, text = parse_command(command)
+    record = notepad.find_record_by_title(Title(title))
+    if record is None:
+        return (
+            "{:<7} A note with the title [{}] doesn't exists".format(
+                '[info]', title))
+    else:
+        record.edit_text(Text(text))
+        return ("{:<7} Note edited.".format('[ok]'))
+
+
+@validate_complex_args(1, "note-delete")
+def note_delete(args, notepad):
+    command = ' '.join(args + ['MOCK'])
+    title, _ = parse_command(command)
+    if notepad.delete(Title(title)):
+        return ("{:<7} Note deleted.".format('[ok]'))
+    else:
+        return (
+            "{:<7} A note with the title [{}] doesn't exists".format(
+                '[info]', title))
+
+
+@validate_complex_args(2, "note-add-tag")
+def note_add_tag(args, notepad):
+    command = ' '.join(args)
+    title, tag = parse_command(command)
+    record = notepad.find_record_by_title(Title(title))
+    if record is None:
+        return (
+            "{:<7} A note with the title [{}] doesn't exists".format(
+                '[info]', title))
+    else:
+        record.add_tag(Tag(tag))
+        return ("{:<7} Tag added.".format('[ok]'))
+
+
+def note_get_all(_, notepad):
+    if len(notepad.data) != 0:
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in notepad.data])
+    else:
+        return ("{:<7} {}".format('[info]', 'There are no notes.'))
+
+
+def note_get_all_sorted(_, notepad):
+    if len(notepad.data) != 0:
+        sorted_notes = sorted(
+            notepad.data,
+            key=lambda x:
+            len(x.tags),
+            reverse=True
+        )
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in sorted_notes])
+    else:
+        return ("{:<7} {}".format('[info]', 'There are no notes.'))
+
+
+@validate_complex_args(1, "note-get")
+def note_get(args, notepad):
+    command = ' '.join(args + ['MOCK'])
+    value, _ = parse_command(command)
+
+    value, value_type = detect_input_type(value)
+    if value_type == 'int':
+        new_value = int(value)
+    elif value_type == 'str':
+        new_value = str(value)
+    else:
+        return ("{:<7} {}".format("[error]", "Unknown type of input value."))
+
+    def handle_record_title(title):
+        record = notepad.find_record_by_title(Title(title))
+        if record is None:
+            return (
+                "{:<7} A note with the title [{}] doesn't exists".format(
+                    '[info]', title))
+        else:
+            return ("{:<7} {:<1} {}".format('[ok]', '-', record))
+
+    def handle_record_id(id):
+        record = notepad.find_record_by_id(int(id))
+        if record is None:
+            return (
+                "{:<7} A note with the id [{}] doesn't exists".format(
+                    '[info]', id))
+        else:
+            return ("{:<7} {:<1} {}".format('[ok]', '-', record))
+
+    type_handlers = {
+        int: handle_record_id,
+        str: handle_record_title,
+    }
+
+    handler = type_handlers.get(type(new_value))
+    return handler(new_value)
+
+
+@validate_complex_args(1, "note-get-tag")
+def note_get_tag(args, notepad):
+    command = ' '.join(args + ['MOCK'])
+    tag, _ = parse_command(command)
+
+    record = notepad.find_record_by_tag(Tag(tag))
+    if record is None:
+        return (
+            "{:<7} A notes with the tag [{}] doesn't exists".format(
+                '[info]', tag))
+    else:
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in record])
+
+
+@validate_complex_args(2, "note-rename")
+def note_rename(args, notepad):
+    command = ' '.join(args)
+    title, new_title = parse_command(command)
+
+    record = notepad.find_record_by_title(Title(title))
+    if record is None:
+        return (
+            "{:<7} A note with the title [{}] doesn't exists".format(
+                '[info]', title))
+    else:
+        record.rename_title(Title(new_title))
+        return ("{:<7} {}".format('[ok]', 'Note renamed.'))
+
+
+@validate_complex_args(1, "note-search")
+def note_search(args, notepad):
+    command = ' '.join(args + ['MOCK'])
+    pattern, _ = parse_command(command)
+
+    record = notepad.find_record_by_text(pattern)
+    if record is None:
+        return (
+            "{:<7} A notes with the pattern [{}] doesn't exists".format(
+                '[info]', pattern))
+    else:
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in record])
+
+# load notes from json file, name as param
+
+
+@validate_args([0, 1], "note-load")
+def load_notes_data(args, notepad):
+    filename = args[0] if len(args) != 0 else "notes.bin"
+
+    with open(filename, "r") as fh:
+        book_state = json.load(fh)
+        for ln in book_state:
+            new_record = NoteRecord(Title(ln["title"]))
+            if "tags" in ln.keys():
+                for tag in ln["tags"]:
+                    new_record.add_tag(Tag(tag))
+            if "text" in ln.keys():
+                new_record.add_text(Text(ln["text"]))
+            notepad.add_record(new_record)
+    return "Notes loaded"
+
+# Write to json file, name as param
+
+
+@validate_args([0, 1], "note-write")
+def write_notes_data(args, notepad):
+    filename = args[0] if len(args) != 0 else "notes.bin"
+
+    notes = []
+    for record in notepad.data:
+        note = {}
+        note["title"] = record.title.value
+        tags = []
+        if len(record.tags):
+            for tag in record.tags:
+                tags.append(tag.value)
+            note["tags"] = tags
+        if "text" in record.__dict__:
+            note["text"] = record.text.value
+        notes.append(note)
+
+    with open(filename, "w") as fh:
+        json.dump(notes, fh)
+    return "Notes written"
+
+
+# Greeting display function
+def hello(*_):
+    return "{:<7} {}".format("[*]", 'How can I help you?')
+
+
+# Function of generating the KeyboardInterrupt interrupt for exit
+def exit(*_):
+    raise KeyboardInterrupt
+
+
+def debug_input(args, _):
+    return args
+
+
 # Available operations on contacts
 actions = {
-    "add-contact-name": add_contact_name,
-    "change-contact-name": change_contact_name,
-    "add-contact": add_contact,
-    "change-contact": change_contact,
-    "remove-phone": remove_phone,
-    "phone": show_phone,
-    "delete-contact": delete_contact,
-    "all": show_all,
-    "load-book": load_book_data,
-    "write-book": write_book_data,
-    "add-birthday": add_birthday,
-    "show-birthday": show_birthday,
+    "contacts-all": show_all,
+    "contact-add-phone": add_contact_phone,
+    "contact-add-name": add_contact_name,
+    "contact-change-name": change_contact_name,
+    "contact-change-phone": change_contact,
+    "contact-remove-phone": remove_phone,
+    "contact-phone": show_phone,
+    "contact-delete": delete_contact,
+    "contact-add-email": add_email,
+    "contact-change-email": add_email,
+    "contact-add-address": add_address,
+    "contact-change-address": add_address,
+    "contact-add-birthday": add_birthday,
+    "contact-show-birthday": show_birthday,
+    "book-load": load_book_data,
+    "book-write": write_book_data,
     "birthdays": get_birthdays,
     "help": show_help,
-    "add-email": add_email,
-    "change-email": add_email,
-    "add-address": add_address,
-    "change-address": add_address,
+    "hello": hello,
+    "exit": exit,
+    "close": exit
 }
 
-book = AddressBook()
+notepad_actions = {
+    "note-add": note_add,
+    "note-edit": note_edit,
+    "note-rename": note_rename,
+    "note-delete": note_delete,
+    "note-add-tag": note_add_tag,
+    "note-get-tag": note_get_tag,
+    "note-get-all": note_get_all,
+    "note-get": note_get,
+    "note-search": note_search,
+    "my-debug": debug_input,
+    "note-delete-tag": '',
+    "note-delete-all-tags": '',
+    "note-sort": note_get_all_sorted,
+    "notes-write": write_notes_data,
+    "notes-load": load_notes_data,
+}
 
-TEST_MODE = True
-TEST_FILE = 'test_commands.txt'
 
 def main():
-    print("Welcome to the assistant bot!")
+    TEST_MODE = False
+    TEST_FILE = 'test_commands.txt'
+
+    book = AddressBook()
+    notepad = NotePad()
+
+    print("{:<7} {}".format("[*]", "Welcome to the assistant bot!"))
+
     test_commands = None
     test_line = 0
     if TEST_MODE:
         with open(TEST_FILE, "r") as fh:
             test_commands = fh.read().splitlines()
+
     while True:
-        if TEST_MODE:
-            user_input = test_commands[test_line]
-            test_line += 1
-        else:
-            user_input = input("Enter a command: ")
-        if user_input:
-            command, *args = parse_input(user_input)
-        else:
+        try:
+            if TEST_MODE:
+                user_input = test_commands[test_line]
+                print(f'[INPUT] {user_input}')
+                test_line += 1
+            else:
+                user_input = input(
+                    "{:<7} {}".format(
+                        "[*]", "Enter a command: "))
+            if user_input:
+                command, *args = parse_input(user_input)
+            else:
+                continue
+
+            if command in actions.keys():
+                print(actions[command](args, book))
+            elif command in notepad_actions.keys():
+                print(notepad_actions[command](args, notepad))
+            else:
+                suggested_commands = get_suggestions(command)
+                if len(suggested_commands):
+                    print(
+                        "{:<7} {}".format(
+                            "[info]",
+                            "Invalid command. Maybe you mean one of these:\n" +
+                            suggested_commands
+                        ),
+                    )
+                else:
+                    print("{:<7} {}".format("[error]", "Invalid command."))
+        except (ValueError, EOFError):
             continue
 
-        if command in ["close", "exit"]:
-            print("Good bye!")
-            break
-        elif command == "hello":
-            print("How can I help you?")
-        elif command in actions.keys():
-            print(actions[command](args, book))
-        else:
-            suggested_commands = get_suggestions(command)
-            if len(suggested_commands):
-                print(
-                    "Invalid command. Maybe you mean one of these:\n" +
-                    suggested_commands
-                )
-            else:
-                print("Invalid command.")
 
-
+# Main function
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("{:<8} {}".format("\n[*]", "Good bye!"))
+        try:
+            sys.exit(130)
+        except SystemExit:
+            os._exit(130)

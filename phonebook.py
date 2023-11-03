@@ -2,7 +2,6 @@ from collections import UserDict
 import re
 
 
-
 class Field:
     def __init__(self, value):
         self.value = value
@@ -25,11 +24,12 @@ class Birthday(Field):
     @value.setter
     def value(self, v):
         if re.search(
-            "^(0[1-9]|[1,2][0-9]|3[0-1])\.(0[1-9]|1[0-2])\.(19\d\d|20\d\d)$", v
-        ):
+            "^(0[1-9]|[1,2][0-9]|3[0-1])\\.(0[1-9]|1[0-2])\\.(19\\d\\d|20\\d\\d)$",
+                v):
             self.__value = v
         else:
             raise ValueError("Date must be the following format: DD.MM.YYYY.")
+
 
 class Email(Field):
     # реалізація класу
@@ -45,11 +45,12 @@ class Email(Field):
     @value.setter
     def value(self, v):
         if re.search(
-            "^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$", v
+            "^((?!\\.)[\\w\\-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$", v
         ):
             self.__value = v
         else:
             raise ValueError("Date must be the following format: DD.MM.YYYY.")
+
 
 class Address(Field):
     # реалізація класу
@@ -61,11 +62,10 @@ class Address(Field):
     def value(self):
         return self.__value
 
-    
     @value.setter
     def value(self, v):
-            self.__value = v
-    
+        self.__value = v
+
 
 class Email(Field):
     # реалізація класу
@@ -81,12 +81,13 @@ class Email(Field):
     @value.setter
     def value(self, v):
         if re.search(
-            "^((?!\.)[\w\-_.]*[^.])(@\w+)(\.\w+(\.\w+)?[^.\W])$", v
+            "^((?!\\.)[\\w\\-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$", v
         ):
             self.__value = v
         else:
             raise ValueError
 
+
 class Address(Field):
     # реалізація класу
     def __init__(self, Field):
@@ -97,11 +98,9 @@ class Address(Field):
     def value(self):
         return self.__value
 
-    
     @value.setter
     def value(self, v):
-            self.__value = v
-    
+        self.__value = v
 
 
 class Name(Field):
@@ -123,25 +122,25 @@ class Phone(Field):
     # Phone length 10 digits
     @value.setter
     def value(self, v):
-        if re.search("^\d{10}$", v):
+        if re.search("^\\d{10}$", v):
             self.__value = v
         else:
             raise ValueError("Phone must be 10 digits long.")
 
 
 class Record:
-    count=1
+    count = 1
+
     def __init__(self, name):
         self.name = Name(name)
         self.phones = []
-        self.email=None
-        self.address=None
-        self.id=Record.count
-        Record.count+=1
+        self.email = None
+        self.address = None
+        self.id = Record.count
+        Record.count += 1
 
     def set_name(self, new_name):
         self.name = Name(new_name)
-
 
     def add_birthday(self, value):
         field = Birthday(value)
@@ -150,14 +149,14 @@ class Record:
     def add_phone(self, value):
         field = Phone(value)
         self.phones.append(field)
-        
+
     def add_email(self, value):
         field = Email(value)
-        self.email=field
-        
+        self.email = field
+
     def add_address(self, value):
         field = Address(value)
-        self.address=field
+        self.address = field
 
     def remove_phone(self, value):
         res = ""
@@ -186,7 +185,7 @@ class Record:
     def __str__(self):
         return f"Record id: {self.id}, Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {self.birthday if 'birthday' in self.__dict__ else 'NA'}, " \
             f"address: {self.address if 'address' in self.__dict__ else 'NA'}, email: {self.email if 'email' in self.__dict__ else 'NA'} "
-            # if p.value is not None
+        # if p.value is not None
 
 
 class AddressBook(UserDict):
@@ -204,7 +203,7 @@ class AddressBook(UserDict):
     def delete(self, id):
         res = None
         for n in self.data.keys():
-            if n == id:
+            if n == int(id):
                 res = n
         if res:
             del self.data[res]
