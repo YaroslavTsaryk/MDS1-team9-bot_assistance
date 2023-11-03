@@ -300,6 +300,8 @@ def note_add(args, notepad):
     if len(args) == 2:
         title = args[0]
         text = args[1]
+        title = title.strip('\'').strip('"')
+        text = text.strip('\'').strip('"')
     if len(args) > 2:
         command = ' '.join(args)
         matches = re.findall(r"'(.*?)'", command)
@@ -321,6 +323,8 @@ def note_edit(args, notepad):
     if len(args) == 2:
         title = args[0]
         text = args[1]
+        title = title.strip('\'').strip('"')
+        text = text.strip('\'').strip('"')
     if len(args) > 2:
         command = ' '.join(args)
         matches = re.findall(r"'(.*?)'", command)
@@ -357,6 +361,8 @@ def note_add_tag(args, notepad):
     if len(args) == 2:
         title = args[0]
         tag = args[1]
+        title = title.strip('\'').strip('"')
+        tag = tag.strip('\'').strip('"')
     if len(args) > 2:
         command = ' '.join(args)
         matches = re.findall(r"'(.*?)'", command)
@@ -448,6 +454,8 @@ def note_rename(args, notepad):
     if len(args) == 2:
         title = args[0]
         new_title = args[1]
+        title = title.strip('\'').strip('"')
+        new_title = new_title.strip('\'').strip('"')
     if len(args) > 2:
         command = ' '.join(args)
         matches = re.findall(r"'(.*?)'", command)
@@ -462,6 +470,25 @@ def note_rename(args, notepad):
     else:
         record.rename_title(Title(new_title))
         return ("{:<7} {}".format('[ok]', 'Note renamed.'))
+
+
+@validate_complex_args_one("note-search")
+def note_search(args, notepad):
+    if len(args) == 1:
+        pattern = args[0]
+    elif len(args) > 1:
+        command = ' '.join(args)
+        matches = re.findall(r"'(.*?)'", command)
+        pattern = matches[0]
+
+    record = notepad.find_record_by_text(pattern)
+    if record is None:
+        return (
+            "{:<7} A notes with the pattern [{}] doesn't exists".format(
+                '[info]', pattern))
+    else:
+        return "\n".join(["{:<7} {:<1} {}".format('[ok]', '-', single_record)
+                         for single_record in record])
 
 # load notes from json file, name as param
 @validate_args([0, 1], "note-load")
@@ -553,6 +580,7 @@ notepad_actions = {
     "note-get-tag": note_get_tag,
     "note-get-all": note_get_all,
     "note-get": note_get,
+    "note-search": note_search,
     "my-debug": debug_input,
     "note-change-title": '',
     "note-change-text": '',
