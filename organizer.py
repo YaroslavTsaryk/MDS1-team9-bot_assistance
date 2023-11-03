@@ -561,7 +561,7 @@ notepad_actions = {
 
 
 def main():
-    TEST_MODE = True
+    TEST_MODE = False
     TEST_FILE = 'test_commands.txt'
 
     book = AddressBook()
