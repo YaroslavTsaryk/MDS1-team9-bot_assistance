@@ -309,6 +309,25 @@ def note_delete(args, notepad):
     else:
         return ("{:<7} A note with the title [{}] doesn't exists".format('[info]',  title))
 
+@validate_complex_args(2, "note-add-tag")
+def note_add_tag(args, notepad):
+    if len(args) == 2:
+        title = args[0]
+        tag = args[1]
+    if len(args) > 2:
+        command = ' '.join(args)
+        matches = re.findall(r"'(.*?)'", command)
+        title = matches[0]
+        tag = matches[1]
+    record = notepad.find_record_by_title(title)
+    if record is None:
+        #note_record = NoteRecord(title)
+        #note_record.add_tag(tag)
+        #notepad.add_record(note_record)
+        return ("{:<7} A note with the title [{}] doesn't exists".format('[ok]', title))
+    else:
+        record.add_tag(tag)
+        return ("{:<7} Tag added.".format('[ok]'))
 
 
 # Greeting display function
@@ -351,6 +370,7 @@ actions = {
 notepad_actions = {
     "note-add": note_add,
     "note-delete": note_delete,
+    "note-add-tag": note_add_tag,
     "my-debug": debug_input,
 }
 
