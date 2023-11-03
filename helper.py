@@ -87,6 +87,8 @@ COMMANDS_DESCRIPTION = {
     # command
     "note-write": "note-write <filename> - writes the notes to a file. " +
     "Default filename - notes.bin",
+    # command
+    "note-get": "note-get <id> or note-get '<title>' - Get a note record by its unique integer identifier or by its title"
 }
 
 
@@ -172,3 +174,19 @@ def get_suggestions(command):
     result = {key: COMMANDS_DESCRIPTION[key] for key in unique_suggestions}
 
     return "\n".join(result.values())
+
+# Function for determining the type of input data
+def detect_input_type(value):
+    try:
+        int_value = int(value)
+        return int_value, 'int'
+    except ValueError:
+        pass
+
+    try:
+        float_value = float(value)
+        return float_value, 'float'
+    except ValueError:
+        pass
+
+    return value, 'str'
