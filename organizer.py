@@ -74,7 +74,10 @@ def change_contact_name(args, book):
     id, *name = args
     new_name = " ".join(name)
     if int(id) in book.data.keys():
-        record = book[int(id)]
+        if book.find(new_name):
+            return "Name already in use"
+        else:
+            record = book[int(id)]
     else:
         return "Id not exists"
     res = ""
