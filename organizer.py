@@ -106,10 +106,8 @@ def add_email(args, book):
 
 
 @validate_args([2, 3, 4, 5, 6, 7, 8, 9], "contact-add-address")
-def add_address(args, book):
-    print(args)
+def add_address(args, book):    
     id, *address = args
-    print(address)
     record = book[int(id)]
     record.add_address(" ".join(address))
     return f"Address {record.address} added to record {id}"
