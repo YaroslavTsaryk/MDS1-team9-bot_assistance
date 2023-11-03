@@ -38,8 +38,8 @@ COMMANDS_DESCRIPTION = {
     "contact-show-birthday": "contact-show-birthday <contact_name> - " +
     "Display birthday data for contact.",
     # command
-    "birthdays": "birthdays <date> - Shows birtdays for next 7 days from" +
-    " selected date. Date format DD.MM.YYYY",
+    "birthdays": "birthdays <days> - Shows birtdays for the specified" +
+    " number of days from today. By default - 7 days",
     # command
     "contacts-all": "contacts-all - Shows all available contacts.",
     # command
@@ -66,26 +66,16 @@ COMMANDS_DESCRIPTION = {
     # command
     "note-get-all": "note-get-all - Get a list of all notes",
     # command
-    "note-change-title": "note-change-title '<old title>' '<new title>' - change the note title",
+    # "note-delete-tag": "note-delete-tag '<note title>' '<tag>' - delete specified tag from the specified note",
     # command
-    "note-change-text": "note-change-text '<note title>' '<new text>' - Changes text in the specified note",
-    # command
-    "note-delete-tag": "note-delete-tag '<note title>' '<tag>' - delete specified tag from the specified note",
-    # command
-    "note-delete-all-tags": "note-delete-all-tags '<note title>' - remove all tags from the note",
-    # command
-    "note-find-title": "note-find-title '<note title>' - Find note with the given title",
-    # command
-    "note-find-tag": "note-find-tag '<tag>' - Returns all notes with the given tag",
-    # command
-    "note-find-id": "note-find-id '<id>' - Find note by id",
+    # "note-delete-all-tags": "note-delete-all-tags '<note title>' - remove all tags from the note",
     # command
     "note-sort": "note-sort - Sort notes by number of tags in descending order, then alphabetically by title",
     # command
-    "note-load": "note-load <filename> - loads data from a json file. " +
+    "notes-load": "note-load <filename> - loads data from a json file. " +
     "Default filename - notes.bin",
     # command
-    "note-write": "note-write <filename> - writes the notes to a file. " +
+    "notes-write": "note-write <filename> - writes the notes to a file. " +
     "Default filename - notes.bin",
     # command
     "note-get": "note-get <id> or note-get '<title>' - Get a note entry by its unique integer identifier or by its title",
