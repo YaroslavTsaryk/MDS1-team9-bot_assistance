@@ -351,7 +351,7 @@ def load_notes_data(args, notepad):
     return "Notes loaded"
 
 # Write to json file, name as param
-@validate_args([0, 1], "book-write")
+@validate_args([0, 1], "note-write")
 def write_notes_data(args, notepad):
     filename = args[0] if len(args) != 0 else "notes.bin"
 
