@@ -16,7 +16,7 @@ from helper import (
 
 
 # Dictionary with working days for sort operation
-days = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday", 5: 'Saturday', 6: 'Sunday'}
+DAYS = {0: "Monday", 1: "Tuesday", 2: "Wednesday", 3: "Thursday", 4: "Friday", 5: 'Saturday', 6: 'Sunday'}
 
 
 # Parse input on spaces
@@ -202,7 +202,7 @@ def get_birthdays(args, book):
             if not present:
                 new = {}
                 new['date'] = greet_date_str
-                new['weekday'] = days[set_day]
+                new['weekday'] = DAYS[set_day]
                 new['names'] = [name]
                 res.append(new)
             else:
@@ -418,6 +418,14 @@ notepad_actions = {
     "note-add-tag": note_add_tag,
     "note-get-all": note_get_all,
     "my-debug": debug_input,
+    "note-change-title": '',    
+    "note-change-text": '',
+    "note-delete-tag": '',    
+    "note-delete-all-tags": '',     
+    "note-find-title": '',
+    "note-find-tag": '',    
+    "note-find-id": '',
+    "note-sort": ''    
     "notes-write": write_notes_data,
     "notes-load": load_notes_data,
 }
