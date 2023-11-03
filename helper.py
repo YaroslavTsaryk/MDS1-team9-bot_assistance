@@ -69,7 +69,7 @@ COMMANDS_DESCRIPTION = {
     "Default filename - notes.bin",
     # command
     "note-write": "note-write <filename> - writes the notes to a file. " +
-    "Default filename - data.bin",
+    "Default filename - notes.bin",
 }
 
 
