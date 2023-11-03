@@ -15,8 +15,8 @@ from notepad import (
 )
 from helper import (
     COMMANDS_DESCRIPTION,
-    validate_complex_two_args,
-    validate_complex_one_arg,
+    validate_complex_args_one,
+    validate_complex_args_two,
     detect_input_type,
     get_suggestions,
     validate_args
@@ -295,7 +295,7 @@ def show_help(args, book):
     return "\n".join(COMMANDS_DESCRIPTION.values())
 
 
-@validate_complex_two_args(2, "note-add")
+@validate_complex_args_two("note-add")
 def note_add(args, notepad):
     if len(args) == 2:
         title = args[0]
@@ -316,7 +316,7 @@ def note_add(args, notepad):
                 '[info]', title))
 
 
-@validate_complex_two_args(2, "note-edit")
+@validate_complex_args_two("note-edit")
 def note_edit(args, notepad):
     if len(args) == 2:
         title = args[0]
@@ -336,7 +336,7 @@ def note_edit(args, notepad):
         return ("{:<7} Note edited.".format('[ok]'))
 
 
-@validate_complex_one_arg(1, "note-delete")
+@validate_complex_args_one("note-delete")
 def note_delete(args, notepad):
     if len(args) == 1:
         title = args[0]
@@ -352,7 +352,7 @@ def note_delete(args, notepad):
                 '[info]', title))
 
 
-@validate_complex_two_args(2, "note-add-tag")
+@validate_complex_args_two("note-add-tag")
 def note_add_tag(args, notepad):
     if len(args) == 2:
         title = args[0]
@@ -379,7 +379,8 @@ def note_get_all(_, notepad):
     else:
         return ("{:<7} {}".format('[info]', 'There are no notes.'))
 
-@validate_complex_one_arg(1, "note-get")
+
+@validate_complex_args_one("note-get")
 def note_get(args, notepad):
     if len(args) == 1:
         value = args[0]
