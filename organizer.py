@@ -458,8 +458,11 @@ def main():
                 suggested_commands = get_suggestions(command)
                 if len(suggested_commands):
                     print(
-                        "Invalid command. Maybe you mean one of these:\n" +
-                        suggested_commands
+                        "{:<7} {}".format(
+                            "[info]",
+                            "Invalid command. Maybe you mean one of these:\n" +
+                            suggested_commands
+                        ),
                     )
                 else:
                     print("{:<7} {}".format("[error]", "Invalid command."))
