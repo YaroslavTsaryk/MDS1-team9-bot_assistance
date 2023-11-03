@@ -64,6 +64,22 @@ COMMANDS_DESCRIPTION = {
     "note-add-tag": "note-add-tag '<note title>' '<tag>' - Add a tag to a note",
     # command
     "note-get-all": "note-get-all - Get a list of all notes",
+    # command
+    "note-change-title": "note-change-title '<old title>' '<new title>' - change the note title",
+    # command
+    "note-change-text": "note-change-text '<note title>' '<new text>' - Changes text in the specified note",
+    # command
+    "note-delete-tag": "note-delete-tag '<note title>' '<tag>' - delete specified tag from the specified note",
+    # command
+    "note-delete-all-tags": "note-delete-all-tags '<note title>' - remove all tags from the note",
+    # command
+    "note-find-title": "note-find-title '<note title>' - Find note with the given title",
+    # command
+    "note-find-tag": "note-find-tag '<tag>' - Returns all notes with the given tag",
+    # command
+    "note-find-id": "note-find-id '<id>' - Find note by id",
+    # command
+    "note-sort": "note-sort - Sort notes by number of tags in descending order, then alphabetically by title"
 }
 
 
