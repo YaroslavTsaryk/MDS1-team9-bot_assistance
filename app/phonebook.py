@@ -134,8 +134,8 @@ class Record:
     def __init__(self, name):
         self.name = Name(name)
         self.phones = []
-        self.email = None
-        self.address = None
+        #self.email = None
+        #self.address = None
         self.id = Record.count
         Record.count += 1
 
@@ -183,7 +183,7 @@ class Record:
         return None
 
     def __str__(self):
-        return f"Record id: {self.id}, Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones)}, birthday: {self.birthday if 'birthday' in self.__dict__ else 'NA'}, " \
+        return f"Record id: {self.id}, Contact name: {self.name.value}, phones: {'; '.join(p.value for p in self.phones) if len(self.phones) else 'NA'}, birthday: {self.birthday if 'birthday' in self.__dict__ else 'NA'}, " \
             f"address: {self.address if 'address' in self.__dict__ else 'NA'}, email: {self.email if 'email' in self.__dict__ else 'NA'} "
         # if p.value is not None
 

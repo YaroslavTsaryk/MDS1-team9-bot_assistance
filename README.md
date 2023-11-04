@@ -3,6 +3,16 @@
 # Functional
 This bot stores contacts and notes and allows adding, modifying, deleting, and searching. All information may be saved to o loaded from a JSON file. Intelligent suggestions are given for partly correct commands. Input erros are seamlessly processed.
 
+## Usage
+Run the tool using:
+`main.py` for Linux
+`python3 main.py` for Windows
+
+# Demo datasets
+Enter commands for demo datasets
+`book-load`
+`notes-load`
+
 ## Contacts
 Stored contacts have the following fields:
 1. ID (automatically generated)
@@ -53,9 +63,9 @@ Notes are independent from contacts and have the following structure:
 `note-edit <note title> <new text>` - Changes text in the specified note    
 `note-delete-tag <note title> <tag>` - delete specified tag from the specified note    
 `note-sort` - Sort notes by number of tags in descending orde, then alphabetically by title    
-`note-search` - Search for note entries by pattern         
-`note-load <filename>` - Loads notes from a json file      
-`note-write <filename>` - Writes the notes to a json file     
+`note-search <text>` - Search the specified pattern in note text         
+`notes-load <filename>` - Loads notes from a json file      
+`notes-write <filename>` - Writes the notes to a json file     
 
 Developed by T9:
 - Yaroslav Tsarik
