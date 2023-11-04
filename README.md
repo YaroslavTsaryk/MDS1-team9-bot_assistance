@@ -17,7 +17,7 @@ Stored contacts have the following fields:
 `close` - Exit the program    
 `exit` - Exit the program   
 `help` - Show help    
-`contact-add-name <firstname> ... <lastname>` - Adds name to existing contact    
+`contact-add-name <firstname> ... <lastname>` - Adds contact with a given name    
 `contact-add-phone <id> <phone_number>` - Adds contact with a phone number. Phone number must be 10 digits    
 `contact-delete <id>` - Deletes contact data from book    
 `contact-add-email <id> <email>` - Adds contact email    
