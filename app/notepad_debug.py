@@ -1,4 +1,4 @@
-from notepad import NotePad, Record, Title, Text, Tag
+from app.notepad import NotePad, Record, Title, Text, Tag
 
 # The debugging section. It will be the last to be deleted.
 print("Create notepad")

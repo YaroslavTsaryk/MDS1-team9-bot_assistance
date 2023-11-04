@@ -5,15 +5,15 @@ import re
 import sys
 import json
 from datetime import datetime, timedelta
-from phonebook import AddressBook, Record
-from notepad import (
+from app.phonebook import AddressBook, Record
+from app.notepad import (
     Record as NoteRecord,
     NotePad,
     Title,
     Text,
     Tag
 )
-from helper import (
+from app.helper import (
     COMMANDS_DESCRIPTION,
     validate_complex_args,
     detect_input_type,
@@ -244,8 +244,9 @@ def get_birthdays(args, book):
 def show_all(args, book):
     if not len(book.items()):
         return "{:<7} {}".format("[info]", "There are no contacts yet.")
-
-    return "\n".join([f"{key}: {value}" for key, value in book.items()])
+        
+    
+    return "\n".join([f"{value}" for key, value in book.items()])
 
 
 # load from json file, name as param
@@ -593,7 +594,7 @@ notepad_actions = {
 
 
 def main():
-    TEST_MODE = False
+    TEST_MODE = True
     TEST_FILE = 'test_commands.txt'
 
     book = AddressBook()
