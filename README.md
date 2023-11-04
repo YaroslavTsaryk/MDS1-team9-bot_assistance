@@ -3,6 +3,16 @@
 # Functional
 This bot stores contacts and notes and allows adding, modifying, deleting, and searching. All information may be saved to o loaded from a JSON file. Intelligent suggestions are given for partly correct commands. Input erros are seamlessly processed.
 
+## Usage
+Run the tool using:
+`main.py` for Linux
+`python3 main.py` for Windows
+
+# Demo datasets
+Enter commands for demo datasets
+`book-load`
+`notes-load`
+
 ## Contacts
 Stored contacts have the following fields:
 1. ID (automatically generated)

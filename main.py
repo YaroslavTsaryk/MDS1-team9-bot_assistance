@@ -246,7 +246,7 @@ def show_all(args, book):
         return "{:<7} {}".format("[info]", "There are no contacts yet.")
         
     
-    return "\n".join([f"{value}" for key, value in book.items()])
+    return "\n".join([f"{value}\n" for key, value in book.items()])
 
 
 # load from json file, name as param
@@ -594,7 +594,7 @@ notepad_actions = {
 
 
 def main():
-    TEST_MODE = True
+    TEST_MODE = False
     TEST_FILE = 'test_commands.txt'
 
     book = AddressBook()
