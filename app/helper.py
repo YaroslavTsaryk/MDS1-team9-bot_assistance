@@ -29,7 +29,7 @@ COMMANDS_DESCRIPTION = {
     "Add birthday data for existing contact or new contact " +
     "with birthday only. Date format DD.MM.YYYY",
     # command
-    "contact-phone": "contact-phone <id> - " +
+    "contact-phone": "contact-phone <name> - " +
     "Displays phones for contact",
     # command
     "contact-remove-phone": "contact-remove-phone <id>" +
