@@ -49,7 +49,7 @@ class Email(Field):
         ):
             self.__value = v
         else:
-            raise ValueError("Date must be the following format: DD.MM.YYYY.")
+            raise ValueError("Wrong email value")
 
 
 class Address(Field):
@@ -67,40 +67,40 @@ class Address(Field):
         self.__value = v
 
 
-class Email(Field):
-    # реалізація класу
-    def __init__(self, Field):
-        self.__value = None
-        self.value = Field
+# class Email(Field):
+#     # реалізація класу
+#     def __init__(self, Field):
+#         self.__value = None
+#         self.value = Field
 
-    @property
-    def value(self):
-        return self.__value
+#     @property
+#     def value(self):
+#         return self.__value
 
-    # Verification for valid email
-    @value.setter
-    def value(self, v):
-        if re.search(
-            "^((?!\\.)[\\w\\-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$", v
-        ):
-            self.__value = v
-        else:
-            raise ValueError
+#     # Verification for valid email
+#     @value.setter
+#     def value(self, v):
+#         if re.search(
+#             "^((?!\\.)[\\w\\-_.]*[^.])(@\\w+)(\\.\\w+(\\.\\w+)?[^.\\W])$", v
+#         ):
+#             self.__value = v
+#         else:
+#             raise ValueError
 
 
-class Address(Field):
-    # реалізація класу
-    def __init__(self, Field):
-        self.__value = None
-        self.value = Field
+# class Address(Field):
+#     # реалізація класу
+#     def __init__(self, Field):
+#         self.__value = None
+#         self.value = Field
 
-    @property
-    def value(self):
-        return self.__value
+#     @property
+#     def value(self):
+#         return self.__value
 
-    @value.setter
-    def value(self, v):
-        self.__value = v
+#     @value.setter
+#     def value(self, v):
+#         self.__value = v
 
 
 class Name(Field):
