@@ -85,7 +85,7 @@ class Email(Field):
         ):
             self.__value = v
         else:
-            raise ValueError
+            raise ValueError('Email has a wrong format.')
 
 
 class Address(Field):
