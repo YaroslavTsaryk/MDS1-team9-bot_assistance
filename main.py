@@ -147,8 +147,8 @@ def remove_phone(args, book):
 
 
 # Show phones for contact
-@validate_args([1, 2, 3], "contact-phone")
 
+@validate_args([1, 2, 3], "contact-phone")
 def show_phone(args, book):
     name = " ".join(args)
     record = book.find(name)
