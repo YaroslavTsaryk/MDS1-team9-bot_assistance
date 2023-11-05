@@ -147,13 +147,13 @@ def remove_phone(args, book):
 
 
 # Show phones for contact
-@validate_args(1, "contact-phone")
+@validate_args([1, 2, 3], "contact-phone")
 def show_phone(args, book):
     name = " ".join(args)
     record = book.find(name)
 
     if record:
-        res = f"{name}: " + ",".join([ph.value for ph in record.phones])
+        res = f"{name}: " + ", ".join([ph.value for ph in record.phones])
         return res
     else:
         raise IndexError("Contact not found.")
@@ -352,8 +352,9 @@ def note_add_tag(args, notepad):
             "{:<7} A note with the title [{}] doesn't exists".format(
                 '[info]', title))
     else:
-        record_tag = notepad.find_record_by_tag(Tag(tag))
-        if record_tag is not None:
+        # record_tag = notepad.find_record_by_tag(Tag(tag))
+        # if record_tag not None:
+        if Tag(tag) in record_title.tags:
             return (
                 "{:<7} This tag [{}] already exists".format(
                     '[info]', tag))
@@ -450,8 +451,8 @@ def note_rename(args, notepad):
             "{:<7} A note with the title [{}] doesn't exists".format(
                 '[info]', title))
     else:
-        record = notepad.find_record_by_title(Title(new_title))
-        if record is not None:
+        record_new_title = notepad.find_record_by_title(Title(new_title))
+        if record_new_title is not None:
             return ("{:<7} {}".format('[error]', 'A note with this name already exists.'))
         else:
             record.rename_title(Title(new_title))
@@ -594,8 +595,8 @@ notepad_actions = {
 
 
 def main():
-    TEST_MODE = False
-    TEST_FILE = 'test_commands.txt'
+    TEST_MODE = True
+    TEST_FILE = 'notes_test.txt'
 
     book = AddressBook()
     notepad = NotePad()
