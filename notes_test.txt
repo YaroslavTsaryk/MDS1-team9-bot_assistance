@@ -1,22 +1,61 @@
-note-add 'big1' 'extra fine text'
-note-add 'big 2' 'not very good text'
-note-add 'big3' 'text 3'
-note-add 'big 4' 'text 4'
-note-edit big3 NEWTEXT
-note-edit 'big 4' 'NEWER TEXT'
-note-add-tag big1 tag1
-note-add-tag 'big 2' tag1
-note-add-tag big3 tag1
-note-add-tag big 2 tag2
-note-add-tag big3 tag2
-note-get-all
-note-get-tag tag1
-note-get-tag tag2
-note-delete 'big 4'
-note-delete big3
-note-get-all
-note-rename big3 big4
-note-rename 'big 4' 'big3'
-note-get-all
-notes-write
+hello
+help
+contact-add-name Ivan GoIT
+contact-add-phone 1 a123456789
+contact-add-phone 1 1234567890
+contact-add-phone 1 0987654321
+contact-add-birthday 1 155.11.1980
+contact-add-birthday 1 15.11.1980
+contact-add-email 1 ivanivan
+contact-add-email 1 ivan@goit.ua
+contact-add-address 1 Khreschatyk 1, apt.1
+contact-show-birthday Ivan GoIT
+contact-add-name Mykola
+contact-add-phone 2 0987654321
+contact-add-birthday 2 10.11.1990
+contact-add-name Neo
+contact-add-phone 3 1122334455
+contact-add-birthday 3 10.11.1990
+contact-add-name Mock
+contacts-all
+contact-phone Mykola
+contact-change-name 1 Petro GoIt
+contact-change-phone 1 1234567890 0998887766
+contact-remove-phone 1 0987654321
+contact-delete 4
+contacts-all
+birthdays
+birthdays 14
+book-write newbook.bin
 exit
+
+loda
+book-load newbook.bin
+contacts-all
+note-add Note1 'Note text'
+note-add-tag Note1 tag1
+note-add-tag Note1 tag1
+note-add-tag Note1 tag2
+note-add Note2 'Note text2'
+note-add-tag Note2 tag1
+note-add Note3 'Note text3'
+note-add-tag Note3 tag2
+note-add Note4 'Note text4'
+note-get-all
+note-rename 'Note1' 'abc'
+note-edit abc 'New text'
+note-get-all
+note-get Note2
+note-get 3
+note-get-tag tag2
+note-sort
+note-search new
+note-delete-tag abc tag1
+note-delete Note4
+note-get-all
+notes-write  newnotes.bin
+close
+
+notes-load newnotes.bin
+note-get-all
+
