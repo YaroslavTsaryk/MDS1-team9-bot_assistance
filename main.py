@@ -42,7 +42,7 @@ def parse_input(user_input):
 
 
 # Add contact with phone or add new phone to existing one
-@validate_args(2, "contact-add")
+@validate_args(2, "contact-add-phone")
 def add_contact_phone(args, book):
     id, phone = args
     if int(id) in book.data.keys():
